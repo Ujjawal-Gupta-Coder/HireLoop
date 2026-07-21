@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HireLoop",
-  description: "AI powered interview prepration platform",
+  title: "HireLoop - AI-Powered Interview Preparation Platform",
+  description: "Master every interview with your AI-Powered copilot. HireLoop provides real-time feedback, behavioral analysis, and industry-specific simulations to help you land your dream offer.",
 };
 
 export default function RootLayout({

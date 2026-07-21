@@ -25,7 +25,9 @@ import {
   Lock,
   Volume2,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  Terminal,
+  RefreshCw
 } from "lucide-react";
 
 // Mock questions database for different roles & experience levels
@@ -207,14 +209,242 @@ const FAQS = [
   }
 ];
 
+interface CodingChallenge {
+  title: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  description: string;
+  initialCode: string;
+  testCases: { input: string; expected: string }[];
+  aiFeedback: {
+    timeComplexity: string;
+    spaceComplexity: string;
+    suggestions: string[];
+    score: number;
+  };
+}
+
+const CODING_CHALLENGES: Record<string, CodingChallenge[]> = {
+  frontend: [
+    {
+      title: "Custom Array Filter",
+      difficulty: "Easy",
+      description: "Implement a function `myFilter(arr, callback)` that behaves exactly like `Array.prototype.filter()`. It should construct a new array with elements that pass the callback test.",
+      initialCode: `function myFilter(arr, callback) {
+  // Write your code here
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (callback(arr[i], i, arr)) {
+      result.push(arr[i]);
+    }
+  }
+  return result;
+}`,
+      testCases: [
+        { input: "myFilter([1, 2, 3, 4], x => x % 2 === 0)", expected: "[2, 4]" },
+        { input: "myFilter(['apple', 'banana', 'kiwi'], s => s.length > 5)", expected: "['banana']" },
+        { input: "myFilter([10, -5, 0], x => x > 0)", expected: "[10]" }
+      ],
+      aiFeedback: {
+        timeComplexity: "O(N) where N is the number of elements in the array.",
+        spaceComplexity: "O(N) in the worst case to store the filtered output array.",
+        suggestions: [
+          "Check for null or undefined callback before executing.",
+          "Ensure sparse arrays are handled without invoking the callback on empty indices."
+        ],
+        score: 95
+      }
+    }
+  ],
+  backend: [
+    {
+      title: "Two Sum",
+      difficulty: "Easy",
+      description: "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. Assume each input has exactly one solution and do not use the same element twice.",
+      initialCode: `function twoSum(nums, target) {
+  // Write your code here
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (map.has(complement)) {
+      return [map.get(complement), i];
+    }
+    map.set(nums[i], i);
+  }
+  return [];
+}`,
+      testCases: [
+        { input: "twoSum([2, 7, 11, 15], 9)", expected: "[0, 1]" },
+        { input: "twoSum([3, 2, 4], 6)", expected: "[1, 2]" },
+        { input: "twoSum([3, 3], 6)", expected: "[0, 1]" }
+      ],
+      aiFeedback: {
+        timeComplexity: "O(N) using a single-pass hash map lookup.",
+        spaceComplexity: "O(N) to store values in the hash map.",
+        suggestions: [
+          "Your current single-pass Map solution is highly optimized.",
+          "Make sure to handle potential large inputs and duplicate elements correctly."
+        ],
+        score: 98
+      }
+    }
+  ],
+  fullstack: [
+    {
+      title: "Deep Clone Object",
+      difficulty: "Medium",
+      description: "Write a function `deepClone(obj)` that returns a deep copy of an object. The function should handle nested objects, arrays, and primitive values.",
+      initialCode: `function deepClone(obj) {
+  // Write your code here
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => deepClone(item));
+  }
+  const cloned = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      cloned[key] = deepClone(obj[key]);
+    }
+  }
+  return cloned;
+}`,
+      testCases: [
+        { input: "deepClone({ a: 1, b: { c: 2 } })", expected: "{ a: 1, b: { c: 2 } }" },
+        { input: "deepClone([1, [2, 3]])", expected: "[1, [2, 3]]" },
+        { input: "deepClone(null)", expected: "null" }
+      ],
+      aiFeedback: {
+        timeComplexity: "O(M) where M is the total number of nested properties/nodes.",
+        spaceComplexity: "O(D) call stack space where D is the maximum depth of recursion.",
+        suggestions: [
+          "Avoid using JSON.parse(JSON.stringify(x)) as it fails on functions, Symbols, and Date objects.",
+          "Consider handling circular references using a Map or WeakMap to avoid stack overflows."
+        ],
+        score: 92
+      }
+    }
+  ],
+  qa: [
+    {
+      title: "Validate Bracket Sequence",
+      difficulty: "Easy",
+      description: "Given a string `s` containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. Brackets must close in correct order and type.",
+      initialCode: `function isValidBrackets(s) {
+  // Write your code here
+  const stack = [];
+  const matches = { ')': '(', '}': '{', ']': '[' };
+  for (let char of s) {
+    if (['(', '{', '['].includes(char)) {
+      stack.push(char);
+    } else if (matches[char]) {
+      if (stack.pop() !== matches[char]) {
+        return false;
+      }
+    }
+  }
+  return stack.length === 0;
+}`,
+      testCases: [
+        { input: "isValidBrackets('()[]{}')", expected: "true" },
+        { input: "isValidBrackets('(]')", expected: "false" },
+        { input: "isValidBrackets('([)]')", expected: "false" }
+      ],
+      aiFeedback: {
+        timeComplexity: "O(N) where N is the length of the input string.",
+        spaceComplexity: "O(N) to store unmatched open brackets in the stack.",
+        suggestions: [
+          "Nice usage of stack data structure.",
+          "Add handling for characters other than brackets if the input allows them, or ensure strict input checks."
+        ],
+        score: 96
+      }
+    }
+  ],
+  ai: [
+    {
+      title: "Compute Cosine Similarity",
+      difficulty: "Medium",
+      description: "Calculate the cosine similarity between two numeric vectors of equal length. Formula: Similarity = (A • B) / (||A|| * ||B||). Return 0 if either vector magnitude is 0.",
+      initialCode: `function cosineSimilarity(vecA, vecB) {
+  // Write your code here
+  let dotProduct = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < vecA.length; i++) {
+    dotProduct += vecA[i] * vecB[i];
+    normA += vecA[i] * vecA[i];
+    normB += vecB[i] * vecB[i];
+  }
+  if (normA === 0 || normB === 0) return 0;
+  return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+}`,
+      testCases: [
+        { input: "cosineSimilarity([1, 2], [2, 4])", expected: "1.0" },
+        { input: "cosineSimilarity([1, 0], [0, 1])", expected: "0.0" },
+        { input: "cosineSimilarity([3, 8, 7], [-1, 2, 4])", expected: "0.85" }
+      ],
+      aiFeedback: {
+        timeComplexity: "O(D) where D is the dimension of the vectors.",
+        spaceComplexity: "O(1) auxiliary space.",
+        suggestions: [
+          "Validate that vecA and vecB are of equal length before iterating.",
+          "Watch out for floating point precision issues; round off results when appropriate."
+        ],
+        score: 93
+      }
+    }
+  ],
+  data_science: [
+    {
+      title: "Calculate Mean and Median",
+      difficulty: "Easy",
+      description: "Given an array of numbers, return an object containing the mean and median of the values. If the array is empty, return null.",
+      initialCode: `function getMeanMedian(nums) {
+  // Write your code here
+  if (!nums || nums.length === 0) return null;
+  const mean = nums.reduce((a, b) => a + b, 0) / nums.length;
+  const sorted = [...nums].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const median = sorted.length % 2 !== 0 
+    ? sorted[mid] 
+    : (sorted[mid - 1] + sorted[mid]) / 2;
+  return { mean, median };
+}`,
+      testCases: [
+        { input: "getMeanMedian([1, 3, 3, 6, 7, 8, 9])", expected: "{ mean: 5.28, median: 6 }" },
+        { input: "getMeanMedian([1, 2, 3, 4])", expected: "{ mean: 2.5, median: 2.5 }" },
+        { input: "getMeanMedian([])", expected: "null" }
+      ],
+      aiFeedback: {
+        timeComplexity: "O(N log N) dominated by sorting the array to find the median.",
+        spaceComplexity: "O(N) to copy and store the sorted array.",
+        suggestions: [
+          "To optimize finding median for large datasets, consider Quickselect algorithm which runs in O(N) average time.",
+          "Be careful with sorting numbers in JavaScript using `.sort()`: always provide a compare function `(a, b) => a - b`."
+        ],
+        score: 97
+      }
+    }
+  ]
+};
+
 export default function Page() {
-  // Simulator State
-  const [demoStage, setDemoStage] = useState<"idle" | "countdown" | "recording" | "feedback">("idle");
-  const [countdown, setCountdown] = useState(3);
-  const [speechText, setSpeechText] = useState("");
+  // Tabs State
+  const [activeTab, setActiveTab] = useState<"audio" | "coding">("audio");
+
+  // Audio Simulator State
+  const [audioStage, setAudioStage] = useState<"idle" | "countdown" | "active" | "feedback">("idle");
+  const [audioCountdown, setAudioCountdown] = useState(3);
+  const [audioSpeechText, setAudioSpeechText] = useState("");
   const [audioBars, setAudioBars] = useState<number[]>([15, 20, 10, 40, 15, 30, 10, 15, 30, 45, 10, 20, 15, 10, 25]);
-  const [hasWebcamPermission, setHasWebcamPermission] = useState(false);
-  const [webcamStream, setWebcamStream] = useState<MediaStream | null>(null);
+  const [audioSpeaker, setAudioSpeaker] = useState<"ai" | "candidate">("ai");
+
+  // Coding Simulator State
+  const [codingStage, setCodingStage] = useState<"idle" | "running" | "feedback">("idle");
+  const [editorCode, setEditorCode] = useState("");
+  const [runStatus, setRunStatus] = useState("");
+  const [completedTests, setCompletedTests] = useState<Record<number, "pending" | "running" | "passed">>({});
 
   // Role & Level State
   const [selectedRole, setSelectedRole] = useState<string>("frontend");
@@ -227,7 +457,6 @@ export default function Page() {
   // FAQ State
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const speechIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const waveformIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -236,9 +465,24 @@ export default function Page() {
     setTrackQuestionIndex(0);
   }, [selectedRole, selectedLevel]);
 
+  // Helper for loading selected coding challenge boilerplate
+  const getChallengeForRole = (role: string): CodingChallenge => {
+    const list = CODING_CHALLENGES[role] || CODING_CHALLENGES["backend"];
+    return list[0];
+  };
+
+  // Sync editor boilerplates when active role is updated
+  useEffect(() => {
+    const challenge = getChallengeForRole(selectedRole);
+    setEditorCode(challenge.initialCode);
+    setCodingStage("idle");
+    setCompletedTests({});
+    setRunStatus("");
+  }, [selectedRole]);
+
   // Audio Waveform Animation
   useEffect(() => {
-    if (demoStage === "recording") {
+    if (audioStage === "active") {
       waveformIntervalRef.current = setInterval(() => {
         setAudioBars(prev => prev.map(() => Math.floor(Math.random() * 45) + 5));
       }, 100);
@@ -249,96 +493,102 @@ export default function Page() {
     return () => {
       if (waveformIntervalRef.current) clearInterval(waveformIntervalRef.current);
     };
-  }, [demoStage]);
+  }, [audioStage]);
 
-  // Countdown timer logic
+  // Audio countdown timer logic
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (demoStage === "countdown") {
-      if (countdown > 1) {
-        timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    if (audioStage === "countdown") {
+      if (audioCountdown > 1) {
+        timer = setTimeout(() => setAudioCountdown(audioCountdown - 1), 1000);
       } else {
         timer = setTimeout(() => {
-          setDemoStage("recording");
-          startMockSpeechText();
+          setAudioStage("active");
+          setAudioSpeaker("ai");
         }, 1000);
       }
     }
     return () => clearTimeout(timer);
-  }, [demoStage, countdown]);
+  }, [audioStage, audioCountdown]);
 
-  // Cleanup webcam stream on unmount
+  // Audio speech transcription & speaker turn simulation
   useEffect(() => {
-    return () => {
-      if (webcamStream) {
-        webcamStream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [webcamStream]);
+    let speakInterval: NodeJS.Timeout;
+    let turnTimeout: NodeJS.Timeout;
 
-  // Request webcam access
-  const enableWebcam = async () => {
-    try {
-      if (webcamStream) {
-        webcamStream.getTracks().forEach(track => track.stop());
-        setWebcamStream(null);
-        setHasWebcamPermission(false);
-        return;
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      setWebcamStream(stream);
-      setHasWebcamPermission(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (err) {
-      console.warn("Camera access denied or unsupported:", err);
-      alert("Could not access camera. Using premium abstract visualization mode instead!");
-      setHasWebcamPermission(false);
-    }
-  };
-
-  const startDemo = () => {
-    setCountdown(3);
-    setDemoStage("countdown");
-    setSpeechText("");
-  };
-
-  const stopDemo = () => {
-    if (speechIntervalRef.current) clearInterval(speechIntervalRef.current);
-    setDemoStage("feedback");
-  };
-
-  const resetDemo = () => {
-    if (speechIntervalRef.current) clearInterval(speechIntervalRef.current);
-    setDemoStage("idle");
-    setSpeechText("");
-  };
-
-  // Mock transcription generation
-  const startMockSpeechText = () => {
-    const textSegments = [
-      "To optimize rendering in React, ",
-      "we can use React.memo to prevent unnecessary re-renders ",
-      "for functional components whose props haven't changed. ",
-      "Additionally, the useMemo and useCallback hooks help preserve referential identity ",
-      "of objects and functions across renders. ",
-      "By avoiding deep component re-evaluations, we can achieve 60 frames-per-second scrolling, ",
-      "especially inside large database dashboard views..."
-    ];
-    let currentIndex = 0;
-    setSpeechText("");
-
-    speechIntervalRef.current = setInterval(() => {
-      if (currentIndex < textSegments.length) {
-        setSpeechText(prev => prev + textSegments[currentIndex]);
-        currentIndex++;
+    if (audioStage === "active") {
+      if (audioSpeaker === "ai") {
+        setAudioSpeechText(`AI Coach: "Welcome to your practice room. Let's evaluate your domain skills. Here is my question for you: ${getQuestion(selectedRole, selectedLevel, trackQuestionIndex)}"`);
+        
+        // AI Coach speaks for 4 seconds, then turns to candidate
+        turnTimeout = setTimeout(() => {
+          setAudioSpeaker("candidate");
+        }, 4000);
       } else {
-        if (speechIntervalRef.current) clearInterval(speechIntervalRef.current);
-        setDemoStage("feedback");
+        // Candidate speaking simulation
+        const textSegments = [
+          "To address this question, ",
+          "I usually start by identifying the performance bottlenecks. ",
+          "Specifically, we want to optimize structural elements, use proper caching strategies, ",
+          "and ensure that our main execution loops are non-blocking. ",
+          "By doing this, we minimize computational latency and provide an optimal user experience."
+        ];
+        let currentIndex = 0;
+        setAudioSpeechText(prev => prev + "\n\nCandidate: ");
+
+        speakInterval = setInterval(() => {
+          if (currentIndex < textSegments.length) {
+            setAudioSpeechText(prev => prev + textSegments[currentIndex]);
+            currentIndex++;
+          } else {
+            clearInterval(speakInterval);
+            // Auto complete call and show feedback after answer ends
+            setAudioStage("feedback");
+          }
+        }, 1500);
       }
-    }, 1800);
+    }
+
+    return () => {
+      clearInterval(speakInterval);
+      clearTimeout(turnTimeout);
+    };
+  }, [audioStage, audioSpeaker]);
+
+  const startAudioDemo = () => {
+    setAudioCountdown(3);
+    setAudioStage("countdown");
+    setAudioSpeechText("");
+  };
+
+  const stopAudioDemo = () => {
+    setAudioStage("feedback");
+  };
+
+  const resetAudioDemo = () => {
+    setAudioStage("idle");
+    setAudioSpeechText("");
+  };
+
+  // Run tests simulation for coding workspace
+  const runCodeTests = () => {
+    setCodingStage("running");
+    setRunStatus("Compiling and executing tests on sandbox environment...");
+    setCompletedTests({ 0: "running", 1: "pending", 2: "pending" });
+
+    setTimeout(() => {
+      setCompletedTests({ 0: "passed", 1: "running", 2: "pending" });
+      
+      setTimeout(() => {
+        setCompletedTests({ 0: "passed", 1: "passed", 2: "running" });
+
+        setTimeout(() => {
+          setCompletedTests({ 0: "passed", 1: "passed", 2: "passed" });
+          setRunStatus("All 3 tests passed successfully! 🎉");
+          setCodingStage("feedback");
+        }, 800);
+      }, 800);
+    }, 800);
   };
 
   // Safe question retrieval helper
@@ -349,6 +599,8 @@ export default function Page() {
     if (!questions || questions.length === 0) return "Question loading...";
     return questions[index % questions.length];
   };
+
+  const activeChallenge = getChallengeForRole(selectedRole);
 
   return (
     <div className="min-h-screen bg-bg-dark text-slate-100 font-sans selection:bg-brand-violet/30 overflow-x-hidden relative">
@@ -459,7 +711,6 @@ export default function Page() {
           </div>
         </div>
       </section>
-
       {/* INTERACTIVE DEMO ROOM SECTION */}
       <section id="demo" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-16">
         <div className="text-center mb-12">
@@ -467,264 +718,575 @@ export default function Page() {
             Try the AI Interview Simulator
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Experience our real-time feedback loops. Click start, answer the prompt, and review instant telemetry analysis.
+            Experience our specialized interview workspaces. Select a room below to test real-time feedback loops and sandbox execution.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto">
-          
-          {/* Left panel: Camera & Simulator controls */}
-          <div className="lg:col-span-7 glass-panel rounded-3xl p-6 border border-white/5 flex flex-col justify-between relative overflow-hidden shadow-2xl">
-            
-            {/* Upper state indicators */}
-            <div className="flex items-center justify-between mb-6 z-10">
-              <div className="flex items-center space-x-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${demoStage === "recording" ? "bg-red-500 animate-pulse" : "bg-emerald-500"}`} />
-                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                  {demoStage === "recording" ? "Live Recording Session" : "Simulator Ready"}
-                </span>
-              </div>
-              <button 
-                onClick={enableWebcam} 
-                className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all flex items-center space-x-1.5 ${
-                  hasWebcamPermission 
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20" 
-                    : "bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
-                }`}
-              >
-                <Video className="w-3.5 h-3.5" />
-                <span>{hasWebcamPermission ? "Disable Webcam" : "Test Webcam"}</span>
-              </button>
-            </div>
-
-            {/* Video / Visual Screen Area */}
-            <div className="aspect-video w-full rounded-2xl bg-[#090A11] border border-white/5 relative flex items-center justify-center overflow-hidden mb-6 group shadow-inner">
-              
-              {/* Webcam view */}
-              <video 
-                ref={videoRef}
-                autoPlay 
-                playsInline 
-                muted
-                className={`absolute inset-0 w-full h-full object-cover transform -scale-x-100 transition-opacity duration-300 ${
-                  hasWebcamPermission && webcamStream ? "opacity-75" : "opacity-0 pointer-events-none"
-                }`}
-              />
-
-              {/* Mock visualization if webcam is off */}
-              {(!hasWebcamPermission || !webcamStream) && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none bg-gradient-to-b from-[#131526] to-[#0A0B14]">
-                  {/* Floating abstract voice icon */}
-                  <div className="w-16 h-16 rounded-full bg-brand-violet/10 border border-brand-violet/20 flex items-center justify-center text-brand-violet mb-4 shadow-lg animate-float">
-                    <Mic className="w-7 h-7" />
-                  </div>
-                  <span className="text-sm font-semibold text-slate-300">AI Audio/Video Feed</span>
-                  <span className="text-xs text-slate-500 mt-1 max-w-xs">
-                    Enable webcam above, or use the interactive audio simulation below
-                  </span>
-                </div>
-              )}
-
-              {/* Countdown Overlay */}
-              {demoStage === "countdown" && (
-                <div className="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center z-20">
-                  <div className="text-7xl font-extrabold text-brand-violet animate-ping">{countdown}</div>
-                  <div className="text-sm font-semibold text-slate-400 mt-4">Preparing simulation room...</div>
-                </div>
-              )}
-
-              {/* Idle screen trigger */}
-              {demoStage === "idle" && (
-                <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] flex items-center justify-center z-10 transition-opacity">
-                  <button 
-                    onClick={startDemo}
-                    className="w-14 h-14 rounded-full bg-brand-violet hover:bg-brand-indigo text-white flex items-center justify-center shadow-lg shadow-brand-violet/30 hover:shadow-brand-indigo/40 hover:scale-110 transition-all duration-300"
-                  >
-                    <Play className="w-6 h-6 fill-white ml-1" />
-                  </button>
-                </div>
-              )}
-
-              {/* Bottom active telemetry indicators */}
-              {demoStage === "recording" && (
-                <div className="absolute bottom-4 left-4 right-4 bg-slate-950/85 backdrop-blur border border-white/5 px-4 py-2.5 rounded-xl flex items-center justify-between z-10">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-end space-x-1.5 h-6">
-                      {audioBars.map((bar, idx) => (
-                        <div
-                          key={idx}
-                          className="w-1 bg-brand-violet rounded-full transition-all duration-105"
-                          style={{ 
-                            height: `${bar}%`,
-                            animation: `wave-bounce ${0.5 + (idx % 5) * 0.2}s ease-in-out infinite alternate`
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs font-mono text-slate-400">00:12</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5">
-                    <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-blue">Analyzing Speech</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Controls panel */}
-            <div className="flex items-center justify-between gap-4">
-              {demoStage === "idle" && (
-                <button
-                  onClick={startDemo}
-                  className="w-full py-3.5 bg-brand-violet hover:bg-brand-indigo text-white font-bold rounded-xl shadow-lg shadow-brand-violet/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2"
-                >
-                  <Play className="w-5 h-5 fill-white" />
-                  <span>Start Practice Session</span>
-                </button>
-              )}
-
-              {demoStage === "countdown" && (
-                <button
-                  disabled
-                  className="w-full py-3.5 bg-slate-800 text-slate-500 font-bold rounded-xl cursor-not-allowed flex items-center justify-center space-x-2"
-                >
-                  <span>Readying...</span>
-                </button>
-              )}
-
-              {demoStage === "recording" && (
-                <button
-                  onClick={stopDemo}
-                  className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2 animate-pulse"
-                >
-                  <Square className="w-4 h-4 fill-white" />
-                  <span>Stop & Generate Feedback</span>
-                </button>
-              )}
-
-              {demoStage === "feedback" && (
-                <div className="w-full flex gap-3">
-                  <button
-                    onClick={startDemo}
-                    className="flex-1 py-3 bg-brand-violet/20 hover:bg-brand-violet/30 border border-brand-violet/40 text-brand-violet font-semibold rounded-xl transition-all"
-                  >
-                    Try Again
-                  </button>
-                  <button
-                    onClick={resetDemo}
-                    className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl transition-all"
-                  >
-                    Reset Dashboard
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right panel: Real-time Transcript & AI Scoring */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            
-            {/* Question display card */}
-            <div className="glass-panel rounded-3xl p-6 border border-white/5">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-violet bg-brand-violet/10 border border-brand-violet/20 px-2.5 py-1 rounded-md">
-                Active Prompt
-              </span>
-              <h3 className="text-md font-semibold text-white mt-3 leading-snug">
-                {getQuestion(selectedRole, selectedLevel, trackQuestionIndex)}
-              </h3>
-            </div>
-
-            {/* Transcription display card */}
-            <div className="glass-panel rounded-3xl p-6 border border-white/5 flex-1 flex flex-col justify-between min-h-[220px]">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-blue bg-brand-blue/10 border border-brand-blue/20 px-2.5 py-1 rounded-md">
-                  Live Transcription
-                </span>
-                <div className="mt-4 text-sm text-slate-300 leading-relaxed font-sans min-h-[100px] max-h-[140px] overflow-y-auto no-scrollbar font-normal">
-                  {demoStage === "idle" && (
-                    <span className="text-slate-500 italic">Start the practice session to generate real-time transcript answers.</span>
-                  )}
-                  {demoStage === "countdown" && (
-                    <span className="text-slate-500 italic">Initializing speech-to-text connection...</span>
-                  )}
-                  {demoStage === "recording" && (
-                    <>
-                      <span>{speechText}</span>
-                      <span className="inline-block w-1.5 h-4 ml-1 bg-brand-violet animate-pulse" />
-                    </>
-                  )}
-                  {demoStage === "feedback" && (
-                    <span className="text-slate-300">{speechText || "To optimize rendering in React, we can use React.memo to prevent unnecessary re-renders for functional components whose props haven't changed. Additionally, the useMemo and useCallback hooks help preserve referential identity of objects and functions across renders. By avoiding deep component re-evaluations, we can achieve 60 frames-per-second scrolling, especially inside large database dashboard views..."}</span>
-                  )}
-                </div>
-              </div>
-              <div className="text-[10px] text-slate-500 border-t border-slate-900 pt-3 flex items-center justify-between">
-                <span>Model: HireLoop-Audio-v2.1</span>
-                <span>Language: English (US)</span>
-              </div>
-            </div>
-
-            {/* AI Scoring Display Card */}
-            <div className="glass-panel rounded-3xl p-6 border border-white/5 relative overflow-hidden">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2.5 py-1 rounded-md">
-                AI Diagnostics Feedback
-              </span>
-
-              {/* Overlay locked cover when idle/recording */}
-              {(demoStage === "idle" || demoStage === "countdown" || demoStage === "recording") && (
-                <div className="absolute inset-0 bg-[#131526]/95 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center select-none">
-                  <Lock className="w-8 h-8 text-slate-500 mb-2" />
-                  <span className="text-sm font-semibold text-slate-300">Telemetry Feedback Locked</span>
-                  <span className="text-xs text-slate-500 max-w-[200px] mt-1">
-                    Complete the interview prompt recording to analyze performance metrics.
-                  </span>
-                </div>
-              )}
-
-              <div className="mt-5 space-y-4">
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
-                    <span className="text-slate-300">Pacing (Speech Rate)</span>
-                    <span className="text-brand-violet font-bold">142 WPM (Optimal)</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-brand-violet to-brand-indigo w-[90%] rounded-full" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
-                    <span className="text-slate-300">Keywords Inclusion</span>
-                    <span className="text-brand-blue font-bold">85% Match</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-brand-blue to-cyan-400 w-[85%] rounded-full" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
-                    <span className="text-slate-300">Tone & Volume</span>
-                    <span className="text-emerald-400 font-bold">Confident (45dB)</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 w-[95%] rounded-full" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
-                    <span className="text-slate-300">Answer Structuring</span>
-                    <span className="text-pink-400 font-bold">STAR Method Match</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-pink-400 to-rose-400 w-[78%] rounded-full" />
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Dual Tab Switcher */}
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex bg-slate-950/60 p-1.5 rounded-2xl border border-white/5 shadow-2xl relative">
+            <button
+              onClick={() => setActiveTab("audio")}
+              className={`px-6 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center space-x-2 cursor-pointer ${
+                activeTab === "audio"
+                  ? "bg-gradient-to-r from-brand-violet to-brand-indigo text-white shadow-lg shadow-brand-violet/20"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <Mic className="w-4 h-4" />
+              <span>🎙️ Audio Interview Room</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("coding")}
+              className={`px-6 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center space-x-2 cursor-pointer ${
+                activeTab === "coding"
+                  ? "bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-lg shadow-brand-blue/20"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <Cpu className="w-4 h-4" />
+              <span>💻 Coding Interview Room</span>
+            </button>
           </div>
         </div>
+
+        {activeTab === "audio" ? (
+          /* AUDIO INTERVIEW SIMULATOR WORKSPACE */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto">
+            
+            {/* Left Column: Speaker feeds & Controls */}
+            <div className="lg:col-span-7 glass-panel rounded-3xl p-6 border border-white/5 flex flex-col justify-between relative overflow-hidden shadow-2xl">
+              
+              {/* Upper call state indicators */}
+              <div className="flex items-center justify-between mb-6 z-10">
+                <div className="flex items-center space-x-2">
+                  <span className={`w-2.5 h-2.5 rounded-full ${audioStage === "active" ? "bg-red-500 animate-pulse" : "bg-emerald-500"}`} />
+                  <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                    {audioStage === "active" ? "Call Session Active" : audioStage === "countdown" ? "Connecting..." : "Audio Room Ready"}
+                  </span>
+                </div>
+                <div className="text-xs text-slate-400 font-mono">
+                  {audioStage === "active" ? "Mode: Dual Audio Feed" : "No Camera Required"}
+                </div>
+              </div>
+
+              {/* Grid with AI Coach & Candidate Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                
+                {/* AI Coach Audio Feed */}
+                <div className={`p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between h-40 ${
+                  audioStage === "active" && audioSpeaker === "ai"
+                    ? "bg-brand-violet/10 border-brand-violet/40 shadow-lg shadow-brand-violet/10 scale-[1.02]"
+                    : "bg-slate-900/50 border-white/5 opacity-70"
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-brand-violet/20 flex items-center justify-center text-brand-violet font-bold relative">
+                        A
+                        {audioStage === "active" && audioSpeaker === "ai" && (
+                          <span className="absolute -inset-0.5 rounded-full border-2 border-brand-violet animate-ping opacity-75" />
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-white">AI Coach</h4>
+                        <p className="text-[10px] text-slate-400">Aria - Technical Reviewer</p>
+                      </div>
+                    </div>
+                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+                      audioStage === "active" && audioSpeaker === "ai"
+                        ? "bg-brand-violet text-white animate-pulse"
+                        : "bg-slate-800 text-slate-500"
+                    }`}>
+                      {audioStage === "active" && audioSpeaker === "ai" ? "Speaking" : "Muted"}
+                    </span>
+                  </div>
+
+                  {/* AI Audio Waveforms */}
+                  <div className="flex items-end justify-center space-x-1 h-12">
+                    {audioStage === "active" && audioSpeaker === "ai" ? (
+                      audioBars.slice(0, 12).map((bar, idx) => (
+                        <div
+                          key={idx}
+                          className="w-1 bg-brand-violet rounded-full transition-all duration-100"
+                          style={{ 
+                            height: `${bar}%`,
+                            animation: `wave-bounce ${0.4 + (idx % 4) * 0.12}s ease-in-out infinite alternate`
+                          }}
+                        />
+                      ))
+                    ) : (
+                      <div className="w-full border-b border-dashed border-slate-800 h-6 flex items-center justify-center">
+                        <span className="text-[9px] text-slate-600 tracking-widest uppercase">Silent</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Candidate Audio Feed */}
+                <div className={`p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between h-40 ${
+                  audioStage === "active" && audioSpeaker === "candidate"
+                    ? "bg-brand-blue/10 border-brand-blue/40 shadow-lg shadow-brand-blue/10 scale-[1.02]"
+                    : "bg-slate-900/50 border-white/5 opacity-70"
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-blue font-bold relative">
+                        U
+                        {audioStage === "active" && audioSpeaker === "candidate" && (
+                          <span className="absolute -inset-0.5 rounded-full border-2 border-brand-blue animate-ping opacity-75" />
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-white">Candidate (You)</h4>
+                        <p className="text-[10px] text-slate-400">Local Mic - Live Stream</p>
+                      </div>
+                    </div>
+                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+                      audioStage === "active" && audioSpeaker === "candidate"
+                        ? "bg-brand-blue text-white animate-pulse"
+                        : "bg-slate-800 text-slate-500"
+                    }`}>
+                      {audioStage === "active" && audioSpeaker === "candidate" ? "Speaking" : "Listening"}
+                    </span>
+                  </div>
+
+                  {/* Candidate Audio Waveforms */}
+                  <div className="flex items-end justify-center space-x-1 h-12">
+                    {audioStage === "active" && audioSpeaker === "candidate" ? (
+                      audioBars.slice(3, 15).map((bar, idx) => (
+                        <div
+                          key={idx}
+                          className="w-1 bg-brand-blue rounded-full transition-all duration-100"
+                          style={{ 
+                            height: `${bar}%`,
+                            animation: `wave-bounce ${0.4 + (idx % 4) * 0.12}s ease-in-out infinite alternate`
+                          }}
+                        />
+                      ))
+                    ) : (
+                      <div className="w-full border-b border-dashed border-slate-800 h-6 flex items-center justify-center">
+                        <span className="text-[9px] text-slate-600 tracking-widest uppercase">Silent</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Call Room Background Overlay / Countdown info */}
+              <div className="w-full rounded-2xl bg-[#090A11] border border-white/5 relative flex flex-col justify-center overflow-hidden mb-6 shadow-inner min-h-[140px] p-6">
+                
+                {audioStage === "idle" && (
+                  <div className="flex flex-col items-center justify-center text-center select-none">
+                    <div className="w-12 h-12 rounded-full bg-brand-violet/10 border border-brand-violet/20 flex items-center justify-center text-brand-violet mb-3 animate-float">
+                      <Mic className="w-5 h-5" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-350">Secure Audio Room Simulation</span>
+                    <span className="text-xs text-slate-500 mt-1 max-w-sm">
+                      Both candidate and AI coach communicate in full-duplex audio. Press Start to initialize the loop.
+                    </span>
+                  </div>
+                )}
+
+                {audioStage === "countdown" && (
+                  <div className="absolute inset-0 bg-slate-950/95 flex flex-col items-center justify-center z-20">
+                    <div className="text-5xl font-extrabold text-brand-violet animate-ping">{audioCountdown}</div>
+                    <div className="text-xs font-semibold text-slate-400 mt-3">Connecting candidate audio channels...</div>
+                  </div>
+                )}
+
+                {audioStage === "active" && (
+                  <div className="w-full flex flex-col justify-between h-full">
+                    <div className="flex items-center justify-between text-[10px] text-slate-550 mb-3 border-b border-white/5 pb-2">
+                      <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> RECORDING FEED</span>
+                      <span className="font-mono">TIME REMAINING: ~30s</span>
+                    </div>
+                    <div className="flex items-center justify-center p-3 bg-slate-950/50 border border-white/5 rounded-xl">
+                      <Volume2 className="w-4 h-4 text-brand-violet mr-2 animate-bounce" />
+                      <span className="text-xs text-slate-400 font-sans">
+                        {audioSpeaker === "ai" ? "AI Recruiter is explaining the problem prompt." : "AI is active. Say your answer clearly into the microphone."}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {audioStage === "feedback" && (
+                  <div className="flex flex-col items-center justify-center text-center select-none">
+                    <CheckCircle2 className="w-10 h-10 text-emerald-400 mb-2" />
+                    <span className="text-sm font-semibold text-white">Audio Telemetry Evaluation Generated</span>
+                    <span className="text-xs text-slate-550 mt-1 max-w-md">
+                      Diagnostic speech analysis has been generated based on STAR method standards.
+                    </span>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Audio controls */}
+              <div className="flex items-center justify-between gap-4">
+                {audioStage === "idle" && (
+                  <button
+                    onClick={startAudioDemo}
+                    className="w-full py-3.5 bg-brand-violet hover:bg-brand-indigo text-white font-bold rounded-xl shadow-lg shadow-brand-violet/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2"
+                  >
+                    <Play className="w-5 h-5 fill-white" />
+                    <span>Connect Call Session</span>
+                  </button>
+                )}
+
+                {audioStage === "countdown" && (
+                  <button
+                    disabled
+                    className="w-full py-3.5 bg-slate-800 text-slate-500 font-bold rounded-xl cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    <span>Establishing link...</span>
+                  </button>
+                )}
+
+                {audioStage === "active" && (
+                  <button
+                    onClick={stopAudioDemo}
+                    className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2 animate-pulse"
+                  >
+                    <Square className="w-4 h-4 fill-white" />
+                    <span>End & Analyze Audio Feed</span>
+                  </button>
+                )}
+
+                {audioStage === "feedback" && (
+                  <div className="w-full flex gap-3">
+                    <button
+                      onClick={startAudioDemo}
+                      className="flex-1 py-3.5 bg-brand-violet/20 hover:bg-brand-violet/30 border border-brand-violet/40 text-brand-violet font-semibold rounded-xl transition-all cursor-pointer"
+                    >
+                      Restart Session
+                    </button>
+                    <button
+                      onClick={resetAudioDemo}
+                      className="flex-1 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl transition-all cursor-pointer"
+                    >
+                      Clear Simulation
+                    </button>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Right Column: Audio Transcript & AI Scoring */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              
+              {/* Active Prompt displaying current question */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-brand-violet bg-brand-violet/10 border border-brand-violet/20 px-2.5 py-1 rounded-md">
+                  Active Question Prompt
+                </span>
+                <h3 className="text-sm font-semibold text-white mt-3 leading-snug">
+                  "{getQuestion(selectedRole, selectedLevel, trackQuestionIndex)}"
+                </h3>
+              </div>
+
+              {/* Live Audio Transcription box */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5 flex-1 flex flex-col justify-between min-h-[220px]">
+                <div>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-brand-blue bg-brand-blue/10 border border-brand-blue/20 px-2.5 py-1 rounded-md">
+                    Speech Transcription Scroll
+                  </span>
+                  <div className="mt-4 text-xs text-slate-300 leading-relaxed font-sans min-h-[100px] max-h-[140px] overflow-y-auto no-scrollbar font-normal">
+                    {audioStage === "idle" && (
+                      <span className="text-slate-500 italic">Call simulator is offline. Connect call to stream transcript.</span>
+                    )}
+                    {audioStage === "countdown" && (
+                      <span className="text-slate-500 italic">Connecting real-time Whisper translation hook...</span>
+                    )}
+                    {audioStage === "active" && (
+                      <>
+                        <span className="whitespace-pre-line">{audioSpeechText}</span>
+                        <span className="inline-block w-1.5 h-3 ml-1 bg-brand-violet animate-pulse" />
+                      </>
+                    )}
+                    {audioStage === "feedback" && (
+                      <span className="text-slate-300 whitespace-pre-line">{audioSpeechText || "Evaluation complete."}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-900 pt-3 flex items-center justify-between">
+                  <span>Engine: Whisper-Large-v3</span>
+                  <span>Feedback Latency: &lt;1.8s</span>
+                </div>
+              </div>
+
+              {/* AI scoring diagnostics for Audio call */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5 relative overflow-hidden">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2.5 py-1 rounded-md">
+                  Audio Evaluation Scoring
+                </span>
+
+                {/* Locked overlay unless feedback has generated */}
+                {audioStage !== "feedback" && (
+                  <div className="absolute inset-0 bg-[#131526]/95 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center select-none">
+                    <Lock className="w-7 h-7 text-slate-500 mb-2" />
+                    <span className="text-xs font-semibold text-slate-300">Scoring Diagnostics Locked</span>
+                    <span className="text-[10px] text-slate-500 max-w-[200px] mt-1">
+                      Complete transcription evaluation to decrypt audio metrics dashboard.
+                    </span>
+                  </div>
+                )}
+
+                <div className="mt-5 space-y-4">
+                  <div>
+                    <div className="flex justify-between text-xs font-semibold mb-1">
+                      <span className="text-slate-300">Pacing (Speech Rate)</span>
+                      <span className="text-brand-violet font-bold">142 WPM (Optimal)</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-brand-violet to-brand-indigo w-[90%] rounded-full" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs font-semibold mb-1">
+                      <span className="text-slate-300">STAR Structure Alignment</span>
+                      <span className="text-brand-blue font-bold">85% Match</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-brand-blue to-cyan-400 w-[85%] rounded-full" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs font-semibold mb-1">
+                      <span className="text-slate-300">Tone Stability</span>
+                      <span className="text-emerald-400 font-bold">Confident (45dB)</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 w-[95%] rounded-full" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs font-semibold mb-1">
+                      <span className="text-slate-300">Vocabulary & Filler Words</span>
+                      <span className="text-pink-400 font-bold">No Filler Detected</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-pink-400 to-rose-400 w-[80%] rounded-full" />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        ) : (
+          /* CODING INTERVIEW SIMULATOR WORKSPACE */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto">
+            
+            {/* Left Column: Problem Details & Live Test Cases */}
+            <div className="lg:col-span-7 flex flex-col gap-6">
+              
+              {/* Problem details panel */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5 flex flex-col justify-between shadow-2xl min-h-[220px]">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-brand-blue bg-brand-blue/10 border border-brand-blue/20 px-2.5 py-1 rounded-md">
+                      Coding Challenge
+                    </span>
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                      activeChallenge.difficulty === "Easy"
+                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                        : "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                    }`}>
+                      {activeChallenge.difficulty}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-white mb-2">{activeChallenge.title}</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed font-normal mb-4">
+                    {activeChallenge.description}
+                  </p>
+
+                  <div className="border-t border-slate-900 pt-4 mt-2">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-2">Example Cases</span>
+                    <div className="space-y-2">
+                      {activeChallenge.testCases.map((tc, idx) => (
+                        <div key={idx} className="p-2.5 bg-slate-950/70 border border-white/5 rounded-lg font-mono text-[11px] text-slate-300 flex justify-between">
+                          <div>
+                            <span className="text-slate-500">Input:</span> {tc.input}
+                          </div>
+                          <div>
+                            <span className="text-slate-500">Expected:</span> <span className="text-emerald-400 font-bold">{tc.expected}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Interactive test cases logs */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5 flex flex-col shadow-2xl">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-md self-start mb-4">
+                  Sandbox Test Execution
+                </span>
+
+                <div className="space-y-3 font-mono text-xs">
+                  {activeChallenge.testCases.map((tc, index) => {
+                    const status = completedTests[index] || "pending";
+                    return (
+                      <div key={index} className="flex items-center justify-between p-3.5 bg-slate-950/80 rounded-xl border border-white/5">
+                        <div className="flex items-center space-x-3">
+                          {status === "pending" && <span className="w-2.5 h-2.5 rounded-full bg-slate-850 border border-slate-700 animate-pulse shrink-0" />}
+                          {status === "running" && <div className="w-3.5 h-3.5 border-2 border-brand-blue border-t-transparent rounded-full animate-spin shrink-0" />}
+                          {status === "passed" && <Check className="w-4 h-4 text-emerald-400 shrink-0" />}
+                          <span className={`${status === "passed" ? "text-white" : "text-slate-450"}`}>
+                            Test Case {index + 1}: Expected {tc.expected}
+                          </span>
+                        </div>
+                        <span className={`text-[10px] uppercase font-bold tracking-wider ${
+                          status === "passed" ? "text-emerald-400" : status === "running" ? "text-brand-blue animate-pulse" : "text-slate-600"
+                        }`}>
+                          {status}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {runStatus && (
+                  <div className="mt-4 p-3 bg-brand-blue/5 border border-brand-blue/20 rounded-xl flex items-center space-x-2 text-xs text-brand-blue font-mono">
+                    <Terminal className="w-3.5 h-3.5" />
+                    <span>{runStatus}</span>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Right Column: Code Editor & AI Evaluation */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              
+              {/* Code Editor */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5 flex flex-col justify-between relative overflow-hidden shadow-2xl min-h-[380px] h-full">
+                
+                <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500/80" />
+                    <div className="w-2 h-2 rounded-full bg-yellow-500/80" />
+                    <div className="w-2 h-2 rounded-full bg-green-500/80" />
+                    <span className="text-[10px] font-mono text-slate-400 ml-2">solution.js</span>
+                  </div>
+                  <span className="text-[9px] font-mono text-brand-blue bg-brand-blue/10 border border-brand-blue/20 px-2.5 py-0.5 rounded uppercase font-semibold">
+                    JavaScript (Node)
+                  </span>
+                </div>
+
+                <div className="flex-1 flex flex-col relative mb-4 font-mono text-xs">
+                  <textarea
+                    value={editorCode}
+                    onChange={(e) => {
+                      setEditorCode(e.target.value);
+                      if (codingStage === "feedback") {
+                        setCodingStage("idle");
+                        setCompletedTests({});
+                        setRunStatus("");
+                      }
+                    }}
+                    className="w-full flex-1 min-h-[220px] bg-slate-950/80 text-emerald-400 p-4 rounded-xl border border-white/5 focus:outline-none focus:border-brand-blue/40 font-mono text-xs leading-relaxed resize-none no-scrollbar shadow-inner"
+                    spellCheck={false}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <button
+                    onClick={() => {
+                      setEditorCode(activeChallenge.initialCode);
+                      setCodingStage("idle");
+                      setCompletedTests({});
+                      setRunStatus("");
+                    }}
+                    className="px-4 py-3 bg-slate-900 hover:bg-slate-850 text-xs font-bold uppercase rounded-xl border border-slate-800 text-slate-350 hover:text-white transition-all cursor-pointer flex items-center space-x-1 shrink-0"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5 animate-hover-spin" />
+                    <span>Reset</span>
+                  </button>
+
+                  <button
+                    onClick={runCodeTests}
+                    disabled={codingStage === "running"}
+                    className="flex-1 py-3 bg-gradient-to-r from-brand-indigo to-brand-blue hover:from-brand-blue hover:to-brand-indigo text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-brand-blue/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  >
+                    {codingStage === "running" ? (
+                      <>
+                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Running Sandbox...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-3.5 h-3.5 fill-white" />
+                        <span>Run Code & Verify</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+              </div>
+
+              {/* AI Code scoring feedback */}
+              <div className="glass-panel rounded-3xl p-6 border border-white/5 relative overflow-hidden">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-pink-400 bg-pink-500/10 border border-pink-500/20 px-2.5 py-1 rounded-md">
+                  AI Code Diagnostics
+                </span>
+
+                {codingStage !== "feedback" && (
+                  <div className="absolute inset-0 bg-[#131526]/95 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center select-none">
+                    <Lock className="w-7 h-7 text-slate-500 mb-2" />
+                    <span className="text-xs font-semibold text-slate-350">Code Telemetry Locked</span>
+                    <span className="text-[10px] text-slate-500 max-w-[220px] mt-1">
+                      Execute sandboxed test cases successfully to generate O-notation and refactoring reviews.
+                    </span>
+                  </div>
+                )}
+
+                <div className="mt-5 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-900 pb-3">
+                    <div className="text-xs text-slate-400">Total Code Efficiency</div>
+                    <div className="text-sm font-extrabold text-brand-blue">{activeChallenge.aiFeedback.score}% Score</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 bg-slate-950/60 rounded-xl border border-white/5">
+                      <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Time Complexity</span>
+                      <span className="block text-[11px] font-mono text-emerald-400 mt-1">{activeChallenge.aiFeedback.timeComplexity}</span>
+                    </div>
+                    <div className="p-3 bg-slate-950/60 rounded-xl border border-white/5">
+                      <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Space Complexity</span>
+                      <span className="block text-[11px] font-mono text-emerald-400 mt-1">{activeChallenge.aiFeedback.spaceComplexity}</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-2">Review Recommendations</span>
+                    <ul className="space-y-2">
+                      {activeChallenge.aiFeedback.suggestions.map((suggestion, sIdx) => (
+                        <li key={sIdx} className="text-[11px] text-slate-350 flex items-start gap-2 leading-relaxed">
+                          <Sparkles className="w-3.5 h-3.5 text-brand-violet shrink-0 mt-0.5" />
+                          <span>{suggestion}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
       </section>
 
       {/* SPECIALIZED TRACKS SECTION */}

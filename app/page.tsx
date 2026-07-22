@@ -29,6 +29,12 @@ import {
   Terminal,
   RefreshCw
 } from "lucide-react";
+import {
+  IconRoute,
+  IconTimeline,
+  IconBrain,
+  IconShieldLock
+} from "@tabler/icons-react";
 
 // Mock questions database for different roles & experience levels
 const ROLE_QUESTIONS: Record<string, Record<string, string[]>> = {
@@ -172,21 +178,21 @@ const TESTIMONIALS = [
     name: "James Jenkins",
     role: "Product Designer at Google",
     avatar: "JJ",
-    color: "from-purple-500 to-indigo-500"
+    color: "bg-teal-600"
   },
   {
     quote: "The behavioral feedback was incredibly accurate. It helped me structure my thoughts using the STAR method and feel completely confident during the actual loop.",
     name: "Sarah Chen",
     role: "Software Engineer at Stripe",
     avatar: "SC",
-    color: "from-blue-500 to-cyan-500"
+    color: "bg-emerald-600"
   },
   {
     quote: "As a career switcher, the technical sessions were invaluable. The AI asked relevant, deep follow-up questions that tested my system architecture knowledge.",
     name: "Alex Rodriguez",
     role: "Product Manager at Airbnb",
     avatar: "AR",
-    color: "from-pink-500 to-rose-500"
+    color: "bg-teal-700"
   }
 ];
 
@@ -603,12 +609,12 @@ export default function Page() {
   const activeChallenge = getChallengeForRole(selectedRole);
 
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-100 font-sans selection:bg-brand-violet/30 overflow-x-hidden relative">
+    <div className="min-h-screen bg-bg-dark text-slate-100 font-sans selection:bg-brand-teal/30 overflow-x-hidden relative">
       
       {/* Background glow graphics */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-violet/10 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute top-[800px] right-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-[1000px] left-10 w-[400px] h-[400px] bg-brand-indigo/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-teal/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-[800px] right-1/4 w-[600px] h-[600px] bg-emerald-50/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-[1000px] left-10 w-[400px] h-[400px] bg-brand-teal/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       {/* Grid overlay */}
       <div className="absolute inset-0 grid-bg-overlay pointer-events-none -z-20 opacity-60" />
@@ -618,12 +624,12 @@ export default function Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {/* Logo */}
-            <div className="relative w-9 h-9 flex items-center justify-center bg-gradient-to-tr from-brand-violet to-brand-blue rounded-xl shadow-lg shadow-brand-violet/20">
+            <div className="relative w-9 h-9 flex items-center justify-center bg-teal-600 rounded-xl shadow-lg shadow-teal-900/30">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3 6-6" />
               </svg>
             </div>
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            <span className="text-xl font-bold tracking-tight text-white">
               HireLoop
             </span>
           </div>
@@ -640,7 +646,7 @@ export default function Page() {
             <button className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
               Sign In
             </button>
-            <button className="px-4 py-2 text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-brand-violet to-brand-indigo hover:from-brand-violet hover:to-brand-blue shadow-md hover:shadow-lg shadow-brand-violet/20 hover:scale-[1.02] transition-all duration-200">
+            <button className="px-4 py-2 text-sm font-semibold rounded-xl text-white bg-teal-600 hover:bg-teal-500 shadow-md hover:shadow-lg shadow-teal-900/30 hover:scale-[1.02] transition-all duration-200">
               Get Started
             </button>
           </div>
@@ -649,15 +655,14 @@ export default function Page() {
 
       {/* HERO SECTION */}
       <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        {/* Top Coach pill */}
-        <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full border border-brand-violet/30 bg-brand-violet/10 text-xs font-semibold text-brand-violet animate-pulse-glow mb-8">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>MEET YOUR AI COACH</span>
+        {/* Top Coach tag */}
+        <div className="inline-flex items-center px-2.5 py-1 rounded-md border border-teal-500/20 bg-teal-950/20 text-xs font-semibold tracking-wider text-teal-400 mb-8 uppercase">
+          <span>Meet Your AI Coach</span>
         </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.1] mb-6">
+        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-[1.1] mb-6">
           Master Every Interview with Your{" "}
-          <span className="bg-gradient-to-r from-brand-violet via-brand-indigo to-brand-blue bg-clip-text text-transparent italic pr-2">
+          <span className="text-teal-400 italic pr-2">
             AI-Powered
           </span>
           Copilot.
@@ -670,7 +675,7 @@ export default function Page() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <a
             href="#pricing"
-            className="w-full sm:w-auto px-8 py-4 text-base font-bold rounded-2xl text-white bg-gradient-to-r from-brand-violet via-brand-indigo to-brand-blue hover:scale-[1.03] shadow-xl shadow-brand-violet/25 hover:shadow-brand-indigo/35 transition-all duration-300 flex items-center justify-center space-x-2"
+            className="w-full sm:w-auto px-8 py-4 text-base font-bold rounded-2xl text-white bg-teal-600 hover:bg-teal-500 hover:scale-[1.03] shadow-xl shadow-teal-900/30 transition-all duration-300 flex items-center justify-center space-x-2"
           >
             <span>Get Started for Free</span>
             <ArrowRight className="w-5 h-5" />
@@ -686,26 +691,26 @@ export default function Page() {
         {/* Feature points */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto pt-8 border-t border-slate-900">
           <div className="flex items-center space-x-3 justify-center md:justify-start">
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <CheckCircle2 className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-tr-2xl rounded-bl-2xl rounded-tl-md rounded-br-md bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
+              <IconRoute className="w-5 h-5" />
             </div>
             <span className="text-sm font-semibold text-slate-300">Personalized Tracks</span>
           </div>
           <div className="flex items-center space-x-3 justify-center md:justify-start">
-            <div className="w-9 h-9 rounded-lg bg-brand-violet/10 border border-brand-violet/20 flex items-center justify-center text-brand-violet">
-              <Clock className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-tl-2xl rounded-br-2xl rounded-tr-md rounded-bl-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <IconTimeline className="w-5 h-5" />
             </div>
             <span className="text-sm font-semibold text-slate-300">Real-Time Analysis</span>
           </div>
           <div className="flex items-center space-x-3 justify-center md:justify-start">
-            <div className="w-9 h-9 rounded-lg bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center text-brand-blue">
-              <Activity className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-t-[1.25rem] rounded-b-[0.5rem] bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shrink-0">
+              <IconBrain className="w-5 h-5" />
             </div>
             <span className="text-sm font-semibold text-slate-300">Fast AI Feedback</span>
           </div>
           <div className="flex items-center space-x-3 justify-center md:justify-start">
-            <div className="w-9 h-9 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
-              <Shield className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-r-[1.25rem] rounded-l-[0.5rem] bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <IconShieldLock className="w-5 h-5" />
             </div>
             <span className="text-sm font-semibold text-slate-300">Secure & Private</span>
           </div>
@@ -714,10 +719,10 @@ export default function Page() {
       {/* INTERACTIVE DEMO ROOM SECTION */}
       <section id="demo" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">
             Try the AI Interview Simulator
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">
+          <p className="text-slate-400 max-w-2xl mx-auto font-normal">
             Experience our specialized interview workspaces. Select a room below to test real-time feedback loops and sandbox execution.
           </p>
         </div>
@@ -729,7 +734,7 @@ export default function Page() {
               onClick={() => setActiveTab("audio")}
               className={`px-6 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center space-x-2 cursor-pointer ${
                 activeTab === "audio"
-                  ? "bg-gradient-to-r from-brand-violet to-brand-indigo text-white shadow-lg shadow-brand-violet/20"
+                  ? "bg-teal-600 text-white shadow-lg shadow-teal-900/30"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -740,7 +745,7 @@ export default function Page() {
               onClick={() => setActiveTab("coding")}
               className={`px-6 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center space-x-2 cursor-pointer ${
                 activeTab === "coding"
-                  ? "bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-lg shadow-brand-blue/20"
+                  ? "bg-teal-600 text-white shadow-lg shadow-teal-900/30"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -927,7 +932,7 @@ export default function Page() {
                 {audioStage === "idle" && (
                   <button
                     onClick={startAudioDemo}
-                    className="w-full py-3.5 bg-brand-violet hover:bg-brand-indigo text-white font-bold rounded-xl shadow-lg shadow-brand-violet/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2"
+                    className="w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-lg shadow-teal-900/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2"
                   >
                     <Play className="w-5 h-5 fill-white" />
                     <span>Connect Call Session</span>
@@ -957,7 +962,7 @@ export default function Page() {
                   <div className="w-full flex gap-3">
                     <button
                       onClick={startAudioDemo}
-                      className="flex-1 py-3.5 bg-brand-violet/20 hover:bg-brand-violet/30 border border-brand-violet/40 text-brand-violet font-semibold rounded-xl transition-all cursor-pointer"
+                      className="flex-1 py-3.5 bg-teal-950/20 hover:bg-teal-950/40 border border-teal-500/30 text-teal-400 font-semibold rounded-xl transition-all cursor-pointer"
                     >
                       Restart Session
                     </button>
@@ -1037,20 +1042,20 @@ export default function Page() {
                   <div>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-slate-300">Pacing (Speech Rate)</span>
-                      <span className="text-brand-violet font-bold">142 WPM (Optimal)</span>
+                      <span className="text-teal-400 font-bold">142 WPM (Optimal)</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-brand-violet to-brand-indigo w-[90%] rounded-full" />
+                      <div className="h-full bg-teal-600 w-[90%] rounded-full" />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-slate-300">STAR Structure Alignment</span>
-                      <span className="text-brand-blue font-bold">85% Match</span>
+                      <span className="text-emerald-400 font-bold">85% Match</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-brand-blue to-cyan-400 w-[85%] rounded-full" />
+                      <div className="h-full bg-emerald-500 w-[85%] rounded-full" />
                     </div>
                   </div>
 
@@ -1060,17 +1065,17 @@ export default function Page() {
                       <span className="text-emerald-400 font-bold">Confident (45dB)</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 w-[95%] rounded-full" />
+                      <div className="h-full bg-teal-500 w-[95%] rounded-full" />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-slate-300">Vocabulary & Filler Words</span>
-                      <span className="text-pink-400 font-bold">No Filler Detected</span>
+                      <span className="text-teal-400 font-bold">No Filler Detected</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-pink-400 to-rose-400 w-[80%] rounded-full" />
+                      <div className="h-full bg-teal-600 w-[80%] rounded-full" />
                     </div>
                   </div>
                 </div>
@@ -1195,7 +1200,7 @@ export default function Page() {
                         setRunStatus("");
                       }
                     }}
-                    className="w-full flex-1 min-h-[220px] bg-slate-950/80 text-emerald-400 p-4 rounded-xl border border-white/5 focus:outline-none focus:border-brand-blue/40 font-mono text-xs leading-relaxed resize-none no-scrollbar shadow-inner"
+                    className="w-full flex-1 min-h-[220px] bg-slate-950/80 text-emerald-400 p-4 rounded-xl border border-white/5 focus:outline-none focus:border-teal-500/40 font-mono text-xs leading-relaxed resize-none no-scrollbar shadow-inner"
                     spellCheck={false}
                   />
                 </div>
@@ -1217,7 +1222,7 @@ export default function Page() {
                   <button
                     onClick={runCodeTests}
                     disabled={codingStage === "running"}
-                    className="flex-1 py-3 bg-gradient-to-r from-brand-indigo to-brand-blue hover:from-brand-blue hover:to-brand-indigo text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-brand-blue/20 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                    className="flex-1 py-3 bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-teal-900/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     {codingStage === "running" ? (
                       <>
@@ -1296,8 +1301,8 @@ export default function Page() {
           {/* Left Side: Track cards list */}
           <div className="lg:col-span-6 space-y-6">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-violet">Curriculum Suite</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Curriculum Suite</span>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">
                 Specialized Interview Tracks
               </h2>
               <p className="text-slate-400">
@@ -1307,20 +1312,20 @@ export default function Page() {
 
             <div className="space-y-4">
               {[
-                { title: "HR Round", desc: "General behavioral questions, core company value alignment, and cultural fit validations.", icon: Users, color: "bg-purple-500/10 border-purple-500/20 text-purple-400" },
-                { title: "Behavioral Round", desc: "Soft skill assessments focused on leadership, teamwork, stress response, and STAR structure alignment.", icon: MessageSquare, color: "bg-pink-500/10 border-pink-500/20 text-pink-400" },
-                { title: "Coding Round", desc: "Interactive algorithmic challenges, time complexity evaluations, and array/tree/graph optimization loops.", icon: Cpu, color: "bg-blue-500/10 border-blue-500/20 text-blue-400" },
-                { title: "Technical Architecture", desc: "Deep dives on system design, microservices, load balancing, databases, and caching strategies.", icon: Target, color: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400" },
-                { title: "Leadership Executive", desc: "Strategic thinking, budget resource planning, conflict resolution, and product management simulation scripts.", icon: Award, color: "bg-amber-500/10 border-amber-500/20 text-amber-400" }
+                { title: "HR Round", desc: "General behavioral questions, core company value alignment, and cultural fit validations.", icon: Users, color: "bg-teal-500/10 border-teal-500/20 text-teal-400" },
+                { title: "Behavioral Round", desc: "Soft skill assessments focused on leadership, teamwork, stress response, and STAR structure alignment.", icon: MessageSquare, color: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" },
+                { title: "Coding Round", desc: "Interactive algorithmic challenges, time complexity evaluations, and array/tree/graph optimization loops.", icon: Cpu, color: "bg-teal-500/10 border-teal-500/20 text-teal-400" },
+                { title: "Technical Architecture", desc: "Deep dives on system design, microservices, load balancing, databases, and caching strategies.", icon: Target, color: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" },
+                { title: "Leadership Executive", desc: "Strategic thinking, budget resource planning, conflict resolution, and product management simulation scripts.", icon: Award, color: "bg-teal-500/10 border-teal-500/20 text-teal-400" }
               ].map((track, index) => {
                 const IconComponent = track.icon;
                 return (
-                  <div key={index} className="flex gap-4 p-5 rounded-2xl bg-[#131526]/50 border border-white/5 hover:border-slate-800 transition-all group">
+                  <div key={index} className="flex gap-4 p-5 rounded-2xl bg-card-dark/50 border border-white/5 hover:border-slate-800 transition-all group">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${track.color}`}>
                       <IconComponent className="w-6 h-6" />
                     </div>
                     <div>
-                      <h4 className="text-base font-bold text-white group-hover:text-brand-violet transition-colors">{track.title}</h4>
+                      <h4 className="text-base font-bold text-white group-hover:text-teal-400 transition-colors">{track.title}</h4>
                       <p className="text-sm text-slate-400 mt-1 leading-relaxed">{track.desc}</p>
                     </div>
                   </div>
@@ -1334,7 +1339,7 @@ export default function Page() {
             
             {/* Supported Roles Selectors */}
             <div className="glass-panel rounded-3xl p-6 border border-white/5">
-              <h3 className="text-lg font-bold text-white mb-4">Supported Technical Roles</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Supported Technical Roles</h3>
               <p className="text-xs text-slate-400 mb-6 font-normal">Select a profile target to adjust the simulator's knowledge base parameters:</p>
               
               <div className="flex flex-wrap gap-2.5">
@@ -1351,7 +1356,7 @@ export default function Page() {
                     onClick={() => setSelectedRole(role.id)}
                     className={`px-4 py-2 text-xs font-semibold rounded-full border cursor-pointer transition-all ${
                       selectedRole === role.id 
-                        ? "bg-brand-violet text-white border-brand-violet shadow-md shadow-brand-violet/20" 
+                        ? "bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-900/30" 
                         : "bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-300 hover:border-slate-700"
                     }`}
                   >
@@ -1363,7 +1368,7 @@ export default function Page() {
 
             {/* Experience level Selector */}
             <div className="glass-panel rounded-3xl p-6 border border-white/5">
-              <h3 className="text-lg font-bold text-white mb-2">Adaptive Experience Levels</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Adaptive Experience Levels</h3>
               <p className="text-xs text-slate-400 mb-5 font-normal">Our AI adjusts question difficulty based on seniority loops:</p>
               
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -1378,7 +1383,7 @@ export default function Page() {
                     onClick={() => setSelectedLevel(level.id)}
                     className={`py-3 px-2 text-xs font-semibold rounded-xl border text-center cursor-pointer transition-all ${
                       selectedLevel === level.id 
-                        ? "bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20" 
+                        ? "bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-900/30" 
                         : "bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-300 hover:border-slate-700"
                     }`}
                   >
@@ -1390,13 +1395,13 @@ export default function Page() {
 
             {/* Dynamic Question Preview Board */}
             <div className="glass-panel-highlight rounded-3xl p-6 border relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-brand-violet/10 rounded-full blur-xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/10 rounded-full blur-xl pointer-events-none" />
               
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Question Library Showcase
                 </span>
-                <span className="text-[10px] font-bold text-brand-violet bg-brand-violet/10 border border-brand-violet/20 px-2 py-0.5 rounded uppercase">
+                <span className="text-[10px] font-bold text-teal-400 bg-teal-950/20 border border-teal-500/20 px-2 py-0.5 rounded uppercase">
                   {selectedRole} • {selectedLevel}
                 </span>
               </div>
@@ -1410,7 +1415,7 @@ export default function Page() {
               <div className="flex items-center justify-between">
                 <button 
                   onClick={() => setTrackQuestionIndex(prev => prev + 1)}
-                  className="text-xs text-brand-violet hover:text-brand-indigo font-bold flex items-center space-x-1 cursor-pointer"
+                  className="text-xs text-teal-400 hover:text-teal-300 font-bold flex items-center space-x-1 cursor-pointer"
                 >
                   <span>Cycle next prompt</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1435,8 +1440,8 @@ export default function Page() {
       {/* HOW IT WORKS SECTION */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
         <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-violet">Workflow Strategy</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">How it Works</h2>
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Workflow Strategy</span>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">How it Works</h2>
           <p className="text-slate-400 max-w-xl mx-auto font-normal">Get your custom prep workspace online in just 4 simple steps.</p>
         </div>
 
@@ -1448,7 +1453,7 @@ export default function Page() {
             { step: "4", title: "Refine & Impress", desc: "Follow customized remediation tips and review sample ideal responses." }
           ].map((item, idx) => (
             <div key={idx} className="glass-panel rounded-2xl p-6 border border-white/5 relative group hover:scale-[1.01] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-md font-extrabold text-brand-violet group-hover:bg-brand-violet group-hover:text-white transition-all duration-300 mb-5 shadow">
+              <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-md font-extrabold text-teal-400 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 mb-5 shadow">
                 {item.step}
               </div>
               <h4 className="text-base font-bold text-white mb-2">{item.title}</h4>
@@ -1461,8 +1466,8 @@ export default function Page() {
       {/* DEEP LEARNING METHODOLOGY SECTION */}
       <section id="methodology" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 scroll-mt-16">
         <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-violet">Engine Architecture</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Deep-learning Methodology</h2>
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Engine Architecture</span>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">Deep-learning Methodology</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
             Our platform's core advanced LLM/ML sentiment and speech analytics provide unparalleled diagnostics accuracy.
           </p>
@@ -1476,30 +1481,30 @@ export default function Page() {
               <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-5">
                 <Video className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Simulated Practice</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Simulated Practice</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-normal mb-6">
                 Immerse yourself answering questions specifically generated by our industry-trained AI models in real time.
               </p>
             </div>
 
             {/* Dashboard Mock 1 */}
-            <div className="bg-[#090A11] rounded-2xl border border-white/5 p-4 flex flex-col gap-3">
+            <div className="bg-slate-950/80 rounded-2xl border border-white/5 p-4 flex flex-col gap-3">
               <div className="flex items-center justify-between text-[10px] text-slate-500">
                 <span>Webcam Stream</span>
                 <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />Rec</span>
               </div>
-              <div className="h-28 rounded-lg bg-gradient-to-tr from-slate-900 to-[#131526] relative overflow-hidden flex items-center justify-center">
+              <div className="h-28 rounded-lg bg-gradient-to-tr from-slate-900 to-card-dark relative overflow-hidden flex items-center justify-center">
                 {/* SVG mock person avatar */}
                 <svg className="w-10 h-10 text-slate-700" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
                 {/* Overlay waves */}
                 <div className="absolute bottom-2 left-2 right-2 h-4 flex items-end justify-center gap-0.5">
-                  <div className="w-0.5 h-3 bg-brand-violet rounded-full" />
-                  <div className="w-0.5 h-4 bg-brand-violet rounded-full" />
-                  <div className="w-0.5 h-2 bg-brand-violet rounded-full" />
-                  <div className="w-0.5 h-5 bg-brand-violet rounded-full" />
-                  <div className="w-0.5 h-3 bg-brand-violet rounded-full" />
+                  <div className="w-0.5 h-3 bg-teal-500 rounded-full" />
+                  <div className="w-0.5 h-4 bg-teal-500 rounded-full" />
+                  <div className="w-0.5 h-2 bg-teal-500 rounded-full" />
+                  <div className="w-0.5 h-5 bg-teal-500 rounded-full" />
+                  <div className="w-0.5 h-3 bg-teal-500 rounded-full" />
                 </div>
               </div>
             </div>
@@ -1511,14 +1516,14 @@ export default function Page() {
               <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mb-5">
                 <TrendingUp className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Instant Analysis</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Instant Analysis</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-normal mb-6">
                 Get direct visual feedback on your body language, tone of voice, pacing, and keyword relevance within seconds.
               </p>
             </div>
 
             {/* Dashboard Mock 2 */}
-            <div className="bg-[#090A11] rounded-2xl border border-white/5 p-4 flex flex-col gap-2.5">
+            <div className="bg-slate-950/80 rounded-2xl border border-white/5 p-4 flex flex-col gap-2.5">
               <span className="text-[10px] font-bold text-slate-500">Live Speech Telemetry</span>
               <div className="space-y-2">
                 <div>
@@ -1527,7 +1532,7 @@ export default function Page() {
                     <span>92%</span>
                   </div>
                   <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-                    <div className="h-full bg-brand-blue w-[92%]" />
+                    <div className="h-full bg-teal-500 w-[92%]" />
                   </div>
                 </div>
                 <div>
@@ -1536,7 +1541,7 @@ export default function Page() {
                     <span>0.8 / min</span>
                   </div>
                   <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-400 w-[95%]" />
+                    <div className="h-full bg-emerald-500 w-[95%]" />
                   </div>
                 </div>
                 <div>
@@ -1545,7 +1550,7 @@ export default function Page() {
                     <span>Excellent</span>
                   </div>
                   <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-                    <div className="h-full bg-brand-violet w-[88%]" />
+                    <div className="h-full bg-teal-600 w-[88%]" />
                   </div>
                 </div>
               </div>
@@ -1558,14 +1563,14 @@ export default function Page() {
               <div className="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center mb-5">
                 <Target className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">Targeted Coaching</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">Targeted Coaching</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-normal mb-6">
                 Receive actionable tips and customized action plans to resolve your structural weaknesses and build interview confidence.
               </p>
             </div>
 
             {/* Dashboard Mock 3 */}
-            <div className="bg-[#090A11] rounded-2xl border border-white/5 p-4 flex flex-col gap-3">
+            <div className="bg-slate-950/80 rounded-2xl border border-white/5 p-4 flex flex-col gap-3">
               <span className="text-[10px] font-bold text-slate-500">Coach Remediations</span>
               
               <div className="space-y-2">
@@ -1647,7 +1652,7 @@ export default function Page() {
               onClick={() => setBillingPeriod("annually")}
               className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center space-x-1.5 ${
                 billingPeriod === "annually"
-                  ? "bg-brand-violet text-white shadow-sm"
+                  ? "bg-teal-600 text-white shadow-sm"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -1664,41 +1669,41 @@ export default function Page() {
             <div>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Starter</span>
               <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-extrabold text-white">$0</span>
+                <span className="text-4xl font-bold text-white">$0</span>
                 <span className="text-sm text-slate-500 ml-2">/ month</span>
               </div>
               <p className="text-xs text-slate-400 mt-2 font-normal">Free diagnostics baseline parameters access.</p>
               
               <ul className="mt-8 space-y-4 text-xs text-slate-300 font-normal">
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>2 AI Simulations / Week</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>Basic Sentiment Analysis score</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>Public Job Board access</span>
                 </li>
               </ul>
             </div>
-            <button className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all">
+            <button className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-880 text-slate-200 hover:text-white font-semibold rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all">
               Get Started
             </button>
           </div>
 
           {/* Pro Plan (Highlighted) */}
           <div className="glass-panel-highlight rounded-3xl p-8 border flex flex-col justify-between relative">
-            <div className="absolute -top-3 right-6 bg-brand-violet text-white text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow">
+            <div className="absolute -top-3 right-6 bg-teal-600 text-white text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow">
               Most Popular
             </div>
 
             <div>
-              <span className="text-xs font-bold text-brand-violet uppercase tracking-wider">Pro Tier</span>
+              <span className="text-xs font-bold text-teal-400 uppercase tracking-wider">Pro Tier</span>
               <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-extrabold text-white">
+                <span className="text-4xl font-bold text-white">
                   {billingPeriod === "monthly" ? "$29" : "$23"}
                 </span>
                 <span className="text-sm text-slate-500 ml-2">/ month</span>
@@ -1707,24 +1712,24 @@ export default function Page() {
               
               <ul className="mt-8 space-y-4 text-xs text-slate-300 font-normal">
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span className="font-semibold text-white">Unlimited Simulations</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>Full Video & Tone Coaching analytics</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>Custom Role Benchmarking algorithms</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>Resume Scanner & Improver utility</span>
                 </li>
               </ul>
             </div>
-            <button className="w-full mt-8 py-3.5 bg-gradient-to-r from-brand-violet to-brand-indigo hover:from-brand-violet hover:to-brand-blue text-white font-bold rounded-xl shadow-lg shadow-brand-violet/20 hover:scale-[1.01] cursor-pointer transition-all">
+            <button className="w-full mt-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-lg shadow-teal-900/30 hover:scale-[1.01] cursor-pointer transition-all">
               Upgrade to Pro
             </button>
           </div>
@@ -1734,26 +1739,26 @@ export default function Page() {
             <div>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Enterprise</span>
               <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-extrabold text-white">Custom</span>
+                <span className="text-4xl font-bold text-white">Custom</span>
               </div>
               <p className="text-xs text-slate-400 mt-2 font-normal">White-label university and corporate portals.</p>
               
               <ul className="mt-8 space-y-4 text-xs text-slate-300 font-normal">
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
-                  <span>Team Analytics Dashboard</span>
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                  <span className="font-semibold text-white">Dedicated API deployment keys</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
-                  <span>White-label platform branding</span>
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                  <span>SSO/SAML directory synchronization</span>
                 </li>
                 <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-brand-violet shrink-0" />
-                  <span>Dedicated Success Manager</span>
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
+                  <span>Custom LLM prompt fine-tuning loops</span>
                 </li>
               </ul>
             </div>
-            <button className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all">
+            <button className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-880 text-slate-200 hover:text-white font-semibold rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all">
               Contact Sales
             </button>
           </div>
@@ -1761,39 +1766,36 @@ export default function Page() {
         </div>
       </section>
 
-      {/* FREQUENTLY ASKED QUESTIONS SECTION */}
+      {/* FAQ SECTION */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-violet">FAQ</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Frequently Asked Questions</h2>
-          <p className="text-slate-400">Everything you need to know about the HireLoop platform.</p>
+        <div className="text-center mb-12">
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Frequently Asked Questions</span>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">
+            Frequently Asked Questions
+          </h2>
         </div>
 
         <div className="space-y-4">
           {FAQS.map((faq, index) => {
             const isOpen = openFaqIndex === index;
             return (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="glass-panel rounded-2xl border border-white/5 overflow-hidden transition-all duration-300"
               >
                 <button
                   onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                  className="w-full p-6 text-left flex items-center justify-between text-sm sm:text-base font-bold text-white hover:text-brand-violet cursor-pointer transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between text-white font-semibold text-sm sm:text-base cursor-pointer hover:bg-white/[0.01]"
                 >
                   <span>{faq.q}</span>
-                  <ChevronDown 
-                    className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 text-brand-violet" : ""}`} 
-                  />
+                  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? "transform rotate-180 text-teal-400" : ""}`} />
                 </button>
-                
-                {/* Expandable answer panel */}
-                <div 
+                <div
                   className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                    isOpen ? "max-h-[300px] border-t border-slate-900" : "max-h-0"
+                    isOpen ? "max-h-[300px] border-t border-white/5" : "max-h-0"
                   }`}
                 >
-                  <p className="p-6 text-xs sm:text-sm text-slate-400 leading-relaxed font-normal">
+                  <p className="p-6 text-xs sm:text-sm text-slate-400 leading-relaxed font-normal bg-slate-950/20">
                     {faq.a}
                   </p>
                 </div>
@@ -1807,10 +1809,10 @@ export default function Page() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="glass-panel-highlight rounded-3xl p-8 sm:p-12 border relative overflow-hidden text-center max-w-5xl mx-auto">
           {/* Decorative glows */}
-          <div className="absolute top-0 left-0 w-32 h-32 bg-brand-violet/20 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-brand-blue/20 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute top-0 left-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
           
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">
             Ready to Land the Offer?
           </h2>
           <p className="text-slate-300 max-w-xl mx-auto text-sm leading-relaxed mb-8 font-normal">
@@ -1830,7 +1832,7 @@ export default function Page() {
       <footer className="border-t border-slate-900 bg-slate-950/60 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 flex items-center justify-center bg-gradient-to-tr from-brand-violet to-brand-blue rounded-lg">
+            <div className="w-7 h-7 flex items-center justify-center bg-teal-600 rounded-lg shadow-md shadow-teal-900/30">
               <svg className="w-4.5 h-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3 6-6" />
               </svg>

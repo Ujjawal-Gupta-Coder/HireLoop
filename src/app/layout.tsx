@@ -13,8 +13,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "HireLoop - AI-Powered Interview Preparation Platform",
-  description: "Master every interview with your AI-Powered copilot. HireLoop provides real-time feedback, behavioral analysis, and industry-specific simulations to help you land your dream offer.",
+  title: "HireLoop – Practice Real AI Interviews & Get Hired Faster",
+  description: "Master coding, behavioral, and technical interviews with AI. Practice in a real-time code editor, receive instant feedback, downloadable PDF reports, personalized interview tracks, and land your dream job with HireLoop.",
 };
 
 export default function RootLayout({

@@ -28,7 +28,7 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="min-h-screen bg-bg-dark text-slate-100 font-sans selection:bg-brand-teal/30 overflow-x-hidden relative">
+        <div className="min-h-screen bg-background text-text font-sans selection:bg-primary/30 overflow-x-hidden relative">
           {children}
         </div>
       </body>

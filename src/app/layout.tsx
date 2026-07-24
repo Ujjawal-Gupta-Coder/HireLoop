@@ -13,7 +13,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "HireLoop – Practice Real AI Interviews & Get Hired Faster",
+  title: "HireLoop | Practice Real AI Interviews | Get Hired Faster",
   description: "Master coding, behavioral, and technical interviews with AI. Practice in a real-time code editor, receive instant feedback, downloadable PDF reports, personalized interview tracks, and land your dream job with HireLoop.",
 };
 
@@ -27,7 +27,11 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="min-h-screen bg-bg-dark text-slate-100 font-sans selection:bg-brand-teal/30 overflow-x-hidden relative">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

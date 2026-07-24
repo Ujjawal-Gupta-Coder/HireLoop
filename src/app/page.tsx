@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import Footer from "../components/Footer";
+
 import {
   Play,
   Square,
@@ -35,6 +37,7 @@ import {
   IconBrain,
   IconShieldLock
 } from "@tabler/icons-react";
+import Navbar from "../components/Navbar";
 
 // Mock questions database for different roles & experience levels
 const ROLE_QUESTIONS: Record<string, Record<string, string[]>> = {
@@ -609,8 +612,10 @@ export default function Page() {
   const activeChallenge = getChallengeForRole(selectedRole);
 
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-100 font-sans selection:bg-brand-teal/30 overflow-x-hidden relative">
-      
+    <>
+      {/* NAVBAR */}
+      <Navbar isLandingPage={true}/>
+
       {/* Background glow graphics */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-teal/5 rounded-full blur-[120px] pointer-events-none -z-10" />
       <div className="absolute top-[800px] right-1/4 w-[600px] h-[600px] bg-emerald-50/5 rounded-full blur-[140px] pointer-events-none -z-10" />
@@ -620,38 +625,7 @@ export default function Page() {
       <div className="absolute inset-0 grid-bg-overlay pointer-events-none -z-20 opacity-60" />
 
       {/* HEADER / NAVIGATION */}
-      <header className="sticky top-0 z-50 glass-panel border-b border-white/5 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            {/* Logo */}
-            <div className="relative w-9 h-9 flex items-center justify-center bg-teal-600 rounded-xl shadow-lg shadow-teal-900/30">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3 6-6" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">
-              HireLoop
-            </span>
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-400">
-            <a href="#features" className="hover:text-white transition-colors duration-200">Features</a>
-            <a href="#tracks" className="hover:text-white transition-colors duration-200">Interview Tracks</a>
-            <a href="#methodology" className="hover:text-white transition-colors duration-200">Methodology</a>
-            <a href="#testimonials" className="hover:text-white transition-colors duration-200">Success Stories</a>
-            <a href="#pricing" className="hover:text-white transition-colors duration-200">Pricing</a>
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            <button className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
-              Sign In
-            </button>
-            <button className="px-4 py-2 text-sm font-semibold rounded-xl text-white bg-teal-600 hover:bg-teal-500 shadow-md hover:shadow-lg shadow-teal-900/30 hover:scale-[1.02] transition-all duration-200">
-              Get Started
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* <Navbar /> */}
 
       {/* HERO SECTION */}
       <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
@@ -2066,30 +2040,7 @@ export default function Page() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950/60 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 flex items-center justify-center bg-teal-600 rounded-lg shadow-md shadow-teal-900/30">
-              <svg className="w-4.5 h-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3 6-6" />
-              </svg>
-            </div>
-            <span className="text-base font-bold text-white">HireLoop</span>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-normal">
-            <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Cookie Policy</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Contact Support</a>
-          </div>
-
-          <p className="text-xs text-slate-600 font-normal">
-            &copy; {new Date().getFullYear()} HireLoop AI. All rights reserved.
-          </p>
-        </div>
-      </footer>
-
-    </div>
+      <Footer />
+    </>
   );
 }

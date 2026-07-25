@@ -12,7 +12,9 @@
   --color-text-muted: #90a1b9;
 
   --color-background: #0B1120; 
-  
+  --color-dark: #030712;
+
+  --color-border: #009688;
 /*----------- Not Used Yet  -------------------------*/
   --color-primary-hover: #0F766E;   
 
@@ -21,12 +23,9 @@
 
   /* Accent */
   --color-accent: #2DD4BF;          
-
-      
+  
   --color-surface: #111827;         
   --color-surface-2: #1F2937;       
-
-  --color-border: #334155;
 
   --color-success: #22C55E;
   --color-warning: #F59E0B;
@@ -60,6 +59,13 @@
   50% {
     transform: scaleY(1.0);
   }
+}
+
+.auth-bg-glow-primary {
+  @apply rounded-full bg-linear-to-tr from-teal-500/15 to-emerald-500/5 blur-[120px];
+}
+.auth-bg-glow-secondary {
+  @apply rounded-full bg-linear-to-bl from-cyan-500/10 to-blue-500/5 blur-[150px];
 }
 
 @keyframes pulse-glow {
@@ -114,7 +120,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Glassmorphism utility */
 .glass-panel {
-  background: rgba(22, 26, 24, 0.7);
+  background: rgba(2, 6, 24, 0.7);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }

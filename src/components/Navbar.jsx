@@ -26,7 +26,7 @@ const Navbar = ({isLandingPage = false}) => {
 ]
 
   return (
-    <header className="fixed w-full top-0 z-50 glass-panel border-b border-white/5 backdrop-blur-md">
+    <header className={`${isLandingPage ? "fixed":"sticky"} w-full top-0 z-50 glass-panel border-b border-white/5 backdrop-blur-md`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div className="flex items-center space-x-3">
             {/* Logo */}

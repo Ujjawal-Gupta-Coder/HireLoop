@@ -613,8 +613,6 @@ export default function Page() {
 
   return (
     <>
-      {/* NAVBAR */}
-      <Navbar isLandingPage={true}/>
 
       {/* Background glow graphics */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-teal/5 rounded-full blur-[120px] pointer-events-none -z-10" />
@@ -624,8 +622,8 @@ export default function Page() {
       {/* Grid overlay */}
       <div className="absolute inset-0 grid-bg-overlay pointer-events-none -z-20 opacity-60" />
 
-      {/* HEADER / NAVIGATION */}
-      {/* <Navbar /> */}
+      {/* NAVBAR */}
+      <Navbar isLandingPage={true}/>
 
       {/* HERO SECTION */}
       <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">

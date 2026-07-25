@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Footer from "../components/Footer";
 
 import {
   Play,
@@ -38,6 +37,8 @@ import {
   IconShieldLock
 } from "@tabler/icons-react";
 import Navbar from "../components/Navbar";
+import Pricing from "../components/Pricing";
+import Footer from "../components/Footer";
 
 // Mock questions database for different roles & experience levels
 const ROLE_QUESTIONS: Record<string, Record<string, string[]>> = {
@@ -461,7 +462,7 @@ export default function Page() {
   const [trackQuestionIndex, setTrackQuestionIndex] = useState(0);
 
   // Pricing State
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">("monthly");
+  
 
   // FAQ State
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -1839,141 +1840,7 @@ export default function Page() {
       </section>
 
       {/* PRICING PLANS SECTION */}
-      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 scroll-mt-16">
-        <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-violet">Flexible Packages</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Invest in Your Career</h2>
-          <p className="text-slate-400 max-w-xl mx-auto mb-8 font-normal">Plans designed for every stage of your job search prep journey.</p>
-          
-          {/* Toggle Monthly / Annual */}
-          <div className="inline-flex items-center bg-slate-900/60 p-1.5 rounded-xl border border-slate-800">
-            <button
-              onClick={() => setBillingPeriod("monthly")}
-              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                billingPeriod === "monthly"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Billed Monthly
-            </button>
-            <button
-              onClick={() => setBillingPeriod("annually")}
-              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center space-x-1.5 ${
-                billingPeriod === "annually"
-                  ? "bg-teal-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              <span>Billed Annually</span>
-              <span className="px-1.5 py-0.5 bg-white/20 text-[9px] font-extrabold rounded-md text-white">Save 20%</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          
-          {/* Starter Plan */}
-          <div className="glass-panel rounded-3xl p-8 border border-white/5 flex flex-col justify-between hover:border-slate-800 transition-all">
-            <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Starter</span>
-              <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-bold text-white">$0</span>
-                <span className="text-sm text-slate-500 ml-2">/ month</span>
-              </div>
-              <p className="text-xs text-slate-400 mt-2 font-normal">Free diagnostics baseline parameters access.</p>
-              
-              <ul className="mt-8 space-y-4 text-xs text-slate-300 font-normal">
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>2 AI Simulations / Week</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>Basic Sentiment Analysis score</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>Public Job Board access</span>
-                </li>
-              </ul>
-            </div>
-            <button className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-880 text-slate-200 hover:text-white font-semibold rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all">
-              Get Started
-            </button>
-          </div>
-
-          {/* Pro Plan (Highlighted) */}
-          <div className="glass-panel-highlight rounded-3xl p-8 border flex flex-col justify-between relative">
-            <div className="absolute -top-3 right-6 bg-teal-600 text-white text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow">
-              Most Popular
-            </div>
-
-            <div>
-              <span className="text-xs font-bold text-teal-400 uppercase tracking-wider">Pro Tier</span>
-              <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-bold text-white">
-                  {billingPeriod === "monthly" ? "$29" : "$23"}
-                </span>
-                <span className="text-sm text-slate-500 ml-2">/ month</span>
-              </div>
-              <p className="text-xs text-slate-300 mt-2 font-normal">Full access suite for active job search runs.</p>
-              
-              <ul className="mt-8 space-y-4 text-xs text-slate-300 font-normal">
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span className="font-semibold text-white">Unlimited Simulations</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>Full Video & Tone Coaching analytics</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>Custom Role Benchmarking algorithms</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>Resume Scanner & Improver utility</span>
-                </li>
-              </ul>
-            </div>
-            <button className="w-full mt-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-lg shadow-teal-900/30 hover:scale-[1.01] cursor-pointer transition-all">
-              Upgrade to Pro
-            </button>
-          </div>
-
-          {/* Enterprise Plan */}
-          <div className="glass-panel rounded-3xl p-8 border border-white/5 flex flex-col justify-between hover:border-slate-800 transition-all">
-            <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Enterprise</span>
-              <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-bold text-white">Custom</span>
-              </div>
-              <p className="text-xs text-slate-400 mt-2 font-normal">White-label university and corporate portals.</p>
-              
-              <ul className="mt-8 space-y-4 text-xs text-slate-300 font-normal">
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span className="font-semibold text-white">Dedicated API deployment keys</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>SSO/SAML directory synchronization</span>
-                </li>
-                <li className="flex items-center space-x-2.5">
-                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>Custom LLM prompt fine-tuning loops</span>
-                </li>
-              </ul>
-            </div>
-            <button className="w-full mt-8 py-3 bg-slate-900 hover:bg-slate-880 text-slate-200 hover:text-white font-semibold rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer transition-all">
-              Contact Sales
-            </button>
-          </div>
-
-        </div>
-      </section>
+      <Pricing />
 
       {/* FAQ SECTION */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">

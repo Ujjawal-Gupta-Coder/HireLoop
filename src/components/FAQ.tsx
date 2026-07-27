@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import SectionHeader from "./ui/SectionHeader";
 
 const FAQ = () => {
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -32,14 +33,9 @@ const FAQ = () => {
         }
     ];
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Still Curious?</span>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-slate-400 max-w-xl mx-auto mb-8 font-normal">Explore answers to the questions users ask most.</p>
-        </div>
+    <section className="section-container-style">
+        
+        <SectionHeader overLine="Still Curious?" heading="Frequently Asked Questions" subHeading="Explore answers to the questions users ask most." />
 
         <div className="space-y-4">
           {FAQS.map((faq, index) => {

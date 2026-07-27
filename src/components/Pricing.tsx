@@ -1,6 +1,7 @@
 'use client'
 
-import { Check, Coins, Sparkles, Zap } from "lucide-react";
+import { Check, Coins, Zap } from "lucide-react";
+import SectionHeader from "./ui/SectionHeader";
 
 const Pricing = () => {
     const PLAN_DETAILS = [
@@ -51,30 +52,8 @@ const Pricing = () => {
         }
     ]
     return (
-        <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 scroll-mt-16">
-            <div className="text-center mb-16">
-
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Flexible Packages</span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Invest in Your Career</h2>
-                <p className="text-slate-400 max-w-xl mx-auto mb-8 font-normal">Flexible credit packs designed to help you ace every interview.</p>
-                
-                {/* Free Registration Bonus Banner */}
-                <div className="inline-flex items-center gap-2.5 bg-linear-to-r from-teal-950/60 via-slate-900/60 to-teal-950/60 p-4 rounded-2xl border border-teal-500/10 max-w-2xl mx-auto text-left shadow-lg backdrop-blur-md">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400 ring-1 ring-teal-500/25">
-                        <Sparkles className="h-4 w-4 text-teal-400" />
-                    </span>
-                    <div>
-                        <p className="text-xs font-bold text-slate-200">
-                            🎁 Registration Bonus
-                        </p>
-                        <p className="text-[11px] text-slate-400 mt-0.5 font-normal">
-                            Get <span className="text-teal-400 font-semibold">50 free credits</span> automatically upon creating your account. No payment details required.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            
+        <section id="pricing" className="section-container-style">
+            <SectionHeader overLine={"Flexible Packages"} heading={"Invest in Your Career"} subHeading={"Flexible credit packs designed to help you ace every interview."} isPricingSection={true} />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
                 {

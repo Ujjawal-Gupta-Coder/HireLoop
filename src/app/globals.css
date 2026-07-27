@@ -67,7 +67,9 @@
 .auth-bg-glow-secondary {
   @apply rounded-full bg-linear-to-bl from-cyan-500/10 to-blue-500/5 blur-[150px];
 }
-
+.section-container-style {
+  @apply py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 scroll-mt-16;
+}
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.3;

@@ -9,10 +9,10 @@ const Pricing = () => {
             credits: "100",
             amount: "99",
             currencySymbol: "₹",
-            description: "Perfect for quick diagnostic checkups and standard practice runs.",
+            description: "Perfect for exploring HireLoop and practicing your first AI interviews.",
             features: [
-                "10 AI Simulator runs (10 credits each)",
-                "Standard Sentiment analysis score",
+                "100 Credits (~10 standard interviews)",
+                "AI feedback & performance insights",
                 "Credits never expire"
             ],
             icon: Coins,
@@ -24,10 +24,10 @@ const Pricing = () => {
             credits: "300",
             amount: "249",
             currencySymbol: "₹",
-            description: "Comprehensive package designed for active job seekers running multiple mock loops.",
+            description: "Ideal for active job seekers preparing for multiple interview rounds.",
             features: [
-                "30 AI Simulator runs (10 credits each)",
-                "Detailed resume optimizer & checklist",
+                "300 Credits (~30 standard interviews)",
+                "Supports coding & system design interviews",
                 "Credits never expire"
             ],
             icon: Zap,
@@ -39,10 +39,10 @@ const Pricing = () => {
             credits: "700",
             amount: "499",
             currencySymbol: "₹",
-            description: "Ultimate solution for complete career coaching, covering massive system design and coding mock tests.",
+            description: "The ultimate package for comprehensive interview preparation and career growth.",
             features: [
-                "70 AI Simulator runs (10 credits each)",
-                "Advanced system design interactive whiteboard tests",
+                "700 Credits (~70 standard interviews)",
+                "Best for coding, system design & technical interviews",
                 "Credits never expire"
             ],
             icon: Coins,

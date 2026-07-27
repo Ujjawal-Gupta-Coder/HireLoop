@@ -6,29 +6,19 @@ import {
   Play,
   Square,
   Check,
-  X,
-  ChevronDown,
   Sparkles,
-  Clock,
-  Shield,
-  ArrowRight,
-  Upload,
   Video,
-  Mic,
   Cpu,
   Award,
   TrendingUp,
   Users,
   CheckCircle2,
   Target,
-  Activity,
-  FileText,
-  Lock,
-  Volume2,
-  ExternalLink,
   MessageSquare,
   Terminal,
-  RefreshCw
+  ArrowRight,
+  Mic,
+  Lock,
 } from "lucide-react";
 import {
   IconRoute,
@@ -39,6 +29,7 @@ import {
 import Navbar from "../components/Navbar";
 import Pricing from "../components/Pricing";
 import Footer from "../components/Footer";
+import FAQ from "../components/FAQ";
 
 // Mock questions database for different roles & experience levels
 const ROLE_QUESTIONS: Record<string, Record<string, string[]>> = {
@@ -197,25 +188,6 @@ const TESTIMONIALS = [
     role: "Product Manager at Airbnb",
     avatar: "AR",
     color: "bg-teal-700"
-  }
-];
-
-const FAQS = [
-  {
-    q: "How accurate is the AI feedback?",
-    a: "Our AI analysis system leverages advanced speech-to-text models combined with custom large language models fine-tuned on thousands of successful tech industry interviews. Feedback on structure (like the STAR method), technical accuracy, pacing, and keyword inclusion achieves a 95%+ correlation with professional recruiter assessments."
-  },
-  {
-    q: "Is my data and video recording private?",
-    a: "Absolutely. We prioritize your privacy above all else. Your mock interview video, audio streams, and transcripts are fully encrypted in transit and at rest. They are only accessible to you. We do not sell your data or use your personal recordings to train public models. You can delete your recordings and profile at any time."
-  },
-  {
-    q: "What types of interviews do you support?",
-    a: "We support a wide array of tracks: technical coding challenges, system design architecture loops, behavioral STAR method coaching, product sense reviews, general HR screeners, and senior leadership case studies. You can select custom roles, customize experience levels, or even paste your own target job description for a tailored practice session."
-  },
-  {
-    q: "Can I cancel my subscription?",
-    a: "Yes, you can cancel your subscription at any time. If you subscribe to our Pro plans, you can downgrade or cancel from your dashboard account settings in one click. You will retain access to your Pro features until the end of your billing cycle."
   }
 ];
 
@@ -461,11 +433,6 @@ export default function Page() {
   const [selectedLevel, setSelectedLevel] = useState<string>("junior");
   const [trackQuestionIndex, setTrackQuestionIndex] = useState(0);
 
-  // Pricing State
-  
-
-  // FAQ State
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const speechIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const waveformIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -1843,43 +1810,7 @@ export default function Page() {
       <Pricing />
 
       {/* FAQ SECTION */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-900">
-        <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Frequently Asked Questions</span>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">
-            Frequently Asked Questions
-          </h2>
-        </div>
-
-        <div className="space-y-4">
-          {FAQS.map((faq, index) => {
-            const isOpen = openFaqIndex === index;
-            return (
-              <div
-                key={index}
-                className="glass-panel rounded-2xl border border-white/5 overflow-hidden transition-all duration-300"
-              >
-                <button
-                  onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                  className="w-full p-6 text-left flex items-center justify-between text-white font-semibold text-sm sm:text-base cursor-pointer hover:bg-white/[0.01]"
-                >
-                  <span>{faq.q}</span>
-                  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? "transform rotate-180 text-teal-400" : ""}`} />
-                </button>
-                <div
-                  className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                    isOpen ? "max-h-[300px] border-t border-white/5" : "max-h-0"
-                  }`}
-                >
-                  <p className="p-6 text-xs sm:text-sm text-slate-400 leading-relaxed font-normal bg-slate-950/20">
-                    {faq.a}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <FAQ />
 
       {/* FOOTER CALL TO ACTION */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">

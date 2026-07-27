@@ -30,6 +30,7 @@ import Navbar from "../components/Navbar";
 import Pricing from "../components/Pricing";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
+import Testimonials from "../components/Testimonials";
 
 // Mock questions database for different roles & experience levels
 const ROLE_QUESTIONS: Record<string, Record<string, string[]>> = {
@@ -167,29 +168,7 @@ const ROLE_QUESTIONS: Record<string, Record<string, string[]>> = {
   }
 };
 
-const TESTIMONIALS = [
-  {
-    quote: "HireLoop was a game-changer. The AI picked up on my filler words, helped me structure my answers, and the role-specific coding questions were spot on.",
-    name: "James Jenkins",
-    role: "Product Designer at Google",
-    avatar: "JJ",
-    color: "bg-teal-600"
-  },
-  {
-    quote: "The behavioral feedback was incredibly accurate. It helped me structure my thoughts using the STAR method and feel completely confident during the actual loop.",
-    name: "Sarah Chen",
-    role: "Software Engineer at Stripe",
-    avatar: "SC",
-    color: "bg-emerald-600"
-  },
-  {
-    quote: "As a career switcher, the technical sessions were invaluable. The AI asked relevant, deep follow-up questions that tested my system architecture knowledge.",
-    name: "Alex Rodriguez",
-    role: "Product Manager at Airbnb",
-    avatar: "AR",
-    color: "bg-teal-700"
-  }
-];
+
 
 interface CodingChallenge {
   title: string;
@@ -1776,35 +1755,8 @@ export default function Page() {
         </div>
       </section>
 
-      {/* CAREER SUCCESS STORIES SECTION */}
-      <section id="testimonials" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 scroll-mt-16">
-        <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-violet">Testimonials</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Career Success Stories</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">Join 20,000+ candidates who landed software roles at industry leaders.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {TESTIMONIALS.map((t, idx) => (
-            <div key={idx} className="glass-panel rounded-3xl p-8 border border-white/5 flex flex-col justify-between relative group hover:scale-[1.01] transition-all">
-              <span className="text-5xl text-brand-violet/20 font-serif absolute top-4 left-4 select-none">“</span>
-              <p className="text-sm text-slate-300 italic relative z-10 leading-relaxed mb-8 font-normal">
-                {t.quote}
-              </p>
-              
-              <div className="flex items-center space-x-3 border-t border-slate-900 pt-6">
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${t.color} flex items-center justify-center text-white text-xs font-bold`}>
-                  {t.avatar}
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white">{t.name}</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{t.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* TESTIMONIALS SECTION */}
+      <Testimonials />
 
       {/* PRICING PLANS SECTION */}
       <Pricing />

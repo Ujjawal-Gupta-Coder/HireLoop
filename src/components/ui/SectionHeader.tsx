@@ -1,6 +1,6 @@
 import { Sparkles } from "lucide-react"
 
-const SectionHeader = ({overLine, heading, subHeading, isPricingSection = false}:{overLine: string, heading:string, subHeading:string, isPricingSection:boolean}) => {
+const SectionHeader = ({overLine, heading, subHeading, isPricingSection = false}:{overLine: string, heading:string, subHeading:string, isPricingSection?:boolean}) => {
   return (
     <div className="text-center mb-12">
         <span className="text-xs font-bold uppercase tracking-wider text-teal-400">{overLine}</span>

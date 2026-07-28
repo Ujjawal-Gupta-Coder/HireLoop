@@ -33,7 +33,7 @@ const FAQ = () => {
         }
     ];
   return (
-    <section className="section-container-style">
+    <section id="faq" className="section-container-style">
         
         <SectionHeader overLine="Still Curious?" heading="Frequently Asked Questions" subHeading="Explore answers to the questions users ask most." />
 

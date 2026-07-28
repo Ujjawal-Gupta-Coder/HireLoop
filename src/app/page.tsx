@@ -19,6 +19,8 @@ import {
   ArrowRight,
   Mic,
   Lock,
+  Volume2,
+  RefreshCw,
 } from "lucide-react";
 import {
   IconRoute,

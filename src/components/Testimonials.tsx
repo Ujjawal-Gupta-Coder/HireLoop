@@ -29,7 +29,7 @@ const Testimonials = () => {
 ];
   return (
     <section id="testimonials" className="section-container-style">
-            <SectionHeader overLine="Testimonials" heading="Career Success Stories" subHeading="See how HireLoop helps candidates prepare for interviews with confidence."  isPricingSection={false}/>
+            <SectionHeader overLine="Testimonials" heading="Career Success Stories" subHeading="See how HireLoop helps candidates prepare for interviews with confidence."/>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {TESTIMONIALS.map((t, idx) => (

@@ -1,9 +1,9 @@
- "use server"
+"use server"
 
 import { signIn } from "../auth";
 
-const SignInWithGoogle = async () => {
-        await signIn("google");
+const signInWithGoogle = async () => {
+        await signIn("google", { redirectTo: "/dashboard" });
 }
 
-export default SignInWithGoogle;
+export default signInWithGoogle;

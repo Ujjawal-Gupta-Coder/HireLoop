@@ -14,6 +14,7 @@ const page = async () => {
       Dashboard Page
 
     <div className="text-2xl font-semibold italic">Hi, <span className="text-teal-500">{session?.user?.name}</span>👋</div>
+    <div className="text-2xl font-semibold italic">{session?.user?.email}</div>
       <div className="flex justify-end px-16">
         
         <form action={signOutWithGoogle} >

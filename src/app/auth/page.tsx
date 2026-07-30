@@ -6,6 +6,7 @@ import Image from "next/image";
 import Logo from '@/public/logo.svg'
 import Footer from "@/src/components/Footer";
 import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import SignInWithGoogle from "@/src/actions/SignIn";
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -172,40 +173,44 @@ export default function AuthPage() {
 
               {/* Google Sign-in Button */}
               <div className="relative z-10">
-                <button
-                  className="group relative flex w-full items-center justify-center gap-3.5 rounded-2xl bg-white px-5 py-4 font-semibold text-slate-900 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-950 cursor-pointer"
-                  onClick={() => {alert('You Try to log in.')}}
+                <form
+                  action={SignInWithGoogle}
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 48 48"
-                    className="shrink-0"
+                  <button
+                    className="group relative flex w-full items-center justify-center gap-3.5 rounded-2xl bg-white px-5 py-4 font-semibold text-slate-900 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-950 cursor-pointer"
+                    type="submit"
                   >
-                    <path
-                      fill="#FFC107"
-                      d="M43.6 20.5H42V20H24v8h11.3C33.6 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"
-                    />
-                    <path
-                      fill="#FF3D00"
-                      d="M6.3 14.7l6.6 4.8C14.6 15.5 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4c-7.7 0-14.3 4.3-17.7 10.7z"
-                    />
-                    <path
-                      fill="#4CAF50"
-                      d="M24 44c5.2 0 10-2 13.5-5.3l-6.2-5.2C29.3 35.1 26.8 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.7 39.6 16.3 44 24 44z"
-                    />
-                    <path
-                      fill="#1976D2"
-                      d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.1-3.3 5.4-6.1 6.9l6.2 5.2C39.2 36.5 44 30.8 44 24c0-1.3-.1-2.3-.4-3.5z"
-                    />
-                  </svg>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 48 48"
+                      className="shrink-0"
+                    >
+                      <path
+                        fill="#FFC107"
+                        d="M43.6 20.5H42V20H24v8h11.3C33.6 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"
+                      />
+                      <path
+                        fill="#FF3D00"
+                        d="M6.3 14.7l6.6 4.8C14.6 15.5 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34 6.1 29.3 4 24 4c-7.7 0-14.3 4.3-17.7 10.7z"
+                      />
+                      <path
+                        fill="#4CAF50"
+                        d="M24 44c5.2 0 10-2 13.5-5.3l-6.2-5.2C29.3 35.1 26.8 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.7 39.6 16.3 44 24 44z"
+                      />
+                      <path
+                        fill="#1976D2"
+                        d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.1-3.3 5.4-6.1 6.9l6.2 5.2C39.2 36.5 44 30.8 44 24c0-1.3-.1-2.3-.4-3.5z"
+                      />
+                    </svg>
 
-                  <span className="tracking-wide">
-                    {isSignUp ? "Sign up with Google" : "Sign in with Google"}
-                  </span>
+                    <span className="tracking-wide">
+                      {isSignUp ? "Sign up with Google" : "Sign in with Google"}
+                    </span>
 
-                  <ArrowRight className="ml-auto h-5 w-5 text-slate-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-slate-900" />
-                </button>
+                    <ArrowRight className="ml-auto h-5 w-5 text-slate-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-slate-900" />
+                  </button>
+                </form>
               </div>
 
               <div className="relative mt-8 flex items-center justify-center z-10">

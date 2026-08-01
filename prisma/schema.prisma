@@ -9,9 +9,25 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
   name      String
   email     String   @unique
   credits   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Plan {
+  id String @id @default(cuid())
+  name String @unique
+  credits Int
+  amount Int
+  currencySymbol String
+  description String?
+  features String[]
+  isMostPopular Boolean @default(false)
+  buttonText String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

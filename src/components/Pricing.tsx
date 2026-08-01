@@ -2,62 +2,81 @@
 
 import { Check, Coins, Zap } from "lucide-react";
 import SectionHeader from "./ui/SectionHeader";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from 'react-hot-toast';
+
+type Plan = {
+        id:string,
+        name:string,
+        credits:number,
+        amount:number,
+        currencySymbol:string,
+        description:string, 
+        features:string[], 
+        isMostPopular:boolean, 
+        buttonText:string, 
+    }
 
 const Pricing = () => {
-    const PLAN_DETAILS = [
-        {
-            name: "Starter",
-            credits: "100",
-            amount: "99",
-            currencySymbol: "₹",
-            description: "Perfect for exploring HireLoop and practicing your first AI interviews.",
-            features: [
-                "100 Credits (~10 standard interviews)",
-                "AI feedback & performance insights",
-                "Credits never expire"
-            ],
-            icon: Coins,
-            isMostPopular: false,
-            buttonText: "Buy Starter Pack"
-        },
-        {
-            name: "Pro Pack",
-            credits: "300",
-            amount: "249",
-            currencySymbol: "₹",
-            description: "Ideal for active job seekers preparing for multiple interview rounds.",
-            features: [
-                "300 Credits (~30 standard interviews)",
-                "Supports coding & system design interviews",
-                "Credits never expire"
-            ],
-            icon: Zap,
-            isMostPopular: true,
-            buttonText: "Upgrade to Pro"
-        },
-        {
-            name: "Elite Pack",
-            credits: "700",
-            amount: "499",
-            currencySymbol: "₹",
-            description: "The ultimate package for comprehensive interview preparation and career growth.",
-            features: [
-                "700 Credits (~70 standard interviews)",
-                "Best for coding, system design & technical interviews",
-                "Credits never expire"
-            ],
-            icon: Coins,
-            isMostPopular: false,
-            buttonText: "Buy Elite Pack"
-        }
-    ]
+    const [loading, setLoading] = useState(false);
+
+    const [plans, setPlans] = useState<Plan[]>([]);
+    
+    const getPlans = async () => {
+        try {
+            const raw = await fetch("/api/plans");
+            const res = await raw.json();
+
+            if(res.success) {
+                setPlans(res.data);
+            }
+
+        } catch(error) {
+            toast.error("Fetch plan details failed");
+            console.error("Error in fetching plans", error);
+            return;
+        } 
+    }
+
+    useEffect(() => {
+        getPlans();   
+    }, []);
+
+    const openPaymentGateway = async (id:string) => {
+        try {
+            setLoading(true);
+
+            const raw = await fetch("/api/create-checkout-session", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id})
+            })
+            const res = await raw.json();
+
+            if(res.success) {
+                window.location.href = res.data.url;
+            }
+            else toast.error(res.message);
+
+        } catch(error) {
+            toast.error('Opening payment gateway failed.');
+            console.error("Error in opening payment gateway: ", error);
+            return;
+        } finally {
+            setLoading(false);
+        }   
+    }
+
     return (
         <section id="pricing" className="section-container-style">
+            <Toaster />
             <SectionHeader overLine={"Flexible Packages"} heading={"Invest in Your Career"} subHeading={"Flexible credit packs designed to help you ace every interview."} isPricingSection={true} />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
                 {
-                    PLAN_DETAILS.map((plan, index) => {
+                    plans.map((plan, index) => {
                     return(
                         <div key={index} className={`rounded-3xl p-8 border flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] ${plan.isMostPopular? "glass-panel-highlight hover:shadow-[0_15px_40px_-10px_rgba(13,148,136,0.15)]  relative":"glass-panel border-white/5 hover:border-slate-800/80 hover:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.7)]"}`}>
                             {
@@ -84,7 +103,12 @@ const Pricing = () => {
                                 </div>
 
                                 <div className={`mt-4 p-3 border rounded-xl flex items-center gap-2.5 ${plan.isMostPopular ? "bg-teal-500/5 border-teal-500/20" : "bg-white/[0.02] border-white/5"}`}>
-                                    <plan.icon className={`w-5 h-5 ${plan.isMostPopular? "text-teal-400 animate-pulse": "text-slate-400"}`} />
+                                    {
+                                        plan.isMostPopular ?
+                                        <Zap className={`w-5 h-5 ${plan.isMostPopular? "text-teal-400 animate-pulse": "text-slate-400"}`} /> :
+                                        <Coins className={`w-5 h-5 ${plan.isMostPopular? "text-teal-400 animate-pulse": "text-slate-400"}`} />
+                                    }
+                                    
                                     <div>
                                         <div className="text-lg font-bold text-white leading-none">{plan.credits}</div>
                                         <div className={`text-[10px] uppercase tracking-wider ${plan.isMostPopular? "text-teal-400 font-bold" : "text-slate-400 font-semibold"}`}>AI Credits Included</div>
@@ -106,8 +130,8 @@ const Pricing = () => {
                                     }
                                 </ul>
                             </div>
-                            <button className={`w-full mt-8 cursor-pointer transition-all rounded-xl ${plan.isMostPopular? "py-3.5 bg-linear-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold shadow-lg shadow-teal-900/30": "py-3 g-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold border border-slate-800 hover:border-slate-700"}`}
-                            onClick={() => {alert("Welcome to payment gateway.")}}
+                            <button disabled={loading} className={`w-full mt-8 ${loading ? "cursor-not-allowed":"cursor-pointer"} transition-all rounded-xl ${plan.isMostPopular? "py-3.5 bg-linear-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold shadow-lg shadow-teal-900/30": "py-3 g-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold border border-slate-800 hover:border-slate-700"}`}
+                            onClick={() => openPaymentGateway(plan.id)}
                             >
                                 {plan.buttonText}
                             </button>

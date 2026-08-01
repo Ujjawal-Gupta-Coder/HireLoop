@@ -4,7 +4,8 @@ import { Check, Coins, Zap } from "lucide-react";
 import SectionHeader from "./ui/SectionHeader";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
-
+import { useRouter } from "next/navigation";
+import { Session } from "@/src/types"
 type Plan = {
         id:string,
         name:string,
@@ -17,8 +18,9 @@ type Plan = {
         buttonText:string, 
     }
 
-const Pricing = () => {
+const Pricing = ({session}: { session : Session }) => {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const [plans, setPlans] = useState<Plan[]>([]);
     
@@ -67,6 +69,13 @@ const Pricing = () => {
         } finally {
             setLoading(false);
         }   
+    }
+
+    const handlePaymentButtonClick = (id : string) => {
+        if(!session?.user) {
+            router.push("/auth")
+        }
+        else openPaymentGateway(id);
     }
 
     return (
@@ -131,7 +140,7 @@ const Pricing = () => {
                                 </ul>
                             </div>
                             <button disabled={loading} className={`w-full mt-8 ${loading ? "cursor-not-allowed":"cursor-pointer"} transition-all rounded-xl ${plan.isMostPopular? "py-3.5 bg-linear-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold shadow-lg shadow-teal-900/30": "py-3 g-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-semibold border border-slate-800 hover:border-slate-700"}`}
-                            onClick={() => openPaymentGateway(plan.id)}
+                            onClick={() => handlePaymentButtonClick(plan.id)}
                             >
                                 {plan.buttonText}
                             </button>

@@ -1,3 +1,4 @@
+import { auth } from "@/src/auth";
 import { prisma } from "@/src/lib/prisma";
 import { stripe } from "@/src/lib/stripe"
 
@@ -11,6 +12,16 @@ export const POST = async (req: Request) => {
                 message: "Invalid plan id",
                 data: null
             }, {status: 404})
+        }
+
+        const authSession = await auth();
+
+        if(!authSession?.user) {
+            return Response.json({
+                success: false,
+                message: "Access denied",
+                data: null
+            }, {status: 401})
         }
 
         const planDetails = await prisma.plan.findUnique({

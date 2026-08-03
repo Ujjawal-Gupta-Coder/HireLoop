@@ -16,10 +16,27 @@ export const POST = async (req: Request) => {
 
         const authSession = await auth();
 
-        if(!authSession?.user) {
+        if(!authSession?.user || !authSession.user?.email) {
             return Response.json({
                 success: false,
                 message: "Access denied",
+                data: null
+            }, {status: 401})
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: authSession.user.email
+            },
+            select: {
+                id: true
+            }
+        })
+
+        if(!user) {
+            return Response.json({
+                success: false,
+                message: "User does not exist",
                 data: null
             }, {status: 401})
         }
@@ -29,6 +46,7 @@ export const POST = async (req: Request) => {
                 id: body.id
             },
             select: {
+                id: true,
                 name: true,
                 amount: true
             }
@@ -56,6 +74,10 @@ export const POST = async (req: Request) => {
                     quantity: 1,
                 }   
             ],
+            metadata: {
+                userId: user.id,
+                planId: planDetails.id
+            },
             success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success`,
             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel`,
         });

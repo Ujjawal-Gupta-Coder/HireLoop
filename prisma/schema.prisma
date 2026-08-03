@@ -7,12 +7,22 @@ datasource db {
   url = env("DATABASE_URL")
 }
 
+enum CreditTransactionType {
+  REGISTRATION
+  PURCHASE
+  BASIC_INTERVIEW
+  CODING_INTERVIEW
+  ADMIN
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
   credits   Int
 
+  creditHistory CreditHistory[]
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -30,4 +40,20 @@ model Plan {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CreditHistory {
+  id String @id @default(cuid())
+
+  userId String
+  credit Int
+
+  type CreditTransactionType
+
+  stripeSessionId String? @unique
+  reason String
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) 
 }

@@ -1,7 +1,9 @@
 import Image from "next/image"
 import Logo from "../../public/logo.svg"
 import Link from "next/link"
-const Navbar = ({isLandingPage = false}) => {
+import { Session } from "@/src/types"
+
+const Navbar = ({session, isLandingPage = false}: {session:Session, isLandingPage:boolean}) => {
     const NAV_TABS = [
         {
             lable: "Features",
@@ -46,14 +48,21 @@ const Navbar = ({isLandingPage = false}) => {
                 }
             </nav>}
 
-            <div className="flex items-center space-x-4">
-            <Link href={"/auth"} className="text-sm font-semibold text-text-muted hover:text-text transition-colors cursor-pointer">
-                Sign In
-            </Link>
-            <Link href={"/auth"} className="px-4 py-2 text-sm font-semibold rounded-xl text-text bg-primary hover:bg-primary-light/90 shadow-md hover:shadow-lg shadow-primary-shadow hover:scale-[1.02] transition-all duration-200 cursor-pointer">
-                Get Started
-            </Link>
-            </div>
+            {
+                !session?.user ? 
+                <div className="flex items-center space-x-4">
+                    <Link href={"/auth"} className="text-sm font-semibold text-text-muted hover:text-text transition-colors cursor-pointer">
+                        Sign In
+                    </Link>
+                    <Link href={"/auth"} className="px-4 py-2 text-sm font-semibold rounded-xl text-text bg-primary hover:bg-primary-light/90 shadow-md hover:shadow-lg shadow-primary-shadow hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+                        Get Started
+                    </Link>
+                </div> :
+                <Link href={"/dashboard"} className="px-4 py-2 text-sm font-semibold rounded-xl text-text bg-primary hover:bg-primary-light/90 shadow-md hover:shadow-lg shadow-primary-shadow hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+                   Dashboard
+                </Link>
+            }
+            
         </div>
     </header>
   )

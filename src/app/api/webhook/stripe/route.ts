@@ -1,6 +1,9 @@
 import { prisma } from "@/src/lib/prisma";
 import { stripe } from "@/src/lib/stripe";
-import { CreditTransactionType, Prisma } from "@prisma/client";
+import { CreditTransactionType, Prisma, User } from "@prisma/client";
+import { generatePaymentReceiptPDF } from "@/src/helper/helper.common";
+import path from "path";
+import fs from "fs";
 import Stripe from "stripe";
 
 const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEvent) => { 
@@ -34,10 +37,11 @@ const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEv
         }, {status: 200})
     }
 
+    let user: User | {name:string, email:string} = {name:"Invalid", email:""};
     try {
         await prisma.$transaction(async(tx) => {
 
-            await tx.user.update({
+            user = await tx.user.update({
                 where: {
                     id: userId
                 },
@@ -79,7 +83,23 @@ const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEv
             data: null
         }, {status: 500})
     }
-    
+
+    const receiptID = `HLP-${Date.now()}`;
+
+    const receiptPDFBytes = await generatePaymentReceiptPDF({
+        customerName:  user.name,
+        customerEmail: user.email,
+        receiptID,
+        date: session.created,
+        paymentMethod: "Stripe Checkout",
+        planName: planDetails.name,
+        credits: planDetails.credits,
+        amount: session.amount_total ?  session.amount_total/100 : 0,
+    });
+
+    const filePath = path.join(process.cwd(), "receipt.pdf");
+    fs.writeFileSync(filePath, receiptPDFBytes);
+
     return Response.json({
         success: true,
         message: "Webhook processed successfully",

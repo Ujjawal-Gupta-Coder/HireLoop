@@ -1,10 +1,9 @@
 import { prisma } from "@/src/lib/prisma";
 import { stripe } from "@/src/lib/stripe";
-import { CreditTransactionType, Prisma, User } from "@prisma/client";
+import { CreditTransactionType, Payment, PaymentStatus, Prisma, User } from "@prisma/client";
 import { generatePaymentReceiptPDF } from "@/src/helper/helper.common";
-import path from "path";
-import fs from "fs";
 import Stripe from "stripe";
+import { supabase } from "@/src/lib/supabase";
 
 const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEvent) => { 
 
@@ -37,7 +36,10 @@ const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEv
         }, {status: 200})
     }
 
-    let user: User | {name:string, email:string} = {name:"Invalid", email:""};
+    const receiptID = `HLP-${session.created}-${session.id.slice(-6).toUpperCase()}`;
+
+    let user: User | null = null;
+    let payment: Payment | null = null;
     try {
         await prisma.$transaction(async(tx) => {
 
@@ -52,13 +54,26 @@ const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEv
                 }
             })
 
-            await tx.creditHistory.create({
+            const creditHistory = await tx.creditHistory.create({
                 data: {
                     userId,
                     credit: planDetails.credits,
                     type: CreditTransactionType.PURCHASE,
                     stripeSessionId: session.id,
                     reason: `${planDetails.name} Plan Purchased`
+                }
+            })
+
+            payment = await tx.payment.create({
+                data: {
+                    userId: user!.id,
+                    planId: planDetails.id,
+                    creditHistoryId: creditHistory!.id,
+                    amount: session.amount_total ?  session.amount_total/100 : 0,
+                    currencyCode: session.currency?.toUpperCase() || "INR",
+                    status: PaymentStatus.PAID,
+                    sessionId: session.id,
+                    receiptId: receiptID,
                 }
             })
         })
@@ -84,21 +99,58 @@ const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEv
         }, {status: 500})
     }
 
-    const receiptID = `HLP-${Date.now()}`;
+    let receiptPath:string;
+    try {
+        const receiptPDFBytes = await generatePaymentReceiptPDF({
+            customerName:  user!.name,
+            customerEmail: user!.email,
+            receiptID,
+            date: session.created,
+            paymentMethod: "Stripe Checkout",
+            planName: planDetails.name,
+            credits: planDetails.credits,
+            amount: session.amount_total ?  session.amount_total/100 : 0,
+        });
 
-    const receiptPDFBytes = await generatePaymentReceiptPDF({
-        customerName:  user.name,
-        customerEmail: user.email,
-        receiptID,
-        date: session.created,
-        paymentMethod: "Stripe Checkout",
-        planName: planDetails.name,
-        credits: planDetails.credits,
-        amount: session.amount_total ?  session.amount_total/100 : 0,
-    });
+        const filePath = `${userId}/${session.id}.pdf`;
+    
+        const {data, error} = await supabase.storage.from("Receipts")
+            .upload(filePath, receiptPDFBytes, {
+                contentType: "application/pdf",
+                upsert: false                                   // override file : No, same name file throw error
+            })
+        if(error) throw new Error(`Receipt upload failed: ${error.message}`)
+        
+        receiptPath = data.path;
 
-    const filePath = path.join(process.cwd(), "receipt.pdf");
-    fs.writeFileSync(filePath, receiptPDFBytes);
+    } catch (error) {
+        console.error("Receipt generation/upload failed: ", error);
+        return Response.json({
+            success: true,
+            message: "Webhook Processed, Receipt generation/upload failed",
+            data: null
+        }, {status: 200})
+    }
+
+    try {
+        await prisma.payment.update({
+            where: {
+                id: payment!.id
+            },
+            data: {
+                receiptPath,
+            }
+        })
+    } catch(error) {
+        console.error("error in updating payment receipt path: ", error);
+        await supabase.storage.from("Receipts").remove([receiptPath]);
+        return Response.json({
+            success: true,
+            message: "Webhook processed, payment receiptPath failed",
+            data: null
+        }, {status: 200})
+    }
+    
 
     return Response.json({
         success: true,

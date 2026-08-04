@@ -15,6 +15,13 @@ enum CreditTransactionType {
   ADMIN
 }
 
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -22,7 +29,8 @@ model User {
   credits   Int
 
   creditHistory CreditHistory[]
-  
+  payment Payment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -37,6 +45,8 @@ model Plan {
   features String[]
   isMostPopular Boolean @default(false)
   buttonText String
+
+  payment Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -54,6 +64,29 @@ model CreditHistory {
   reason String
 
   user User @relation(fields: [userId], references: [id])
+  payment Payment?
 
   createdAt DateTime @default(now()) 
+}
+
+model Payment {
+  id String @id @default(cuid())
+  userId String
+  planId String
+  creditHistoryId String @unique
+
+  amount Int
+  currencyCode String
+  status PaymentStatus
+
+  sessionId String @unique
+  receiptId String @unique
+  receiptPath String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+  creditHistory CreditHistory @relation(fields: [creditHistoryId], references: [id])
 }

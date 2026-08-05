@@ -54,7 +54,24 @@ export default async function Page() {
   } catch(error) {
       console.error("Database crashed: ", error);
   }
-    
+  
+  let credits:number = 0;
+  if(session?.user?.email) {
+    try {
+      const userData = await prisma.user.findUnique({
+        where: {
+          email: session.user.email
+        },
+        select: {
+          credits: true
+        }
+      })
+      credits = userData?.credits || 0;
+    } catch(error) {
+      console.error("Error in getting user credits: ", error);
+    }
+      
+  }
 
   return (
     <>
@@ -67,7 +84,7 @@ export default async function Page() {
       <div className="absolute inset-0 grid-bg-overlay pointer-events-none -z-20 opacity-60" />
 
       {/* NAVBAR */}
-      <Navbar session={session} isLandingPage={true}/>  
+      <Navbar session={session} credits={credits} isLandingPage={true}/>  
 
       {/* Landing page component group  */}
       <LandingPage />

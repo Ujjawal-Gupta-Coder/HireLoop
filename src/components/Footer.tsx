@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import Poster from "../../public/hireloop_poster.png"
+import BottomLineFooter from "./BottomLineFooter"
 
 const Footer = () => {
   const FOOTER_LINKS = [
@@ -56,11 +57,9 @@ const Footer = () => {
       ]
     }
   ]
-  
-  const PORTFOLIO_LINK = "https://ujjawalgupta.vercel.app/"
 
   return (
-    <footer className="relative border-white/5 bg-dark/60 py-8 px-4 sm:px-6 lg:px-8 overflow-hidden backdrop-blur-md">
+    <footer className="relative border-white/5 bg-dark/60 pt-8 px-4 sm:px-6 lg:px-8 overflow-hidden backdrop-blur-md">
       {/* Background glow effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute -bottom-10 right-10 w-72 h-72 bg-primary-light/5 rounded-full blur-[100px] pointer-events-none" />
@@ -110,12 +109,7 @@ const Footer = () => {
 
         </div>
 
-        {/* Copyright Section */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 border-t border-white/5 text-xs text-text-muted">
-          <p className="text-center sm:text-left leading-relaxed">
-            © {new Date().getFullYear()} HireLoop. ⚙️ All rights reserved. ✨Designed & Developed with 💖 by <Link href={PORTFOLIO_LINK}>Ujjawal Gupta</Link>
-          </p> 
-        </div>
+        <BottomLineFooter />
 
       </div>
     </footer>

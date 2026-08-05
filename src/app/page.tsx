@@ -9,9 +9,9 @@ import { auth } from "../auth";
 import { prisma } from "../lib/prisma";
 
 export default async function Page() {
-  let session = null, testimonial = [], faq = [];
+  let session = null, testimonial = [], faq = [], plans = [];
   try {
-    [session, testimonial, faq] = await Promise.all([
+    [session, testimonial, faq, plans] = await Promise.all([
       auth(),
       prisma.testimonial.findMany({
         select: {
@@ -32,6 +32,22 @@ export default async function Page() {
         },
         orderBy: {
           order: "asc"
+        }
+      }),
+      prisma.plan.findMany({
+        select: {
+            id:true,
+            name:true,
+            credits:true,
+            amount:true,
+            currencySymbol:true,
+            description:true, 
+            features:true, 
+            isMostPopular:true, 
+            buttonText:true, 
+        },
+        orderBy: {
+            amount: "asc"
         }
       })
     ])
@@ -60,7 +76,7 @@ export default async function Page() {
       <Testimonials testimonialData={testimonial}/>
 
       {/* PRICING PLANS SECTION */}
-      <Pricing session={session}/>
+      <Pricing session={session} plans={plans}/>
 
       {/* FAQ SECTION */}
       <FAQ faqData={faq}/>

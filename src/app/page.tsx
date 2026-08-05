@@ -6,9 +6,40 @@ import Testimonials from "../components/Testimonials";
 import CTA from "../components/CTA";
 import LandingPage from "../components/LandingPage";
 import { auth } from "../auth";
+import { prisma } from "../lib/prisma";
 
 export default async function Page() {
-  const session = await auth();
+  let session = null, testimonial = [], faq = [];
+  try {
+    [session, testimonial, faq] = await Promise.all([
+      auth(),
+      prisma.testimonial.findMany({
+        select: {
+          quote : true,
+          name : true,
+          role : true,
+          avatar : true,
+          color : true, 
+        },
+        orderBy: {
+          order: "asc"
+        }
+      }), 
+      prisma.fAQ.findMany({
+        select: {
+          question : true,
+          answer : true,
+        },
+        orderBy: {
+          order: "asc"
+        }
+      })
+    ])
+  } catch(error) {
+      console.error("Database crashed: ", error);
+  }
+    
+
   return (
     <>
       {/* Background glow graphics */}
@@ -20,19 +51,19 @@ export default async function Page() {
       <div className="absolute inset-0 grid-bg-overlay pointer-events-none -z-20 opacity-60" />
 
       {/* NAVBAR */}
-      <Navbar session={session} isLandingPage={true}/>
+      <Navbar session={session} isLandingPage={true}/>  
 
       {/* Landing page component group  */}
       <LandingPage />
 
       {/* TESTIMONIALS SECTION */}
-      <Testimonials />
+      <Testimonials testimonialData={testimonial}/>
 
       {/* PRICING PLANS SECTION */}
       <Pricing session={session}/>
 
       {/* FAQ SECTION */}
-      <FAQ />
+      <FAQ faqData={faq}/>
 
       {/* FOOTER CALL TO ACTION */}
       <CTA />

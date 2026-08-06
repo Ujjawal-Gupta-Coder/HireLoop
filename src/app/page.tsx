@@ -9,7 +9,10 @@ import { auth } from "../auth";
 import { prisma } from "../lib/prisma";
 
 export default async function Page() {
-  let session = null, testimonial = [], faq = [], plans = [];
+  let session: any = null;
+  let testimonial: any[] = [];
+  let faq: any[] = [];
+  let plans: any[] = [];
   try {
     [session, testimonial, faq, plans] = await Promise.all([
       auth(),

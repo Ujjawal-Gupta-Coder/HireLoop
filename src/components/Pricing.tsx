@@ -2,47 +2,14 @@
 
 import { Check, Coins, Zap } from "lucide-react";
 import SectionHeader from "./ui/SectionHeader";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from "next/navigation";
-import { Session } from "@/src/types"
-type Plan = {
-        id:string,
-        name:string,
-        credits:number,
-        amount:number,
-        currencySymbol:string,
-        description:string, 
-        features:string[], 
-        isMostPopular:boolean, 
-        buttonText:string, 
-    }
+import { Plan, Session } from "@/src/types"
 
-const Pricing = ({session}: { session : Session }) => {
+const Pricing = ({session, plans}: { session : Session, plans : Plan[] }) => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
-    const [plans, setPlans] = useState<Plan[]>([]);
-    
-    const getPlans = async () => {
-        try {
-            const raw = await fetch("/api/plans");
-            const res = await raw.json();
-
-            if(res.success) {
-                setPlans(res.data);
-            }
-
-        } catch(error) {
-            toast.error("Fetch plan details failed");
-            console.error("Error in fetching plans", error);
-            return;
-        } 
-    }
-
-    useEffect(() => {
-        getPlans();   
-    }, []);
 
     const openPaymentGateway = async (id:string) => {
         try {

@@ -1,7 +1,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { stripe } from "@/src/lib/stripe";
 import { CreditTransactionType, Payment, PaymentStatus, Prisma, User } from "@prisma/client";
-import { generatePaymentReceiptPDF } from "@/src/helper/helper.common";
+import generatePaymentReceiptPDF from "@/src/helper/generatePDF";
 import Stripe from "stripe";
 import { supabase } from "@/src/lib/supabase";
 

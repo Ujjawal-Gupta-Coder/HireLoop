@@ -90,3 +90,22 @@ model Payment {
   plan Plan @relation(fields: [planId], references: [id])
   creditHistory CreditHistory @relation(fields: [creditHistoryId], references: [id])
 }
+
+model Testimonial {
+  id String @id @default(cuid())
+  quote String
+  name String
+  role String
+  avatar String
+  color String 
+  order Int
+  createdAt DateTime @default(now())
+}
+
+model FAQ {
+  id String @id @default(cuid())
+  question String
+  answer String
+  order Int
+  createdAt DateTime @default(now())
+}

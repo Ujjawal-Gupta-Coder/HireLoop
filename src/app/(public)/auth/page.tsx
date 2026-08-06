@@ -35,15 +35,15 @@ const session = await auth();
   
   return (
     <> 
-    <main className="relative min-h-screen overflow-hidden bg-dark text-text grid-bg-overlay pb-20 pt-16">
+    <main className="relative min-h-screen overflow-hidden bg-dark text-text grid-bg-overlay pb-10 sm:pb-20 pt-8 sm:pt-16">
       {/* Glow Spotlights */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute left-1/4 top-1/4 h-[500px] w-[500px] auth-bg-glow-primary" />
         <div className="absolute right-1/4 bottom-1/4 h-[600px] w-[600px] auth-bg-glow-secondary" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl items-center px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid w-full gap-16 lg:grid-cols-12 items-center">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <div className="grid w-full gap-8 lg:gap-16 lg:grid-cols-12 items-center">
 
           {/* Features & Branding */}
           <div className="hidden flex-col justify-center lg:flex lg:col-span-7">

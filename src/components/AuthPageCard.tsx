@@ -11,29 +11,31 @@ const AuthPageCard = () => {
     const [isSignUp, setIsSignUp] = useState(false);
   return (
     <div className="flex items-center justify-center lg:col-span-5 w-full">
-            <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.01] p-8 lg:p-10 shadow-[0_0_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
+            <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.01] p-5 sm:p-8 lg:p-10 shadow-[0_0_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
               {/* Internal Card glows */}
               <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
               <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-cyan-500/5 blur-3xl pointer-events-none" />
 
               {/* Mobile branding */}
-              <div className="mb-8 flex justify-center lg:hidden">
+              <div className="mb-6 sm:mb-8 flex justify-center lg:hidden">
                 <Link href="/" className="flex items-center gap-3 group">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-teal-950/50 border border-teal-500/30 shadow-lg shadow-teal-500/10">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-950/50 border border-teal-500/30 shadow-lg shadow-teal-500/10 p-2">
                     <Image
-                      src="/logo.svg"
+                      src={Logo}
                       alt="HireLoop Logo"
-                      fill
+                      width={32}
+                      height={32}
+                      className="text-teal-400"
                     />
                   </div>
-                  <span className="text-2xl font-bold tracking-tight">
+                  <span className="text-2xl font-bold tracking-tight text-white">
                     Hire<span className="text-teal-400">Loop</span>
                   </span>
                 </Link>
               </div>
 
               {/* Toggle switch */}
-              <div className="relative z-10 mb-8 flex justify-center">
+              <div className="relative z-10 mb-6 sm:mb-8 flex justify-center">
                 <div className="inline-flex rounded-full bg-slate-950/60 p-1 border border-white/10">
                   <button
                     onClick={() => setIsSignUp(false)}
@@ -58,14 +60,14 @@ const AuthPageCard = () => {
                 </div>
               </div>
 
-              <div className="mb-8 text-center relative z-10">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-teal-500/20 to-cyan-500/5 p-[1px] ring-1 ring-white/10 shadow-lg shadow-teal-500/10">
+              <div className="mb-6 sm:mb-8 text-center relative z-10">
+                <div className="mx-auto mb-5 hidden lg:flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-teal-500/20 to-cyan-500/5 p-[1px] ring-1 ring-white/10 shadow-lg shadow-teal-500/10">
                   <div className="flex h-full w-full items-center justify-center rounded-2xl bg-slate-950/80 backdrop-blur-xl">
                     <Image src={Logo} alt={"HireLoop Logo"} className="h-16 w-16 text-teal-400 animate-pulse" />
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-extrabold tracking-tight text-white">
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
                   {isSignUp ? "Create Account" : "Welcome Back"}
                 </h2>
 
@@ -82,7 +84,7 @@ const AuthPageCard = () => {
                   action={signInWithGoogle}
                 >
                   <button
-                    className="group relative flex w-full items-center justify-center gap-3.5 rounded-2xl bg-white px-5 py-4 font-semibold text-slate-900 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-950 cursor-pointer"
+                    className="group relative flex w-full items-center justify-center gap-3.5 rounded-2xl bg-white px-5 py-3 sm:py-4 font-semibold text-slate-900 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-950 cursor-pointer"
                     type="submit"
                   >
                     <svg
@@ -118,7 +120,7 @@ const AuthPageCard = () => {
                 </form>
               </div>
 
-              <div className="relative mt-8 flex items-center justify-center z-10">
+              <div className="relative mt-6 sm:mt-8 flex items-center justify-center z-10">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-white/10" />
                 </div>
@@ -127,7 +129,7 @@ const AuthPageCard = () => {
                 </div>
               </div>
 
-              <div className="mt-8 text-center relative z-10">
+              <div className="mt-6 sm:mt-8 text-center relative z-10">
                 <Link
                   href="/"
                   className="group inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-white"

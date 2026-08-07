@@ -1,9 +1,10 @@
 export type Session = {
-    user: {
-        name: string,
-        email: string
-    }
-}
+    user?: {
+        name?: string | null,
+        email?: string | null,
+        image?: string | null
+    } | null
+} | null
 
 export type Plan = {
     id:string,

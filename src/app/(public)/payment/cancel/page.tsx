@@ -11,7 +11,7 @@ export default function PaymentCancelPage() {
   };
 
   const handleHome = () => {
-    router.push("/");
+    router.push("/billing");
   };
 
   return (
@@ -69,7 +69,7 @@ export default function PaymentCancelPage() {
               className="w-full py-3 px-5 rounded-xl font-semibold bg-slate-800/40 hover:bg-slate-800/60 border border-slate-700/60 text-[#F8FAFC] flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 transform active:scale-98"
             >
               <Home className="w-4 h-4 text-slate-400" />
-              Go to Home Page
+              Go to Payment Page
             </button>
           </div>
         </div>

@@ -119,7 +119,7 @@ export default function PaymentSuccessPage() {
   // Handle redirect when countdown hits 0
   useEffect(() => {
     if (status === "success" && countdown <= 0) {
-      router.push("/");
+      router.push("/billing");
     }
   }, [countdown, status, router]);
 
@@ -351,7 +351,7 @@ export default function PaymentSuccessPage() {
   }, [status]);
 
   const handleManualRedirect = () => {
-    router.push("/");
+    router.push("/billing");
   };
 
   return (
@@ -515,7 +515,7 @@ export default function PaymentSuccessPage() {
             <div className="w-full flex flex-col items-center mb-6">
               <div className="flex items-center gap-2 text-xs text-text-muted mb-2">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-cyan-400" />
-                <span>Redirecting to homepage in <strong className="text-teal-400 font-mono text-sm">{countdown}</strong> seconds...</span>
+                <span>Redirecting to payment page in <strong className="text-teal-400 font-mono text-sm">{countdown}</strong> seconds...</span>
               </div>
               {/* Progress bar container */}
               <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
@@ -531,7 +531,7 @@ export default function PaymentSuccessPage() {
               onClick={handleManualRedirect}
               className="group w-full py-3 px-5 rounded-xl font-semibold bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-dark flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_20px_rgba(20,184,166,0.3)] transition-all duration-300 transform active:scale-98"
             >
-              Go to Home Page
+              Go to Payment Page
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </div>

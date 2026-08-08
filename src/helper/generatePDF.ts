@@ -11,7 +11,7 @@ const generatePaymentReceiptPDF = async (data: {
   customerName: string;
   customerEmail: string;
   receiptID: string;
-  date: number;      
+  date: Date;      
   paymentMethod: string;
   planName: string;
   credits: number;
@@ -205,7 +205,7 @@ const generatePaymentReceiptPDF = async (data: {
 
     // Construct receipt ID and formatted date (with time)
 
-    const paymentDate = new Date(data.date * 1000);
+    const paymentDate = new Date(data.date);
 
     const formattedDate = paymentDate.toLocaleDateString("en-IN", {
         day: "2-digit",

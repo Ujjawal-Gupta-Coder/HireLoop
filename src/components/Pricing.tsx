@@ -3,7 +3,7 @@
 import { Check, Coins, Zap } from "lucide-react";
 import SectionHeader from "./ui/SectionHeader";
 import { useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 import { Plan, Session } from "@/src/types"
 
@@ -47,7 +47,6 @@ const Pricing = ({session, plans}: { session : Session, plans : Plan[] }) => {
 
     return (
         <section id="pricing" className="section-container-style">
-            <Toaster />
             <SectionHeader overLine={"Flexible Packages"} heading={"Invest in Your Career"} subHeading={"Flexible credit packs designed to help you ace every interview."} isPricingSection={true} />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">

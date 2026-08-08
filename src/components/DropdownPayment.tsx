@@ -1,36 +1,37 @@
 import { Prisma } from "@prisma/client"
 import * as DropdownMenu  from "@radix-ui/react-dropdown-menu"
 import { MoreVertical } from "lucide-react"
-import toast, { Toaster } from "react-hot-toast"
+import toast from "react-hot-toast"
 
 type PaymentWithPlan = Prisma.PaymentGetPayload<{
   include: { plan: true }
 }>
 
-const DropdownPayment = ({payment}:{payment: PaymentWithPlan}) => {
+interface DropdownPaymentProps {
+  payment: PaymentWithPlan;
+  onViewDetails: (payment: PaymentWithPlan) => void;
+}
 
-    const handleItemClick = () => {
-        toast("you click on dropdown action")
+const DropdownPayment = ({ payment, onViewDetails }: DropdownPaymentProps) => {
+
+    const handleCopyReceiptId = () => {
+        navigator.clipboard.writeText(payment.receiptId);
+        toast.success("Receipt ID copied to clipboard!");
     }
 
     const items = [
         {
-            label: "View Receipt",
-            action: handleItemClick
-        },
-        {
             label: "View Payment Details",
-            action: handleItemClick
+            action: () => onViewDetails(payment)
         },
         {
             label: "Copy Receipt ID",
-            action: handleItemClick
+            action: handleCopyReceiptId
         },
-
     ]
+
   return (
     <>
-        <Toaster />
         <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
             <button
@@ -48,12 +49,15 @@ const DropdownPayment = ({payment}:{payment: PaymentWithPlan}) => {
             >
                 {
                     items.map((item, index) => {
-                        return <DropdownMenu.Item
-                            key={index}
-                            className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:bg-slate-900 hover:text-slate-100 rounded-lg transition-colors cursor-pointer focus:outline-none focus:bg-slate-900 focus:text-slate-100"
+                        return (
+                            <DropdownMenu.Item
+                                key={index}
+                                onClick={item.action}
+                                className="w-full text-left px-3 py-2 text-xs text-slate-300 hover:bg-slate-900 hover:text-slate-100 rounded-lg transition-colors cursor-pointer focus:outline-none focus:bg-slate-900 focus:text-slate-100"
                             >
-                            <button onClick={item.action} className="cursor-pointer"> {item.label} </button>
-                        </DropdownMenu.Item>
+                                {item.label}
+                            </DropdownMenu.Item>
+                        )
                     })
                 }
             </DropdownMenu.Content>

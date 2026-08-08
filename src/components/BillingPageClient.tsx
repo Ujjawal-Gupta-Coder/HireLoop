@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Coins,
   ShoppingCart,
-  Download,
   CheckCircle2,
   Calendar,
   CreditCard,
@@ -13,13 +12,16 @@ import {
   CircleX,
   Loader,
   HandCoins,
+  FileText,
   LucideIcon
 } from "lucide-react";
 import { Prisma } from "@prisma/client";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import SecurePaymentBanner from "./SecurePaymentBanner";
 import NoPaymentRecord from "./NoPaymentRecord";
 import DropdownPayment from "./DropdownPayment";
+import { useState } from "react";
+import PaymentDetailsModal from "./PaymentDetailsModal";
 
 type PaymentWithPlan = Prisma.PaymentGetPayload<{
   include: { plan: true }
@@ -79,12 +81,31 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
       underLineTextColor: "text-emerald-400"
     }
   ]
+  const [openingReceipt, setOpeningReceipt] = useState<string|null>(null);
+  const [selectedPaymentForDetails, setSelectedPaymentForDetails] = useState<PaymentWithPlan | null>(null);
+
+  const handleReceiptViewClick = async (receiptId:string) => {
+    try {
+      setOpeningReceipt(receiptId);
+      const raw = await fetch(`/api/payment/${receiptId}`);
+      const res = await raw.json();
+      if(!res.success) throw new Error()
+    
+      window.open(res.data.url, "_blank");
+
+    } catch(error) {
+      toast.error("View receipt action failed");
+      console.error("Error in view receipt: ", error);
+    } finally {
+        setOpeningReceipt(null);
+    }
+  }
+
   const columns: string[] = ["Date", "Plan", "Credits", "Amount", "Payment Status", "Receipt"];
 
   if(error) toast.error(error);
   return (
         <main className="flex-1 py-8 px-6 sm:px-8 max-w-7xl w-full mx-auto space-y-8">
-          <Toaster />
 
           {/* Header Row */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -138,7 +159,7 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
               <NoPaymentRecord error={error}/>
               ) : (
                 <div className="overflow-x-auto -mx-6 sm:mx-0">
-                  <table className="w-full min-w-[800px] border-collapse text-left text-sm text-slate-300">
+                  <table className="w-full min-w-[900px] border-collapse text-left text-sm text-slate-300">
                     <thead>
                       <tr className="border-b border-slate-900 text-slate-500 font-semibold text-xs tracking-wider uppercase bg-slate-950/30">
                         {
@@ -230,16 +251,31 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
                           {/* Receipt */}
                           <td className="py-4 px-4">
                             <button
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-teal-500/20 bg-teal-950/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950 hover:border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm active:scale-95"
+                              onClick={()=> {handleReceiptViewClick(payment.receiptId)}}
+                              disabled={openingReceipt === payment.receiptId}
+                              className={`inline-flex items-center gap-1.5 rounded-lg border ${openingReceipt === payment.receiptId ? "border-grey-500/20 bg-slate-900 text-gray-400 hover:bg-gray-200 hover:text-slate-950" : "border-teal-500/20 bg-teal-950/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950"} hover:border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm active:scale-95`}
                             >
-                              <Download className="h-3.5 w-3.5" />
-                              <span>Download</span>
+                              {
+                                openingReceipt === payment.receiptId ? 
+                                <> 
+                                  <Loader className="h-3.5 w-3.5 animate-spin" />
+                                  <span>Preparing</span>
+                                </>
+                              :
+                                <>
+                                  <FileText className="h-3.5 w-3.5 " /> 
+                                  <span>View Receipt</span>
+                                </>
+                              }
                             </button>
                           </td>
 
                           {/* Options menu */}
                           <td className="py-4 px-6 text-right relative">
-                            <DropdownPayment payment={payment}/>
+                            <DropdownPayment 
+                              payment={payment}
+                              onViewDetails={setSelectedPaymentForDetails}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -251,6 +287,16 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
 
           {/* Secure Payments Banner */}
           <SecurePaymentBanner />
+
+          {/* Details Modal */}
+          {selectedPaymentForDetails && (
+            <PaymentDetailsModal
+              payment={selectedPaymentForDetails}
+              onClose={() => setSelectedPaymentForDetails(null)}
+              onViewReceipt={handleReceiptViewClick}
+              openingReceipt={openingReceipt}
+            />
+          )}
         </main>
   );
 }

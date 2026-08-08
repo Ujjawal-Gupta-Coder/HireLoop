@@ -105,7 +105,7 @@ const handlePaymentSuccessCase = async (event: Stripe.CheckoutSessionCompletedEv
             customerName:  user!.name,
             customerEmail: user!.email,
             receiptID,
-            date: session.created,
+            date: payment!.createdAt,
             paymentMethod: "Stripe Checkout",
             planName: planDetails.name,
             credits: planDetails.credits,

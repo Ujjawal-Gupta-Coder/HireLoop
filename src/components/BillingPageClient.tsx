@@ -89,7 +89,7 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
       setOpeningReceipt(receiptId);
       const raw = await fetch(`/api/payment/${receiptId}`);
       const res = await raw.json();
-      if(!res.success) throw new Error()
+      if(!res.success) throw new Error(res.message)
     
       window.open(res.data.url, "_blank");
 
@@ -250,24 +250,28 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
 
                           {/* Receipt */}
                           <td className="py-4 px-4">
-                            <button
-                              onClick={()=> {handleReceiptViewClick(payment.receiptId)}}
-                              disabled={openingReceipt === payment.receiptId}
-                              className={`inline-flex items-center gap-1.5 rounded-lg border ${openingReceipt === payment.receiptId ? "border-grey-500/20 bg-slate-900 text-gray-400 hover:bg-gray-200 hover:text-slate-950" : "border-teal-500/20 bg-teal-950/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950"} hover:border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm active:scale-95`}
-                            >
-                              {
-                                openingReceipt === payment.receiptId ? 
-                                <> 
-                                  <Loader className="h-3.5 w-3.5 animate-spin" />
-                                  <span>Preparing</span>
-                                </>
-                              :
-                                <>
-                                  <FileText className="h-3.5 w-3.5 " /> 
-                                  <span>View Receipt</span>
-                                </>
-                              }
-                            </button>
+                            {
+                              payment.receiptPath && 
+                              <button
+                                onClick={()=> {handleReceiptViewClick(payment.receiptId)}}
+                                disabled={openingReceipt === payment.receiptId}
+                                className={`inline-flex items-center gap-1.5 rounded-lg border ${openingReceipt === payment.receiptId ? "border-grey-500/20 bg-slate-900 text-gray-400 hover:bg-gray-200 hover:text-slate-950" : "border-teal-500/20 bg-teal-950/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950"} hover:border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm active:scale-95`}
+                              >
+                                {
+                                  openingReceipt === payment.receiptId ? 
+                                  <> 
+                                    <Loader className="h-3.5 w-3.5 animate-spin" />
+                                    <span>Preparing</span>
+                                  </>
+                                :
+                                  <>
+                                    <FileText className="h-3.5 w-3.5 " /> 
+                                    <span>View Receipt</span>
+                                  </>
+                                }
+                              </button>
+                            }
+                            
                           </td>
 
                           {/* Options menu */}

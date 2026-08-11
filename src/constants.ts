@@ -1,0 +1,1 @@
+export const PORTFOLIO_WEBSITE = "https://ujjawalgupta.vercel.app/"

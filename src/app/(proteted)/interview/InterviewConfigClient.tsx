@@ -120,6 +120,17 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
     },
   ];
 
+  // Animation steps 
+  const launchStepsText = [
+  "Preparing your interview configuration...",
+  "Analyzing your selected skills and experience...",
+  "Generating your personalized interview structure...",
+  "Calibrating questions to your selected difficulty...",
+  "Initializing the AI interviewer...",
+  "Preparing your interview environment...",
+  "Ready! Entering interview room...",
+];
+
   // State variables
   const [selectedType, setSelectedType] = useState<string>("technical");
   const [selectedSkills, setSelectedSkills] = useState<string[]>(["React", "TypeScript"]);
@@ -132,8 +143,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
   const [launchStep, setLaunchStep] = useState<number>(0);
 
   if (isLaunching) 
-    return <InterviewLaunchAmination launchStep={launchStep} /> ;
-  
+    return <InterviewLaunchAmination launchStep={launchStep} launchStepsText={launchStepsText}/>;
 
   return (
     <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto space-y-8 relative pb-20">
@@ -180,7 +190,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
         </div>
 
         {/* Right: Summary Card */}
-        <SummaryCardConfig credits={credits} interviewTypes={interviewTypes} interViewLengthOptions={interViewLengthOptions} selectedType={selectedType} selectedSkills={selectedSkills} difficulty={difficulty} experience={experience} targetRole={targetRole} sessionLength={sessionLength} focusAreas={focusAreas} setIsLaunching={setIsLaunching} setLaunchStep={setLaunchStep} />
+        <SummaryCardConfig credits={credits} interviewTypes={interviewTypes} interViewLengthOptions={interViewLengthOptions} selectedType={selectedType} selectedSkills={selectedSkills} difficulty={difficulty} experience={experience} targetRole={targetRole} sessionLength={sessionLength} focusAreas={focusAreas} setIsLaunching={setIsLaunching} setLaunchStep={setLaunchStep} totalLaunchSteps={launchStepsText.length} />
 
       </div>
 

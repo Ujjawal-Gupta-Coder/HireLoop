@@ -1,19 +1,15 @@
-import { Loader, Sparkles } from "lucide-react"
+import { Loader } from "lucide-react"
+import Image from "next/image"
+import LOGO from '@/public/logo.svg'
+import Link from "next/link"
+import { PORTFOLIO_WEBSITE } from "@/src/constants"
 
 type InterviewLaunchAminationProps = {
     launchStep: number
+    launchStepsText: string[]
 }
 
-const InterviewLaunchAmination = ({launchStep}: InterviewLaunchAminationProps) => {
-    const launchStepsText = [
-          "Configuring AI Interview Parameters...",
-          "Analyzing selected skills & difficulty context...",
-          "Injecting developer experience profile details...",
-          "Tailoring custom system coding sandbox...",
-          "Initializing AI voice and conversational engine...",
-          "Setting up secure exam room environment...",
-          "Ready! Entering room..."
-        ];
+const InterviewLaunchAmination = ({launchStep, launchStepsText}: InterviewLaunchAminationProps) => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center p-8 bg-[#0B1120] relative min-h-[80vh]">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-teal-500/10 rounded-full blur-[100px] animate-pulse-glow" />
@@ -21,7 +17,8 @@ const InterviewLaunchAmination = ({launchStep}: InterviewLaunchAminationProps) =
         <div className="max-w-md w-full text-center space-y-6 relative z-10 glass-panel-highlight rounded-3xl p-8 border-teal-500/20 bg-slate-950/60 shadow-[0_0_50px_rgba(13,148,136,0.15)] animate-float">
           <div className="flex justify-center">
             <div className="relative w-20 h-20 flex items-center justify-center bg-teal-950/50 border border-teal-500/30 rounded-2xl shadow-inner">
-              <Sparkles className="h-10 w-10 text-teal-400 animate-pulse" />
+              <Image src={LOGO} alt="HireLoop Logo" fill />
+
               <div className="absolute -inset-1 border border-teal-400/20 rounded-2xl animate-spin [animation-duration:10s]" />
             </div>
           </div>
@@ -31,7 +28,7 @@ const InterviewLaunchAmination = ({launchStep}: InterviewLaunchAminationProps) =
               Preparing Your AI Interview
             </h3>
             <p className="text-sm text-slate-400">
-              Generating tailored questions and configuring the audio space...
+              Your interviewer is getting ready...
             </p>
           </div>
 
@@ -48,7 +45,7 @@ const InterviewLaunchAmination = ({launchStep}: InterviewLaunchAminationProps) =
           </div>
 
           <p className="text-[10px] text-slate-500 font-medium tracking-widest uppercase">
-            HIRELOOP AI CORE V2
+            Build with ♥️ by <Link href={PORTFOLIO_WEBSITE}> Ujjawal Gupta </Link>
           </p>
         </div>
       </div>

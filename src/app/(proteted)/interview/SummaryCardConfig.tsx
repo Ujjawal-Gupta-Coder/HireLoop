@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { InterViewLengthOptionsType, InterviewTypeConfig } from "@/src/types"
 import { AlertCircle, ChevronRight, Coins, Compass, Info } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
+import ConformationDialogBox from "./ConformationDialogBox"
 
 type SummaryCardConfig = {
     credits: number,
@@ -18,10 +20,11 @@ type SummaryCardConfig = {
     sessionLength: string, 
     focusAreas: string,
     setIsLaunching: React.Dispatch<React.SetStateAction<boolean>>,
-    setLaunchStep: React.Dispatch<React.SetStateAction<number>>
+    setLaunchStep: React.Dispatch<React.SetStateAction<number>>,
+    totalLaunchSteps: number
 }
 
-const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, selectedType, selectedSkills, difficulty, experience, targetRole, sessionLength, focusAreas, setIsLaunching, setLaunchStep }:SummaryCardConfig) => {
+const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, selectedType, selectedSkills, difficulty, experience, targetRole, sessionLength, focusAreas, setIsLaunching, setLaunchStep, totalLaunchSteps }:SummaryCardConfig) => {
 
     const activeTypeConfig = interviewTypes.find(t => t.id === selectedType) || interviewTypes[0];
     const selectedInterviewLength = interViewLengthOptions.find(e => e.id === sessionLength) || interViewLengthOptions[1]
@@ -30,53 +33,48 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
     const hasEnoughCredits = credits >= requiredCredits;
     const router = useRouter();
 
-    const handleStartInterview = async () => {
-    if (!hasEnoughCredits) {
-      toast.error("Insufficient credits. Please purchase more credits first.");
-      return;
-    }
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isConfirming, setIsConfirming] = useState(false);
 
-    if (selectedSkills.length < 1) {
-      toast.error("Please select at least 1 skill.");
-      return;
-    }
-    if (selectedSkills.length > 5) {
-      toast.error("Please select maximum 5 skills.");
-      return;
-    }
+    const handleStartInterview = () => {
+      if (!hasEnoughCredits) {
+        toast.error("Insufficient credits. Please purchase more credits first.");
+        return;
+      }
 
-    setIsLaunching(true);
-    setLaunchStep(0);
+      if (selectedSkills.length < 1) {
+        toast.error("Please select at least 1 skill.");
+        return;
+      }
+      if (selectedSkills.length > 5) {
+        toast.error("Please select maximum 5 skills.");
+        return;
+      }
 
-    const steps = [
-      "Configuring AI Interview Parameters...",
-      "Analyzing selected skills & difficulty context...",
-      "Injecting developer experience profile details...",
-      "Tailoring custom system coding sandbox...",
-      "Initializing AI voice and conversational engine...",
-      "Setting up secure exam room environment...",
-      "Ready! Entering room..."
-    ];
+      setShowConfirmModal(true);
+    };
 
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setLaunchStep(i);
-    }
+     const handleConfirmStart = async () => {
+      setIsConfirming(true);
+      setIsLaunching(true);
+      setLaunchStep(0);
 
-    toast.success("Interview session initialized successfully!");
-    
-    const query = new URLSearchParams({
-      type: selectedType,
-      skills: selectedSkills.join(","),
-      difficulty,
-      experience,
-      role: targetRole,
-      length: sessionLength,
-      focus: focusAreas
-    }).toString();
-
-    router.push(`/interview-room?${query}`);
-  };
+      for (let i = 0; i < totalLaunchSteps; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setLaunchStep(i);
+      }
+      const config = {
+        type: selectedType,
+        skills: selectedSkills.join(","),
+        difficulty,
+        experience,
+        role: targetRole,
+        length: sessionLength,
+        focus: focusAreas
+      };
+      console.log("the Interview configuration is: ", config)
+      router.push("/interview-room");
+    };
 
   return (
     <div className="lg:col-span-1">
@@ -159,7 +157,8 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
                 <button
                   type="button"
                   onClick={handleStartInterview}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-slate-950 bg-teal-400 hover:bg-teal-300 hover:scale-[1.01] shadow-lg shadow-teal-500/10 hover:shadow-teal-500/25 transition-all duration-200 font-bold text-xs cursor-pointer group select-none relative overflow-hidden"
+                  disabled={isConfirming}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-slate-950 bg-teal-400 hover:bg-teal-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] shadow-lg shadow-teal-500/10 hover:shadow-teal-500/25 transition-all duration-200 font-bold text-xs cursor-pointer group select-none relative overflow-hidden"
                 >
                   <span>Start Interview Session</span>
                   <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
@@ -184,6 +183,12 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
             </div>
 
           </div>
+
+          {/* Confirmation Modal */}
+          {
+            showConfirmModal && 
+            <ConformationDialogBox credits={credits} requiredCredits={requiredCredits} isConfirming={isConfirming} setShowConfirmModal={setShowConfirmModal} handleConfirmStart={handleConfirmStart}/> 
+          }
         </div>
   )
 }

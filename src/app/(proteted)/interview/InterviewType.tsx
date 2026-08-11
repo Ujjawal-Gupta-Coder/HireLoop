@@ -27,9 +27,9 @@ const InterviewType = ({
       </div>
 
       <p className="text-xs text-slate-400 leading-relaxed">
-        Standard sessions focus on conceptual design and QA (10 Credits).
+        Standard sessions focus on conceptual design and QA.
         Specialized coding, situational fit, and mixed assessments utilize
-        sandbox execution systems and custom speech agents (15 Credits).
+        sandbox execution systems and custom speech agents.
       </p>
 
       {/* Grid of cards where height is greater than width */}

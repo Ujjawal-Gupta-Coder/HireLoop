@@ -52,6 +52,12 @@ const DifficultyAndSkills = ({
       setCustomSkill("");
       return;
     }
+
+    if(cleanSkill.length > 40) {
+      toast.error("Skill name must be 40 characters or less");
+      return;
+    }
+
     setSelectedSkills([...selectedSkills, cleanSkill]);
     setCustomSkill("");
   };

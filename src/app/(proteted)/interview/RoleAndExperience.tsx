@@ -39,13 +39,13 @@ const RoleAndExperience = ({
       icon: Smartphone,
     },
     {
-      id: "DevOps / SRE Engineer",
-      name: "DevOps / SRE Engineer",
+      id: "DevOps Engineer",
+      name: "DevOps Engineer",
       icon: Terminal,
     },
     {
-      id: "AI / Machine Learning Engineer",
-      name: "AI / Machine Learning Engineer",
+      id: "AI / ML Engineer",
+      name: "AI / ML Engineer",
       icon: Brain,
     },
   ];

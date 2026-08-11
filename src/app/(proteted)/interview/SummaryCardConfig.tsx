@@ -178,7 +178,7 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
               <div className="flex gap-2 p-2.5 bg-slate-900/30 rounded-xl border border-slate-900 text-[10px] text-slate-500 leading-normal">
                 <Info className="h-3.5 w-3.5 text-slate-400 shrink-0 mt-0.5" />
                 <span>
-                  Normal sessions charge 10 credits. Coding, behavioral, and mixed Assessments require sandbox configurations and charge 15 credits.
+                  Your configuration will be used to dynamically tailor the interview flow, question difficulty, and evaluation criteria to your selected preferences.
                 </span>
               </div>
             </div>

@@ -76,7 +76,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
     {
       id: "mixed",
       title: "Mixed Trial",
-      description: "A hybrid test combining coding, systems, and behavior.",
+      description: "A hybrid test combining technical and behavior rounds.",
       icon: Cpu,
       cost: 15,
       badge: "Best Value",
@@ -124,7 +124,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
   const [selectedType, setSelectedType] = useState<string>("technical");
   const [selectedSkills, setSelectedSkills] = useState<string[]>(["React", "TypeScript"]);
   const [difficulty, setDifficulty] = useState<string>("medium");
-  const [experience, setExperience] = useState<string>("mid-level");
+  const [experience, setExperience] = useState<string>("junior");
   const [targetRole, setTargetRole] = useState<string>("Full Stack Developer");
   const [sessionLength, setSessionLength] = useState<string>("standard");
   const [focusAreas, setFocusAreas] = useState<string>("");

@@ -28,23 +28,23 @@ const RoleAndExperience = ({
 }: RoleAndExperienceProps) => {
   // Target Roles configuration
   const targetRoles = [
-    { id: "Full Stack Developer", name: "Full Stack Developer", icon: Layers },
-    { id: "Front End Developer", name: "Front End Developer", icon: Laptop },
-    { id: "Back End Developer", name: "Back End Developer", icon: Database },
-    { id: "React Developer", name: "React Developer", icon: Code2 },
-    { id: "Software Engineer", name: "Software Engineer", icon: Cpu },
+    { id: "FULL_STACK_DEVELOPER", name: "Full Stack Developer", icon: Layers },
+    { id: "FRONT_END_DEVELOPER", name: "Front End Developer", icon: Laptop },
+    { id: "BACK_END_DEVELOPER", name: "Back End Developer", icon: Database },
+    { id: "REACT_DEVELOPER", name: "React Developer", icon: Code2 },
+    { id: "SOFTWARE_ENGINEER", name: "Software Engineer", icon: Cpu },
     {
-      id: "Mobile App Developer",
+      id: "MOBILE_APP_DEVELOPER",
       name: "Mobile App Developer",
       icon: Smartphone,
     },
     {
-      id: "DevOps Engineer",
+      id: "DEVOPS_ENGINEER",
       name: "DevOps Engineer",
       icon: Terminal,
     },
     {
-      id: "AI / ML Engineer",
+      id: "AI_ML_ENGINEER",
       name: "AI / ML Engineer",
       icon: Brain,
     },
@@ -52,13 +52,13 @@ const RoleAndExperience = ({
 
   // Experience timeline configurations
   const experienceLevels = [
-    { id: "fresher", name: "Fresher", detail: "0-1 yrs", percent: 0 },
-    { id: "junior", name: "Junior", detail: "1-3 yrs", percent: 20 },
-    { id: "mid-level", name: "Mid-Level", detail: "3-5 yrs", percent: 40 },
-    { id: "senior", name: "Senior", detail: "5-8 yrs", percent: 60 },
-    { id: "lead-staff", name: "Lead/Staff", detail: "8+ yrs", percent: 80 },
+    { id: "FRESHER", name: "Fresher", detail: "0-1 yrs", percent: 0 },
+    { id: "JUNIOR", name: "Junior", detail: "1-3 yrs", percent: 20 },
+    { id: "MID_LEVEL", name: "Mid-Level", detail: "3-5 yrs", percent: 40 },
+    { id: "SENIOR", name: "Senior", detail: "5-8 yrs", percent: 60 },
+    { id: "LEAD_STAFF", name: "Lead/Staff", detail: "8+ yrs", percent: 80 },
     {
-      id: "manager-director",
+      id: "MANAGER",
       name: "Manager+",
       detail: "Director",
       percent: 100,
@@ -70,37 +70,37 @@ const RoleAndExperience = ({
     string,
     { bar: string; text: string; glow: string; border: string }
   > = {
-    fresher: {
+    FRESHER: {
       bar: "bg-teal-500",
       text: "text-teal-400",
       glow: "shadow-teal-500/50 border-teal-500",
       border: "border-teal-500/20",
     },
-    junior: {
+    JUNIOR: {
       bar: "bg-emerald-500",
       text: "text-emerald-400",
       glow: "shadow-emerald-500/50 border-emerald-500",
       border: "border-emerald-500/20",
     },
-    "mid-level": {
+    MID_LEVEL: {
       bar: "bg-cyan-500",
       text: "text-cyan-400",
       glow: "shadow-cyan-500/50 border-cyan-500",
       border: "border-cyan-500/20",
     },
-    senior: {
+    SENIOR: {
       bar: "bg-blue-500",
       text: "text-blue-400",
       glow: "shadow-blue-500/50 border-blue-500",
       border: "border-blue-500/20",
     },
-    "lead-staff": {
+    LEAD_STAFF: {
       bar: "bg-indigo-500",
       text: "text-indigo-400",
       glow: "shadow-indigo-500/50 border-indigo-500",
       border: "border-indigo-500/20",
     },
-    "manager-director": {
+    MANAGER: {
       bar: "bg-purple-500",
       text: "text-purple-400",
       glow: "shadow-purple-500/50 border-purple-500",

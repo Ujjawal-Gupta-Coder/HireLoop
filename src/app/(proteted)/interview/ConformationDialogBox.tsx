@@ -42,13 +42,15 @@ const ConformationDialogBox = ({credits, requiredCredits, isConfirming, setShowC
 
         {/* Details Box */}
         <div className="rounded-xl border border-slate-900 bg-slate-950/40 p-4 space-y-3">
+
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-400 font-medium">Credits to Deduct</span>
-            <span className="font-bold text-slate-250">{requiredCredits} Credits</span>
-          </div>
-          <div className="flex justify-between items-center text-xs border-t border-slate-900/60 pt-3">
             <span className="text-slate-400 font-medium">Current Balance</span>
             <span className="font-bold text-teal-400">{credits} Credits</span>
+          </div>
+          
+          <div className="flex justify-between items-center text-xs border-t border-slate-900/60 pt-3">
+            <span className="text-slate-400 font-medium">Credits to Deduct</span>
+            <span className="font-bold text-slate-250">{requiredCredits} Credits</span>
           </div>
           <div className="flex justify-between items-center text-xs border-t border-slate-900/60 pt-3">
             <span className="text-slate-400 font-medium">Remaining Balance</span>

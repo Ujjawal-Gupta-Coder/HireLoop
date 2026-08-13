@@ -33,6 +33,7 @@ export type InterviewTypeConfig = {
 export type InterViewLengthOptionsType = {
     id: string,
     title: string,
+    shortTitle: string,
     questions: number,
     duration: string,
     icon: React.ComponentType<{ className?: string }>,

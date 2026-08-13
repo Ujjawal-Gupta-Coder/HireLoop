@@ -30,7 +30,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
   // Interview Tracks configuration
   const interviewTypes: InterviewTypeConfig[] = [
     {
-      id: "technical",
+      id: "TECHNICAL_INTERVIEW",
       title: "Technical Q&A",
       description: "CS fundamentals, database designs, systems concepts.",
       icon: Laptop,
@@ -41,7 +41,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
       glowColor: "group-hover:shadow-blue-500/10",
     },
     {
-      id: "coding",
+      id: "CODING_INTERVIEW",
       title: "Coding Practice",
       description: "Live interactive coding & algorithm execution sandboxes.",
       icon: Code2,
@@ -52,29 +52,29 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
       glowColor: "group-hover:shadow-teal-500/10",
     },
     {
-      id: "behaviour",
+      id: "BEHAVIORAL_INTERVIEW",
       title: "Behavioral",
       description: "Soft skills, scenarios, fitment check, and leadership fit.",
       icon: Users,
-      cost: 15,
+      cost: 10,
       badge: "Premium",
       iconColor: "text-purple-400",
       borderColor: "border-purple-500/20",
       glowColor: "group-hover:shadow-purple-500/10",
     },
     {
-      id: "system",
+      id: "SYSTEM_DESIGN_INTERVIEW",
       title: "System Design",
       description: "Scalability, high availability, database topologies, APIs.",
       icon: Layers,
-      cost: 10,
+      cost: 15,
       badge: "Standard",
       iconColor: "text-amber-400",
       borderColor: "border-amber-500/20",
       glowColor: "group-hover:shadow-amber-500/10",
     },
     {
-      id: "mixed",
+      id: "MIXED_INTERVIEW",
       title: "Mixed Trial",
       description: "A hybrid test combining technical and behavior rounds.",
       icon: Cpu,
@@ -89,8 +89,9 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
   // Interview length configuration
   const interViewLengthOptions: InterViewLengthOptionsType[] = [
     {
-      id: "quick",
+      id: "QUICK",
       title: "Quick Practice",
+      shortTitle: "Quick",
       questions: 5,
       duration: "~3–4 min",
       icon: Zap,
@@ -99,8 +100,9 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
       isRecommended: false,
     },
     {
-      id: "standard",
+      id: "STANDARD",
       title: "Standard Session",
+      shortTitle: "Standard",
       questions: 8,
       duration: "~5–7 min",
       icon: Clock,
@@ -109,8 +111,9 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
       isRecommended: true,
     },
     {
-      id: "extended",
+      id: "EXTENDED",
       title: "Extended Evaluation",
+      shortTitle: "Extended",
       questions: 12,
       duration: "~8–10 min",
       icon: Timer,
@@ -132,12 +135,12 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
 ];
 
   // State variables
-  const [selectedType, setSelectedType] = useState<string>("technical");
+  const [selectedType, setSelectedType] = useState<string>("TECHNICAL_INTERVIEW");
   const [selectedSkills, setSelectedSkills] = useState<string[]>(["React", "TypeScript"]);
-  const [difficulty, setDifficulty] = useState<string>("medium");
-  const [experience, setExperience] = useState<string>("junior");
-  const [targetRole, setTargetRole] = useState<string>("Full Stack Developer");
-  const [sessionLength, setSessionLength] = useState<string>("standard");
+  const [difficulty, setDifficulty] = useState<string>("MEDIUM");
+  const [experience, setExperience] = useState<string>("JUNIOR");
+  const [targetRole, setTargetRole] = useState<string>("FULL_STACK_DEVELOPER");
+  const [sessionLength, setSessionLength] = useState<string>("STANDARD");
   const [focusAreas, setFocusAreas] = useState<string>("");
    const [isLaunching, setIsLaunching] = useState<boolean>(false);
   const [launchStep, setLaunchStep] = useState<number>(0);

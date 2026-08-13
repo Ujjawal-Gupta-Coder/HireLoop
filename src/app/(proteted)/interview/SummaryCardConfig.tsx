@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import ConformationDialogBox from "./ConformationDialogBox"
+import { formatIdIntoLabel } from "@/src/helper/helper.common"
 
 type SummaryCardConfig = {
     credits: number,
@@ -55,25 +56,50 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
     };
 
      const handleConfirmStart = async () => {
-      setIsConfirming(true);
-      setIsLaunching(true);
-      setLaunchStep(0);
+      try {
+        setIsConfirming(true);
 
-      for (let i = 0; i < totalLaunchSteps; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLaunchStep(i);
+        const config = {
+          type: selectedType,
+          skills: selectedSkills,
+          difficulty,
+          experience,
+          role: targetRole,
+          session: sessionLength,
+          context: focusAreas
+        };
+        const raw = await fetch("/api/interview", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(config)
+        })
+        const res = await raw.json();
+
+        setShowConfirmModal(false);
+
+        if(!res.success) {
+          toast.error(res.message || "Failed to create interview session");
+          setIsConfirming(false);
+          return;
+        }
+        
+        setIsLaunching(true);
+        setLaunchStep(0);
+        for (let i = 0; i < totalLaunchSteps; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 800));
+          setLaunchStep(i);
+        }
+        
+        router.push(`/interview-room/${res.data.interviewId}`);
+
+      } catch(error) {
+        console.log("Error in creating interview session:", error);
+        toast.error("Failed to create interview session")
+        setIsConfirming(false);
+        setShowConfirmModal(false);
       }
-      const config = {
-        type: selectedType,
-        skills: selectedSkills.join(","),
-        difficulty,
-        experience,
-        role: targetRole,
-        length: sessionLength,
-        focus: focusAreas
-      };
-      console.log("the Interview configuration is: ", config)
-      router.push("/interview-room");
     };
 
   return (
@@ -98,25 +124,25 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
 
               <div className="flex justify-between items-start gap-4 border-b border-slate-900/40 pb-2">
                 <span className="text-slate-500 font-medium">Target Role:</span>
-                <span className="text-slate-200 font-semibold text-right max-w-[130px] truncate" title={targetRole}>
-                  {targetRole}
+                <span className="text-slate-200 font-semibold text-right max-w-[130px] truncate">
+                  {formatIdIntoLabel(targetRole)}
                 </span>
               </div>
 
               <div className="flex justify-between items-start gap-4 border-b border-slate-900/40 pb-2">
                 <span className="text-slate-500 font-medium">Seniority Profile:</span>
-                <span className="text-slate-200 font-semibold text-right capitalize">{experience.replace("-", " ")}</span>
+                <span className="text-slate-200 font-semibold text-right capitalize">{formatIdIntoLabel(experience)}</span>
               </div>
 
               <div className="flex justify-between items-start gap-4 border-b border-slate-900/40 pb-2">
                 <span className="text-slate-500 font-medium">Difficulty Level:</span>
-                <span className="text-slate-200 font-semibold capitalize text-right">{difficulty}</span>
+                <span className="text-slate-200 font-semibold capitalize text-right">{formatIdIntoLabel(difficulty)}</span>
               </div>
 
               <div className="flex justify-between items-start gap-4 border-b border-slate-900/40 pb-2">
                 <span className="text-slate-500 font-medium">Session Length:</span>
                 <span className="text-slate-200 font-semibold capitalize text-right">
-                  {selectedInterviewLength.id} ({selectedInterviewLength.questions} Qs)
+                  {selectedInterviewLength.shortTitle} ({selectedInterviewLength.questions} Qs)
                 </span>
               </div>
 
@@ -128,7 +154,7 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
               </div>
             </div>
 
-            {/* Dynamic Credits cost block - REDESIGNED (Total cost left, Credits on right, no badges, compact size) */}
+            {/* Dynamic Credits cost block */}
             <div className="bg-slate-950/70 rounded-xl p-3.5 border border-slate-900 shadow-inner">
               <div className="flex justify-between items-center text-sm">
                 <span className="font-semibold text-slate-400">Total Cost</span>

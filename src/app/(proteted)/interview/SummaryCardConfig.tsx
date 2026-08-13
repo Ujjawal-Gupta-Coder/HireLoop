@@ -85,6 +85,8 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
           return;
         }
         
+        router.refresh();
+
         setIsLaunching(true);
         setLaunchStep(0);
         for (let i = 0; i < totalLaunchSteps; i++) {
@@ -95,7 +97,7 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
         router.push(`/interview-room/${res.data.interviewId}`);
 
       } catch(error) {
-        console.log("Error in creating interview session:", error);
+        console.error("Error in creating interview session:", error);
         toast.error("Failed to create interview session")
         setIsConfirming(false);
         setShowConfirmModal(false);

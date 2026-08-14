@@ -1,3 +1,4 @@
+import { formatIdIntoLabel } from "@/src/helper/helper.common";
 import {
   Brain,
   Check,
@@ -129,7 +130,7 @@ const RoleAndExperience = ({
               Target Role
             </label>
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border border-teal-500/10 bg-teal-950/30 text-teal-400 select-none">
-              Active: {targetRole}
+              Active: {formatIdIntoLabel(targetRole)}
             </span>
           </div>
 

@@ -164,7 +164,7 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-100 font-display">
           Setup Your AI Interview
         </h1>
-        <p className="text-sm text-slate-400 leading-relaxed max-w-3xl">
+        <p className="text-[12px] md:text-sm text-slate-400 leading-relaxed max-w-3xl">
           Configure your technical scope, experience level, and difficulty. Our generative AI agent will craft a personalized session based on your parameters.
         </p>
       </div>

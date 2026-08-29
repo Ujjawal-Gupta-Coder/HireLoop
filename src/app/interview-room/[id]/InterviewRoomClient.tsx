@@ -5,7 +5,11 @@ import Header from "./Header";
 import InterviewerFeed from "./InterviewerFeed";
 import Sidebar from "./Sidebar";
 
-export default function InterviewRoomClient() {
+type InterviewRoomClientProps = {
+  type: string
+}
+
+export default function InterviewRoomClient({type: interviewType}: InterviewRoomClientProps) {
 
   // Timer state
   const [timeElapsed, setTimeElapsed] = useState(0); 
@@ -17,9 +21,6 @@ export default function InterviewRoomClient() {
   // Questions
   const totalQuestion = 10;
   const [currentQuestion, setCurrentQuestion] = useState(4);
-
-  // Interview type
-  const interviewType = "TECHNICAL_INTERVIEW"
 
   // Start ticking timer
   useEffect(() => {

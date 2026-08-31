@@ -1,6 +1,11 @@
 import { Mic } from "lucide-react";
 
-const VoiceWave = ({ state }: { state: "listening" | "speaking" | "thinking" }) => {
+type VoiceWaveProps = {
+  state: "listening" | "speaking" | "thinking";
+  onMicClick?: () => void;
+};
+
+const VoiceWave = ({ state, onMicClick }: VoiceWaveProps) => {
   // Height configurations for the sound wave bars
   const leftHeights = [6, 10, 8, 14, 10, 20, 12, 24, 16, 20, 10, 14, 8, 10];
   const rightHeights = [10, 8, 14, 10, 20, 16, 24, 12, 20, 10, 14, 8, 10, 6];
@@ -45,8 +50,12 @@ const VoiceWave = ({ state }: { state: "listening" | "speaking" | "thinking" }) 
         })}
       </div>
 
-      {/* Center glowing microphone circle */}
-      <div className="relative mx-3 flex items-center justify-center min-w-10 min-h-10 rounded-full bg-[#020408]/95 border border-teal-500/40 shadow-[0_0_24px_rgba(20,184,166,0.35)] pointer-events-auto group active:scale-95 transition-all">
+      {/* Center glowing microphone button */}
+      <button 
+        onClick={onMicClick}
+        disabled={state !== "listening"}
+        className="relative mx-3 flex items-center justify-center min-w-10 min-h-10 rounded-full bg-[#020408]/95 border border-teal-500/40 shadow-[0_0_24px_rgba(20,184,166,0.35)] pointer-events-auto group active:scale-95 transition-all cursor-pointer disabled:cursor-default"
+      >
         {state === "listening" && (
           <div className="absolute inset-0 rounded-full border border-teal-500/30 animate-ping opacity-60 pointer-events-none" />
         )}
@@ -57,7 +66,7 @@ const VoiceWave = ({ state }: { state: "listening" | "speaking" | "thinking" }) 
           <div className="absolute inset-0 rounded-full border border-purple-500/20 animate-pulse opacity-40 pointer-events-none" />
         )}
         <Mic className="w-6 h-6 text-teal-400 group-hover:scale-105 transition-transform" />
-      </div>
+      </button>
 
       {/* Right side wave */}
       <div className="flex items-center gap-1.5">
@@ -93,4 +102,4 @@ const VoiceWave = ({ state }: { state: "listening" | "speaking" | "thinking" }) 
   );
 }
 
-export default VoiceWave
+export default VoiceWave;

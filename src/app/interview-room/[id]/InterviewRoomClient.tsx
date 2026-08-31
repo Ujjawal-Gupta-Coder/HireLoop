@@ -1,7 +1,7 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/purity */
+//  🔦--->       /* eslint-disable @typescript-eslint/no-explicit-any */
+//  🔦-->      /* eslint-disable react-hooks/purity */
 
 import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
@@ -9,8 +9,9 @@ import InterviewerFeed from "./InterviewerFeed";
 import Sidebar from "./Sidebar";
 import { generateInterviewQuestion, updateInterviewProgress, endInterviewSession } from "@/src/actions/interview";
 import { formatIdIntoLabel } from "@/src/helper/helper.common";
-import { Sparkles } from "lucide-react";
+import LOGO from "@/public/logo.svg"
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 type SerializedInterviewDetails = {
   id: string;
@@ -517,7 +518,8 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md">
           <div className="max-w-md w-full mx-4 p-8 rounded-3xl border border-teal-500/30 bg-gradient-to-b from-[#080d1a] to-[#030612] text-center shadow-[0_0_50px_rgba(20,184,166,0.15)]">
             <div className="w-16 h-16 mx-auto rounded-full bg-teal-500/10 flex items-center justify-center border border-teal-500/20 mb-6 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
-              <Sparkles className="w-8 h-8 text-teal-400" />
+              {/* <Sparkles className="w-8 h-8 text-teal-400" /> */}
+              <Image src={LOGO} alt={"HireLoop Logo"} />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2 tracking-tight">AI Voice Interview Room</h2>
             <p className="text-slate-400 text-sm mb-6 leading-relaxed">

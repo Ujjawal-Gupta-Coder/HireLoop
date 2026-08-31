@@ -23,16 +23,28 @@ const VoiceWave = ({ state, onMicClick }: VoiceWaveProps) => {
       {/* Left side wave */}
       <div className="flex items-center gap-1.5">
         {/* 10 dots */}
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div 
+        {Array.from({ length: 10 }).map((_, i) => {
+          const dotOpacity = (i: number, state: string) =>
+            state === "thinking"
+              ? 0.2 + Math.sin(i * 0.55) * 0.2
+              : 0.6
+
+          const dotScale = (i: number, state: string) =>
+            state === "thinking"
+              ? 0.75 + Math.sin(i * 0.55) * 0.25
+              : 1
+          return <div 
             key={`left-dot-${i}`} 
             className="w-1.5 h-1.5 rounded-full bg-teal-500/40 transition-all duration-500"
             style={{
-              opacity: state === "thinking" ? 0.2 + Math.sin(i * 0.55) * 0.2 : 0.6,
-              transform: state === "thinking" ? `scale(${0.75 + Math.sin(i * 0.55) * 0.25})` : "none",
+              opacity: Number(dotOpacity(i, state).toFixed(3)),
+              transform:
+                state === "thinking"
+                  ? `scale(${dotScale(i, state).toFixed(3)})`
+                  : "none",
             }}
           />
-        ))}
+})}
         {/* 14 bars */}
         {leftHeights.map((height, i) => {
           // ripple effect delay (closer to center means smaller delay)
@@ -86,16 +98,29 @@ const VoiceWave = ({ state, onMicClick }: VoiceWaveProps) => {
           );
         })}
         {/* 10 dots */}
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div 
+        {Array.from({ length: 10 }).map((_, i) => {
+          const dotOpacity = (i: number, state: string) =>
+            state === "thinking"
+              ? 0.2 + Math.sin(i * 0.55) * 0.2
+              : 0.6
+
+          const dotScale = (i: number, state: string) =>
+            state === "thinking"
+              ? 0.75 + Math.sin(i * 0.55) * 0.25
+              : 1
+
+          return <div 
             key={`right-dot-${i}`} 
             className="w-1.5 h-1.5 rounded-full bg-teal-500/40 transition-all duration-500"
             style={{
-              opacity: state === "thinking" ? 0.2 + Math.sin((i + 10) * 0.55) * 0.2 : 0.6,
-              transform: state === "thinking" ? `scale(${0.75 + Math.sin((i + 10) * 0.55) * 0.25})` : "none",
+              opacity: Number(dotOpacity(i, state).toFixed(3)),
+              transform:
+                state === "thinking"
+                  ? `scale(${dotScale(i, state).toFixed(3)})`
+                  : "none",
             }}
           />
-        ))}
+          })}
       </div>
 
     </div>

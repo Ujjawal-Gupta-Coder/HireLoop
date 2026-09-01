@@ -2,7 +2,8 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { prisma } from "@/src/lib/prisma";
-import { InterviewStatus } from "@prisma/client";
+import { InterviewStatus, Speaker } from "@prisma/client";
+import { auth } from "@/src/auth";
 
 type MappedMessage = {
   role: "user" | "model";
@@ -78,11 +79,104 @@ Strict Constraints:
   }
 }
 
-export async function updateInterviewProgress(interviewId: string, answeredCount: number) {
+export type SaveConversationParams = {
+  interviewId: string;
+  speaker: Speaker;
+  message: string;
+  questionNumber?: number | null;
+  timeElapsed?: number;
+  answered?: number;
+};
+
+export async function saveConversationMessage({
+  interviewId,
+  speaker,
+  message,
+  questionNumber,
+  timeElapsed,
+  answered,
+}: SaveConversationParams) {
   try {
+    const session = await auth();
+    if (!session?.user?.email) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const trimmed = message.trim();
+    if (!trimmed) {
+      return { success: false, error: "Message cannot be empty" };
+    }
+
+    const interview = await prisma.interviewHistory.findFirst({
+      where: {
+        id: interviewId,
+        user: { email: session.user.email },
+      },
+      select: { id: true },
+    });
+
+    if (!interview) {
+      return { success: false, error: "Interview session not found or unauthorized" };
+    }
+
+    const conversation = await prisma.conversation.create({
+      data: {
+        interviewId,
+        speaker,
+        message: trimmed,
+        questionNumber: questionNumber ?? null,
+      },
+    });
+
+    const updateData: { timeElapsed?: number; answered?: number } = {};
+    if (typeof timeElapsed === "number" && !isNaN(timeElapsed)) {
+      updateData.timeElapsed = Math.max(0, Math.floor(timeElapsed));
+    }
+    if (typeof answered === "number" && !isNaN(answered)) {
+      updateData.answered = Math.max(0, Math.floor(answered));
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      await prisma.interviewHistory.update({
+        where: { id: interviewId },
+        data: updateData,
+      });
+    }
+
+    return {
+      success: true,
+      data: {
+        id: conversation.id,
+        interviewId: conversation.interviewId,
+        speaker: conversation.speaker,
+        message: conversation.message,
+        questionNumber: conversation.questionNumber,
+        createdAt: conversation.createdAt.toISOString(),
+      },
+    };
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : "Failed to save conversation";
+    console.error("Error in saveConversationMessage:", error);
+    return { success: false, error: errMsg };
+  }
+}
+
+export async function updateInterviewProgress(
+  interviewId: string,
+  answeredCount: number,
+  timeElapsed?: number
+) {
+  try {
+    const updateData: { answered: number; timeElapsed?: number } = {
+      answered: answeredCount,
+    };
+    if (typeof timeElapsed === "number" && !isNaN(timeElapsed)) {
+      updateData.timeElapsed = Math.max(0, Math.floor(timeElapsed));
+    }
+
     await prisma.interviewHistory.update({
       where: { id: interviewId },
-      data: { answered: answeredCount },
+      data: updateData,
     });
     return { success: true };
   } catch (error: unknown) {
@@ -92,12 +186,64 @@ export async function updateInterviewProgress(interviewId: string, answeredCount
   }
 }
 
-export async function endInterviewSession(interviewId: string) {
+export type EndInterviewSessionOptions = {
+  interviewId: string;
+  timeElapsed?: number;
+  answered?: number;
+  status?: InterviewStatus;
+  pendingTranscript?: {
+    speaker: Speaker;
+    message: string;
+    questionNumber?: number | null;
+  };
+};
+
+export async function endInterviewSession(
+  input: string | EndInterviewSessionOptions
+) {
   try {
+    const interviewId = typeof input === "string" ? input : input.interviewId;
+    const timeElapsed = typeof input === "object" ? input.timeElapsed : undefined;
+    const answered = typeof input === "object" ? input.answered : undefined;
+    const status =
+      typeof input === "object" && input.status
+        ? input.status
+        : InterviewStatus.COMPLETED;
+    const pendingTranscript =
+      typeof input === "object" ? input.pendingTranscript : undefined;
+
+    if (pendingTranscript && pendingTranscript.message.trim()) {
+      await prisma.conversation.create({
+        data: {
+          interviewId,
+          speaker: pendingTranscript.speaker,
+          message: pendingTranscript.message.trim(),
+          questionNumber: pendingTranscript.questionNumber ?? null,
+        },
+      });
+    }
+
+    const updateData: {
+      status: InterviewStatus;
+      timeElapsed?: number;
+      answered?: number;
+    } = {
+      status,
+    };
+
+    if (typeof timeElapsed === "number" && !isNaN(timeElapsed)) {
+      updateData.timeElapsed = Math.max(0, Math.floor(timeElapsed));
+    }
+
+    if (typeof answered === "number" && !isNaN(answered)) {
+      updateData.answered = Math.max(0, Math.floor(answered));
+    }
+
     await prisma.interviewHistory.update({
       where: { id: interviewId },
-      data: { status: InterviewStatus.COMPLETED },
+      data: updateData,
     });
+
     return { success: true };
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : "Failed to end interview";

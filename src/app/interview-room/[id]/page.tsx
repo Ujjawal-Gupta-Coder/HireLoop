@@ -29,6 +29,13 @@ const page = async ({params}:{params: Promise<{id: string}>}) => {
     where: {
       id: interviewId,
       userId: user.id
+    },
+    include: {
+      conversations: {
+        orderBy: {
+          createdAt: "asc"
+        }
+      }
     }
   })
   if(!interviewDetails) return <InvalidIdClient />
@@ -36,28 +43,25 @@ const page = async ({params}:{params: Promise<{id: string}>}) => {
   if(interviewDetails.status !== "RUNNING") {
     redirect(`/analytics/${interviewDetails.id}`)
   }
-// 🔦 http://localhost:3000/interview-room/cmsrb7lpm0003ks00u5mmwmv6
 
-
-  // const serializedDetails = {
-  //   id: interviewDetails.id,
-  //   userId: interviewDetails.userId,
-  //   type: interviewDetails.type,
-  //   role: interviewDetails.role,
-  //   experience: interviewDetails.experience,
-  //   difficulty: interviewDetails.difficulty,
-  //   skills: interviewDetails.skills,
-  //   sessionType: interviewDetails.sessionType,
-  //   context: interviewDetails.context,
-  //   creditsUsed: interviewDetails.creditsUsed,
-  //   totalQuestions: interviewDetails.totalQuestions,
-  //   answered: interviewDetails.answered,
-  //   status: interviewDetails.status,
-  // };
+  const serializedDetails = {
+    ...interviewDetails,
+    timeElapsed: interviewDetails.timeElapsed ?? 0,
+    createdAt: interviewDetails.createdAt.toISOString(),
+    updatedAt: interviewDetails.updatedAt.toISOString(),
+    conversations: interviewDetails.conversations.map((c) => ({
+      id: c.id,
+      interviewId: c.interviewId,
+      speaker: c.speaker,
+      message: c.message,
+      questionNumber: c.questionNumber,
+      createdAt: c.createdAt.toISOString(),
+    })),
+  };
 
   return (
     <>
-      <InterviewRoomClient interviewDetails={interviewDetails} />
+      <InterviewRoomClient interviewDetails={serializedDetails} />
       <BottomLineFooter />
     </>
   )

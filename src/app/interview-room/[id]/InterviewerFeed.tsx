@@ -1,13 +1,15 @@
 "use client";
 
-import { AudioLines, Brain, Mic, PhoneOff, Sparkles } from "lucide-react";
+import { AudioLines, Brain, LogOut, PhoneOff, Sparkles } from "lucide-react";
 import VoiceWave from "./VoiceWave";
 import Image from "next/image";
 import InterviewerImage from "@/public/interviewer.png";
+import SubmitSpeechUI from "./SubmitSpeechUI";
 
 type InterviewerFeedProps = {
   interviewerState: "listening" | "speaking" | "thinking";
   onEndInterview: () => void;
+  onExitInterview: () => void;
   hasSpoken: boolean;
   onSubmitAnswer: () => void;
 };
@@ -15,6 +17,7 @@ type InterviewerFeedProps = {
 const InterviewerFeed = ({
   interviewerState,
   onEndInterview,
+  onExitInterview,
   hasSpoken,
   onSubmitAnswer,
 }: InterviewerFeedProps) => {
@@ -87,37 +90,39 @@ const InterviewerFeed = ({
         {/* Middle/Bottom: Audio Wave Overlay & Center Microphone */}
         <VoiceWave state={interviewerState} onMicClick={onSubmitAnswer} />
 
+        {/* Floating Done / Submit Answer Button - Visible only when candidate is speaking and ready to submit */}
+        {interviewerState === "listening" && hasSpoken && (
+          <SubmitSpeechUI onSubmitAnswer={onSubmitAnswer}/>
+        )}
+
         {/* Bottom Row: Controls Overlay */}
-        <div className="relative z-10 py-6 px-1 sm:px-6 flex flex-col items-center pointer-events-none mt-auto ">
+        <div className="relative z-10 py-6 px-1 sm:px-6 flex flex-col items-center pointer-events-none mt-auto">
           
           {/* Glassmorphic main control panel */}
-          <div className="flex items-center justify-center gap-5 sm:gap-7 w-fit backdrop-blur-lg border border-slate-800/60 px-5 sm:px-7 py-2.5 sm:py-3 rounded-[20px] shadow-xl pointer-events-auto">
+          <div className="flex items-center justify-center gap-6 sm:gap-8 w-fit backdrop-blur-lg border border-slate-800/60 px-6 sm:px-8 py-2.5 sm:py-3 rounded-[24px] shadow-2xl pointer-events-auto bg-slate-950/40">
             
-            {/* Done (Submit) button */}
+            {/* 1. Exit Interview (Pause & Resume Later) Button */}
             <div className="flex flex-col items-center gap-1.5 group/btn">
               <button 
-                onClick={onSubmitAnswer}
-                disabled={interviewerState !== "listening" || !hasSpoken}
-                className={`w-11 h-11 rounded-full flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed ${
-                  interviewerState === "listening" && hasSpoken
-                    ? "bg-teal-500 text-slate-950 border border-teal-400 hover:bg-teal-400 hover:text-slate-950 shadow-[0_0_15px_rgba(20,184,166,0.4)] animate-pulse"
-                    : "bg-slate-900/60 text-slate-500 border border-slate-800/80"
-                }`}
+                onClick={onExitInterview}
+                className="w-12 h-12 rounded-full cursor-pointer bg-slate-900/90 hover:bg-amber-500/20 active:scale-95 text-slate-300 hover:text-amber-400 flex items-center justify-center transition shadow-md border border-slate-700/70 hover:border-amber-500/40"
+                title="Pause interview and resume later"
               >
-                <Mic className="w-5 h-5" />
+                <LogOut className="w-5 h-5" />
               </button>
-              <span className={`text-[10px] font-bold uppercase tracking-wider transition ${
-                interviewerState === "listening" && hasSpoken ? "text-teal-400" : "text-slate-500"
-              }`}>
-                Done
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/btn:text-amber-400 transition">
+                Exit Room
               </span>
             </div>
 
-            {/* End Interview Button */}
+            <div className="w-px h-8 bg-slate-800/80" />
+
+            {/* 2. End Interview (Complete & Finalize) Button */}
             <div className="flex flex-col items-center gap-1.5 group/btn">
               <button 
                 onClick={onEndInterview}
                 className="w-12 h-12 rounded-full cursor-pointer bg-[#ef4444] hover:bg-red-500 active:scale-95 text-white flex items-center justify-center transition shadow-lg shadow-red-600/30 border border-red-500/40"
+                title="End interview permanently"
               >
                 <PhoneOff className="w-5 h-5" />
               </button>

@@ -86,6 +86,7 @@ export type SaveConversationParams = {
   questionNumber?: number | null;
   timeElapsed?: number;
   answered?: number;
+  notes?: string;
 };
 
 export async function saveConversationMessage({
@@ -95,6 +96,7 @@ export async function saveConversationMessage({
   questionNumber,
   timeElapsed,
   answered,
+  notes,
 }: SaveConversationParams) {
   try {
     const session = await auth();
@@ -128,12 +130,15 @@ export async function saveConversationMessage({
       },
     });
 
-    const updateData: { timeElapsed?: number; answered?: number } = {};
+    const updateData: { timeElapsed?: number; answered?: number; notes?: string } = {};
     if (typeof timeElapsed === "number" && !isNaN(timeElapsed)) {
       updateData.timeElapsed = Math.max(0, Math.floor(timeElapsed));
     }
     if (typeof answered === "number" && !isNaN(answered)) {
       updateData.answered = Math.max(0, Math.floor(answered));
+    }
+    if (typeof notes === "string") {
+      updateData.notes = notes;
     }
 
     if (Object.keys(updateData).length > 0) {
@@ -164,14 +169,18 @@ export async function saveConversationMessage({
 export async function updateInterviewProgress(
   interviewId: string,
   answeredCount: number,
-  timeElapsed?: number
+  timeElapsed?: number,
+  notes?: string
 ) {
   try {
-    const updateData: { answered: number; timeElapsed?: number } = {
+    const updateData: { answered: number; timeElapsed?: number; notes?: string } = {
       answered: answeredCount,
     };
     if (typeof timeElapsed === "number" && !isNaN(timeElapsed)) {
       updateData.timeElapsed = Math.max(0, Math.floor(timeElapsed));
+    }
+    if (typeof notes === "string") {
+      updateData.notes = notes;
     }
 
     await prisma.interviewHistory.update({
@@ -190,6 +199,7 @@ export type EndInterviewSessionOptions = {
   interviewId: string;
   timeElapsed?: number;
   answered?: number;
+  notes?: string;
   status?: InterviewStatus;
   pendingTranscript?: {
     speaker: Speaker;
@@ -205,6 +215,7 @@ export async function endInterviewSession(
     const interviewId = typeof input === "string" ? input : input.interviewId;
     const timeElapsed = typeof input === "object" ? input.timeElapsed : undefined;
     const answered = typeof input === "object" ? input.answered : undefined;
+    const notes = typeof input === "object" ? input.notes : undefined;
     const status =
       typeof input === "object" && input.status
         ? input.status
@@ -227,6 +238,7 @@ export async function endInterviewSession(
       status: InterviewStatus;
       timeElapsed?: number;
       answered?: number;
+      notes?: string;
     } = {
       status,
     };
@@ -237,6 +249,10 @@ export async function endInterviewSession(
 
     if (typeof answered === "number" && !isNaN(answered)) {
       updateData.answered = Math.max(0, Math.floor(answered));
+    }
+
+    if (typeof notes === "string") {
+      updateData.notes = notes;
     }
 
     await prisma.interviewHistory.update({

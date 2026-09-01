@@ -43,6 +43,7 @@ export type SerializedInterviewDetails = {
   answered: number;
   status: string;
   timeElapsed: number;
+  notes?: string | null;
   conversations?: SerializedConversation[];
 };
 
@@ -77,8 +78,13 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
   const timeElapsedRef = useRef<number>(interviewDetails.timeElapsed || 0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Notes
-  const [notes, setNotes] = useState<string>("");
+  // Notes initialized from Database
+  const [notes, setNotes] = useState<string>(interviewDetails.notes || "");
+  const notesRef = useRef<string>(interviewDetails.notes || "");
+
+  useEffect(() => {
+    notesRef.current = notes;
+  }, [notes]);
 
   // Total questions
   const totalQuestions = interviewDetails.totalQuestions;
@@ -191,7 +197,8 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
         updateInterviewProgress(
           interviewDetails.id, 
           answeredCountRef.current, 
-          timeElapsedRef.current
+          timeElapsedRef.current,
+          notesRef.current
         );
       }
     };
@@ -314,13 +321,14 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       }
     ]);
 
-    // Save AI response to DB with elapsed time
+    // Save AI response to DB with elapsed time and notes
     await saveConversationMessage({
       interviewId: interviewDetails.id,
       speaker: Speaker.INTERVIEWER,
       message: questionText,
       questionNumber: nextQuestionIndex,
       timeElapsed: timeElapsedRef.current,
+      notes: notesRef.current,
     });
 
     speakText(questionText, () => {
@@ -369,7 +377,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       }
     ]);
 
-    // 4. System completion: Store conversation in DB, update status to COMPLETED, answered count, and time elapsed
+    // 4. System completion: Store conversation in DB, update status to COMPLETED, answered count, time elapsed, and notes
     await saveConversationMessage({
       interviewId: interviewDetails.id,
       speaker: Speaker.INTERVIEWER,
@@ -377,6 +385,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       questionNumber: totalQuestions,
       timeElapsed: timeElapsedRef.current,
       answered: totalQuestions,
+      notes: notesRef.current,
     });
 
     await endInterviewSession({
@@ -384,6 +393,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       timeElapsed: timeElapsedRef.current,
       answered: totalQuestions,
       status: InterviewStatus.COMPLETED,
+      notes: notesRef.current,
     });
 
     speakText(closingText, async () => {
@@ -427,7 +437,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
     answeredCountRef.current = currentQuestion;
     setAnsweredCount(currentQuestion);
 
-    // 2. Save candidate response in DB with timeElapsed and answered count
+    // 2. Save candidate response in DB with timeElapsed, answered count, and notes
     await saveConversationMessage({
       interviewId: interviewDetails.id,
       speaker: Speaker.CANDIDATE,
@@ -435,6 +445,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       questionNumber: currentQuestion,
       timeElapsed: timeElapsedRef.current,
       answered: currentQuestion,
+      notes: notesRef.current,
     });
 
     const nextQuestionIndex = currentQuestion + 1;
@@ -580,7 +591,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
 
     setMessages([introMessage]);
 
-    // Save initial prompt to DB
+    // Save initial prompt to DB with notes
     saveConversationMessage({
       interviewId: interviewDetails.id,
       speaker: Speaker.INTERVIEWER,
@@ -588,6 +599,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       questionNumber: 1,
       timeElapsed: timeElapsedRef.current,
       answered: 0,
+      notes: notesRef.current,
     });
 
     speakText(introPrompt, () => {
@@ -664,6 +676,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
           questionNumber: currentQuestion,
           timeElapsed: timeElapsedRef.current,
           answered: currentQuestion,
+          notes: notesRef.current,
         });
         answeredCountRef.current = currentQuestion;
         setAnsweredCount(currentQuestion);
@@ -672,7 +685,8 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       await updateInterviewProgress(
         interviewDetails.id,
         answeredCountRef.current,
-        timeElapsedRef.current
+        timeElapsedRef.current,
+        notesRef.current
       );
 
       toast.success("Progress saved! You can resume anytime.", {
@@ -703,6 +717,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
         timeElapsed: timeElapsedRef.current,
         answered: answeredCountRef.current,
         status: InterviewStatus.COMPLETED,
+        notes: notesRef.current,
         pendingTranscript: pendingText
           ? {
               speaker: Speaker.CANDIDATE,

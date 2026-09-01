@@ -105,7 +105,7 @@ const DifficultyAndSkills = ({
       description: string;
     }
   > = {
-    easy: {
+    EASY: {
       percent: 33,
       color: "bg-emerald-500",
       bg: "bg-emerald-950/20",
@@ -113,7 +113,7 @@ const DifficultyAndSkills = ({
       description:
         "Conceptual baseline. Ideal for entry-level checks, fundamental loops, syntax details, and simple behavioral situations.",
     },
-    medium: {
+    MEDIUM: {
       percent: 66,
       color: "bg-amber-500",
       bg: "bg-amber-950/20",
@@ -121,7 +121,7 @@ const DifficultyAndSkills = ({
       description:
         "Standard industry evaluation. Includes core system patterns, practical algorithms, API designs, and typical engineering collaboration challenges.",
     },
-    hard: {
+    HARD: {
       percent: 100,
       color: "bg-rose-500",
       bg: "bg-rose-950/20",
@@ -130,6 +130,32 @@ const DifficultyAndSkills = ({
         "Rigorous architect level. Focuses on system scale bottlenecks, deep structural algorithm complexity, edge optimizations, and senior engineering conflicts.",
     },
   };
+  const difficultyOptions = [
+    {
+      id: "EASY",
+      name: "Easy Practice",
+      color:
+        "border-emerald-500/20 text-emerald-400 bg-emerald-950/10 hover:bg-emerald-950/20",
+      activeColor:
+        "border-emerald-500 bg-emerald-950/40 ring-1 ring-emerald-500/30",
+    },
+    {
+      id: "MEDIUM",
+      name: "Medium (Standard)",
+      color:
+        "border-amber-500/20 text-amber-400 bg-amber-950/10 hover:bg-amber-950/20",
+      activeColor:
+        "border-amber-500 bg-amber-950/40 ring-1 ring-amber-500/30",
+    },
+    {
+      id: "HARD",
+      name: "Hard (Rigorous)",
+      color:
+        "border-rose-500/20 text-rose-400 bg-rose-950/10 hover:bg-rose-950/20",
+      activeColor:
+        "border-rose-500 bg-rose-950/40 ring-1 ring-rose-500/30",
+    },
+  ]
   const activeDifficultyMetric =
     difficultyMetadata[difficulty] || difficultyMetadata.medium;
   return (
@@ -152,32 +178,7 @@ const DifficultyAndSkills = ({
             Session Difficulty
           </label>
           <div className="flex flex-wrap gap-3">
-            {[
-              {
-                id: "easy",
-                name: "Easy Practice",
-                color:
-                  "border-emerald-500/20 text-emerald-400 bg-emerald-950/10 hover:bg-emerald-950/20",
-                activeColor:
-                  "border-emerald-500 bg-emerald-950/40 ring-1 ring-emerald-500/30",
-              },
-              {
-                id: "medium",
-                name: "Medium (Standard)",
-                color:
-                  "border-amber-500/20 text-amber-400 bg-amber-950/10 hover:bg-amber-950/20",
-                activeColor:
-                  "border-amber-500 bg-amber-950/40 ring-1 ring-amber-500/30",
-              },
-              {
-                id: "hard",
-                name: "Hard (Rigorous)",
-                color:
-                  "border-rose-500/20 text-rose-400 bg-rose-950/10 hover:bg-rose-950/20",
-                activeColor:
-                  "border-rose-500 bg-rose-950/40 ring-1 ring-rose-500/30",
-              },
-            ].map((item) => {
+            {difficultyOptions.map((item) => {
               const isActive = difficulty === item.id;
               return (
                 <button

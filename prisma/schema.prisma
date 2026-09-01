@@ -8,11 +8,14 @@ datasource db {
 }
 
 enum CreditTransactionType {
+  ADMIN
   REGISTRATION
   PURCHASE
-  BASIC_INTERVIEW
+  TECHNICAL_INTERVIEW
   CODING_INTERVIEW
-  ADMIN
+  SYSTEM_DESIGN_INTERVIEW
+  BEHAVIORAL_INTERVIEW
+  MIXED_INTERVIEW
 }
 
 enum PaymentStatus {
@@ -20,6 +23,57 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum InterviewType {
+  TECHNICAL_INTERVIEW
+  CODING_INTERVIEW
+  SYSTEM_DESIGN_INTERVIEW
+  BEHAVIORAL_INTERVIEW
+  MIXED_INTERVIEW
+}
+
+enum InterviewRole {
+  FULL_STACK_DEVELOPER
+  FRONT_END_DEVELOPER
+  BACK_END_DEVELOPER
+  REACT_DEVELOPER
+  SOFTWARE_ENGINEER 
+  MOBILE_APP_DEVELOPER
+  DEVOPS_ENGINEER
+  AI_ML_ENGINEER
+}
+
+enum Experience {
+  FRESHER
+  JUNIOR
+  MID_LEVEL
+  SENIOR
+  LEAD_STAFF
+  MANAGER
+}
+
+enum DifficultyType {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum InterviewSessionType {
+  QUICK
+  STANDARD
+  EXTENDED
+}
+
+enum InterviewStatus {
+  RUNNING
+  ABANDONED
+  COMPLETED
+}
+
+enum Speaker {
+  INTERVIEWER    
+  CANDIDATE
 }
 
 model User {
@@ -30,6 +84,7 @@ model User {
 
   creditHistory CreditHistory[]
   payment Payment[]
+  interviewHistory InterviewHistory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -67,6 +122,42 @@ model CreditHistory {
   payment Payment?
 
   createdAt DateTime @default(now()) 
+}
+
+model InterviewHistory {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  conversations Conversation[] 
+
+  type InterviewType
+  role InterviewRole
+  experience Experience
+  difficulty DifficultyType
+  skills String[] 
+  sessionType InterviewSessionType
+  context String? 
+
+  creditsUsed Int
+  totalQuestions Int
+  answered Int 
+  status InterviewStatus
+  timeElapsed Int @default(0)
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+  id String @id @default(cuid())
+  interviewId String
+  interview InterviewHistory @relation(fields: [interviewId], references: [id])
+
+  speaker Speaker
+  message String
+  questionNumber Int?
+  createdAt DateTime @default(now())
 }
 
 model Payment {

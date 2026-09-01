@@ -58,13 +58,13 @@ export default function InterviewConfirmModal({
         <div className="flex flex-col items-center text-center space-y-3.5 pt-1">
           <div className={`p-4 rounded-2xl border flex items-center justify-center shadow-lg transition-transform duration-300 ${
             isExit 
-              ? "bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-amber-500/10" 
+              ? "bg-teal-500/10 border-teal-500/30 text-teal-400 shadow-teal-500/10" 
               : "bg-red-500/10 border-red-500/30 text-red-400 shadow-red-500/10"
           }`}>
             {isExit ? (
-              <LogOut className="h-7 w-7" />
+              <LogOut className="h-7 w-7 text-teal-400" />
             ) : (
-              <PhoneOff className="h-7 w-7" />
+              <PhoneOff className="h-7 w-7 text-red-400" />
             )}
           </div>
 
@@ -107,7 +107,7 @@ export default function InterviewConfirmModal({
               <BookmarkCheck className="w-3.5 h-3.5 text-teal-400" />
               Interview Status
             </span>
-            <span className={`font-bold text-xs ${isExit ? "text-amber-400" : "text-red-400"}`}>
+            <span className={`font-bold text-xs ${isExit ? "text-teal-400" : "text-red-400"}`}>
               {isExit ? "Will Stay In Progress (Resumable)" : "Will Mark Completed (Final)"}
             </span>
           </div>
@@ -115,8 +115,8 @@ export default function InterviewConfirmModal({
 
         {/* Informative / Warning Note */}
         {isExit ? (
-          <div className="flex gap-3 p-3.5 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-xs text-amber-300 leading-relaxed">
-            <CheckCircle2 className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+          <div className="flex gap-3 p-3.5 bg-teal-500/10 rounded-2xl border border-teal-500/20 text-xs text-teal-300 leading-relaxed">
+            <CheckCircle2 className="h-5 w-5 text-teal-400 shrink-0 mt-0.5" />
             <span>
               <strong>Resume Anytime:</strong> All questions and answers recorded so far are securely saved in your account. You can return and continue from where you left off.
             </span>
@@ -146,7 +146,7 @@ export default function InterviewConfirmModal({
               type="button"
               onClick={onConfirm}
               disabled={isProcessing}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-slate-950 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg shadow-amber-500/20 transition-all duration-200 active:scale-95"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-slate-950 bg-linear-to-r from-teal-400 via-teal-500 to-cyan-500 hover:from-teal-300 hover:to-cyan-400 font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg shadow-teal-500/25 transition-all duration-200 active:scale-95"
             >
               {isProcessing ? (
                 <>

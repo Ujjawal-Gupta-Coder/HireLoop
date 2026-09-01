@@ -92,7 +92,7 @@ const InterviewerFeed = ({
 
         {/* Floating Done / Submit Answer Button - Visible only when candidate is speaking and ready to submit */}
         {interviewerState === "listening" && hasSpoken && (
-          <SubmitSpeechUI onSubmitAnswer={onSubmitAnswer}/>
+          <SubmitSpeechUI onSubmitAnswer={onSubmitAnswer} />
         )}
 
         {/* Bottom Row: Controls Overlay */}
@@ -105,12 +105,12 @@ const InterviewerFeed = ({
             <div className="flex flex-col items-center gap-1.5 group/btn">
               <button 
                 onClick={onExitInterview}
-                className="w-12 h-12 rounded-full cursor-pointer bg-slate-900/90 hover:bg-amber-500/20 active:scale-95 text-slate-300 hover:text-amber-400 flex items-center justify-center transition shadow-md border border-slate-700/70 hover:border-amber-500/40"
+                className="w-12 h-12 rounded-full cursor-pointer bg-slate-900/90 hover:bg-teal-500/15 active:scale-95 text-slate-300 hover:text-teal-400 flex items-center justify-center transition shadow-md border border-slate-700/70 hover:border-teal-500/40"
                 title="Pause interview and resume later"
               >
                 <LogOut className="w-5 h-5" />
               </button>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/btn:text-amber-400 transition">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/btn:text-teal-400 transition">
                 Exit Room
               </span>
             </div>

@@ -27,11 +27,16 @@ const Sidebar = ({
   currentQuestionText,
 }: SidebarProps) => {
   const [activeTab, setActiveTab] = useState<"progress" | "notes">("progress");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const transcriptContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to the bottom of the transcript as messages update
+  // Auto-scroll ONLY the transcript container to the bottom as messages update (never scroll the whole window/header)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (transcriptContainerRef.current) {
+      transcriptContainerRef.current.scrollTo({
+        top: transcriptContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages]);
 
   return (
@@ -97,13 +102,16 @@ const Sidebar = ({
                 </div>
               </div>
 
-              {/* Transcript History list - Showing Chronological (Latest at bottom) with Auto-scroll */}
+              {/* Transcript History list - Auto-scrolling only within this inner container */}
               <div className="flex-1 flex flex-col gap-2 min-h-0">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">TRANSCRIPT</span>
                 
-                <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
+                <div 
+                  ref={transcriptContainerRef}
+                  className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 max-h-[280px] sm:max-h-[340px] lg:max-h-none"
+                >
                   {messages.length === 0 ? (
-                    <div className="h-full flex items-center justify-center text-slate-600 text-xs italic">
+                    <div className="h-full min-h-[80px] flex items-center justify-center text-slate-600 text-xs italic">
                       No conversation logs yet.
                     </div>
                   ) : (
@@ -150,8 +158,6 @@ const Sidebar = ({
                           </div>
                         );
                       })}
-                      {/* Anchor element to target auto scroll */}
-                      <div ref={messagesEndRef} />
                     </>
                   )}
                 </div>

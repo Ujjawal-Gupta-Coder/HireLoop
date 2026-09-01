@@ -490,21 +490,10 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
     };
 
     recognition.onerror = (event: any) => {
-      if (event.error === "aborted") {
+      if (event.error === "aborted" || event.error === "no-speech") {
         return;
       }
       console.error("SpeechRecognition error:", event.error);
-      if (event.error === "no-speech") {
-        if (shouldListenRef.current) {
-          setTimeout(() => {
-            if (shouldListenRef.current) {
-              try {
-                recognition.start();
-              } catch {}
-            }
-          }, 200);
-        }
-      }
     };
 
     recognition.onend = () => {
@@ -513,7 +502,11 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
           if (shouldListenRef.current) {
             try {
               recognition.start();
-            } catch {}
+            } catch (err: any) {
+              if (err.name !== "InvalidStateError" && !err.message?.includes("already started")) {
+                // Ignore harmless state transitions
+              }
+            }
           }
         }, 150);
       }
@@ -687,7 +680,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
         style: {
           background: "#030712",
           color: "#F8FAFC",
-          border: "1px solid rgba(245, 158, 11, 0.4)",
+          border: "1px solid rgba(20, 184, 166, 0.4)",
         }
       });
 

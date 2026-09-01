@@ -71,6 +71,11 @@ enum InterviewStatus {
   COMPLETED
 }
 
+enum Speaker {
+  INTERVIEWER    
+  CANDIDATE
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -122,7 +127,8 @@ model CreditHistory {
 model InterviewHistory {
   id String @id @default(cuid())
   userId String
-  user User @relation(fields: [userId], references: [id]) 
+  user User @relation(fields: [userId], references: [id])
+  conversations Conversation[] 
 
   type InterviewType
   role InterviewRole
@@ -136,9 +142,21 @@ model InterviewHistory {
   totalQuestions Int
   answered Int 
   status InterviewStatus
+  timeElapsed Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+  id String @id @default(cuid())
+  interviewId String
+  interview InterviewHistory @relation(fields: [interviewId], references: [id])
+
+  speaker Speaker
+  message String
+  questionNumber Int?
+  createdAt DateTime @default(now())
 }
 
 model Payment {

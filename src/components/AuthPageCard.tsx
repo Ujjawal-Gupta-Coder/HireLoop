@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import Logo from '@/public/logo.svg'
 import { useState } from "react";
-import signInWithGoogle from "../actions/signIn";
+import signInWithGoogle from "@/src/actions/signIn";
 
 const AuthPageCard = () => {
     const [isSignUp, setIsSignUp] = useState(false);

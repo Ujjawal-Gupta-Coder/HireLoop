@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Clock,
   Play,
@@ -11,6 +12,8 @@ import {
   Sparkles,
   ChevronRight,
   Coins,
+  BarChart3,
+  ArrowUpRight,
 } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { SerializedInterviewHistory } from "./types";
@@ -26,14 +29,14 @@ import { formatIdIntoLabel } from "@/src/helper/helper.common";
 type HistoryTableProps = {
   interviews: SerializedInterviewHistory[];
   onViewDetails: (interview: SerializedInterviewHistory) => void;
-  onDeleteRequest: (interview: SerializedInterviewHistory) => void;
 };
 
 export default function HistoryTable({
   interviews,
   onViewDetails,
-  onDeleteRequest,
 }: HistoryTableProps) {
+  const router = useRouter();
+
   const columns = [
     "Date & Time",
     "Role & Track",
@@ -91,7 +94,8 @@ export default function HistoryTable({
               return (
                 <tr
                   key={interview.id}
-                  className="hover:bg-slate-900/40 transition-colors group/row"
+                  onClick={() => router.push(`/analytics/${interview.id}`)}
+                  className="hover:bg-slate-900/60 transition-colors group/row cursor-pointer"
                 >
                   {/* Date & Time */}
                   <td className="py-4 px-5 font-medium text-slate-300 whitespace-nowrap text-xs sm:text-sm">
@@ -102,12 +106,12 @@ export default function HistoryTable({
                   <td className="py-4 px-5">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className={`flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 border ${track.borderColor} shrink-0`}
+                        className={`flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 border ${track.borderColor} shrink-0 group-hover/row:scale-105 transition-transform`}
                       >
                         <TrackIcon className={`h-4 w-4 ${track.textColor}`} />
                       </div>
                       <div>
-                        <span className="font-semibold text-slate-200 block text-sm">
+                        <span className="font-semibold text-slate-200 block text-sm group-hover/row:text-teal-300 transition-colors">
                           {roleLabel}
                         </span>
                         <span
@@ -184,7 +188,10 @@ export default function HistoryTable({
                   </td>
 
                   {/* Actions */}
-                  <td className="py-4 px-5 text-right whitespace-nowrap">
+                  <td
+                    className="py-4 px-5 text-right whitespace-nowrap"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <div className="flex items-center justify-end gap-1.5">
                       {interview.status === "RUNNING" ? (
                         <Link
@@ -195,13 +202,14 @@ export default function HistoryTable({
                           <span>Resume</span>
                         </Link>
                       ) : (
-                        <button
-                          onClick={() => onViewDetails(interview)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg text-teal-400 bg-teal-950/40 border border-teal-500/20 hover:bg-teal-400 hover:text-slate-950 hover:border-transparent transition-all cursor-pointer shadow-sm"
+                        <Link
+                          href={`/analytics/${interview.id}`}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-lg text-slate-950 bg-teal-400 hover:bg-teal-300 transition-all cursor-pointer shadow-sm group/btn"
                         >
-                          <FileText className="h-3 w-3" />
-                          <span>Transcript</span>
-                        </button>
+                          <BarChart3 className="h-3 w-3" />
+                          <span>Analytics</span>
+                          <ArrowUpRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                        </Link>
                       )}
 
                       {/* Dropdown Options */}
@@ -216,16 +224,26 @@ export default function HistoryTable({
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Portal>
                           <DropdownMenu.Content
-                            className="z-50 min-w-[170px] overflow-hidden rounded-xl bg-[#0d1322] border border-slate-800/90 p-1.5 shadow-2xl backdrop-blur-md animate-in fade-in-80"
+                            className="z-50 min-w-[180px] overflow-hidden rounded-xl bg-[#0d1322] border border-slate-800/90 p-1.5 shadow-2xl backdrop-blur-md animate-in fade-in-80"
                             sideOffset={5}
                             align="end"
                           >
+                            <DropdownMenu.Item asChild>
+                              <Link
+                                href={`/analytics/${interview.id}`}
+                                className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-teal-400 rounded-lg hover:bg-teal-950/40 cursor-pointer outline-none transition-colors"
+                              >
+                                <BarChart3 className="h-3.5 w-3.5" />
+                                <span>View Analytics</span>
+                              </Link>
+                            </DropdownMenu.Item>
+
                             <DropdownMenu.Item
                               onClick={() => onViewDetails(interview)}
-                              className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-200 rounded-lg hover:bg-teal-950/40 hover:text-teal-300 cursor-pointer outline-none transition-colors"
+                              className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-200 rounded-lg hover:bg-slate-800/60 cursor-pointer outline-none transition-colors"
                             >
-                              <FileText className="h-3.5 w-3.5 text-teal-400" />
-                              <span>View Transcript</span>
+                              <FileText className="h-3.5 w-3.5 text-slate-400" />
+                              <span>Transcript Preview</span>
                             </DropdownMenu.Item>
 
                             {interview.status === "RUNNING" && (
@@ -240,26 +258,7 @@ export default function HistoryTable({
                               </DropdownMenu.Item>
                             )}
 
-                            <DropdownMenu.Item asChild>
-                              <Link
-                                href="/interview"
-                                className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-300 rounded-lg hover:bg-slate-800/60 cursor-pointer outline-none transition-colors"
-                              >
-                                <RotateCcw className="h-3.5 w-3.5 text-blue-400" />
-                                <span>Practice Similar</span>
-                              </Link>
-                            </DropdownMenu.Item>
-
-                            <DropdownMenu.Separator className="h-px bg-slate-800/80 my-1" />
-
-                            <DropdownMenu.Item
-                              onClick={() => onDeleteRequest(interview)}
-                              className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-rose-400 rounded-lg hover:bg-rose-950/40 cursor-pointer outline-none transition-colors"
-                            >
-                              <Trash2 className="h-3.5 w-3.5 text-rose-400" />
-                              <span>Delete Session</span>
-                            </DropdownMenu.Item>
-                          </DropdownMenu.Content>
+                            </DropdownMenu.Content>
                         </DropdownMenu.Portal>
                       </DropdownMenu.Root>
                     </div>
@@ -273,3 +272,4 @@ export default function HistoryTable({
     </div>
   );
 }
+

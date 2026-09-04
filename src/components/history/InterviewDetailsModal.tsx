@@ -21,6 +21,8 @@ import {
   Layers,
   ArrowRight,
   MessageSquare,
+  BarChart3,
+  ArrowUpRight,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { SerializedInterviewHistory } from "./types";
@@ -427,8 +429,8 @@ export default function InterviewDetailsModal({
             Close Window
           </button>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto">
-            {interview.status === "RUNNING" && (
+          <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+            {interview.status === "RUNNING" ? (
               <Link
                 href={`/interview-room/${interview.id}`}
                 className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold rounded-xl text-slate-950 bg-teal-400 hover:bg-teal-300 transition-all cursor-pointer shadow-lg shadow-teal-500/10"
@@ -436,15 +438,23 @@ export default function InterviewDetailsModal({
                 <Play className="h-3.5 w-3.5 fill-current" />
                 <span>Resume Session</span>
               </Link>
+            ) : (
+              <Link
+                href={`/analytics/${interview.id}`}
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold rounded-xl text-slate-950 bg-teal-400 hover:bg-teal-300 transition-all cursor-pointer shadow-lg shadow-teal-500/10 group"
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+                <span>Full Analytics</span>
+                <ArrowUpRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
             )}
 
             <Link
               href="/interview"
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2 text-xs font-semibold rounded-xl text-teal-400 bg-teal-950/40 border border-teal-500/30 hover:bg-teal-400 hover:text-slate-950 hover:border-transparent transition-all cursor-pointer shadow-sm group"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl text-slate-300 bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-teal-300 transition-all cursor-pointer shadow-sm group"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
+              <RotateCcw className="h-3.5 w-3.5 text-blue-400" />
               <span>Practice Similar</span>
-              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>
@@ -452,3 +462,4 @@ export default function InterviewDetailsModal({
     </div>
   );
 }
+

@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Video,
   Sparkles,
-  ChevronLeft,
-  ChevronRight,
-  GalleryHorizontalEnd,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
-import toast from "react-hot-toast";
 import {
   SerializedInterviewHistory,
   StatusFilterType,
@@ -24,9 +22,7 @@ import HistoryFilterBar from "./HistoryFilterBar";
 import HistoryCard from "./HistoryCard";
 import HistoryTable from "./HistoryTable";
 import InterviewDetailsModal from "./InterviewDetailsModal";
-import DeleteConfirmModal from "./DeleteConfirmModal";
 import NoHistoryFound from "./NoHistoryFound";
-import { deleteInterviewSession } from "@/src/actions/interview";
 import { getTrackInfo } from "./historyHelpers";
 import { formatIdIntoLabel } from "@/src/helper/helper.common";
 
@@ -34,13 +30,12 @@ type HistoryPageClientProps = {
   initialInterviews: SerializedInterviewHistory[];
 };
 
-const ITEMS_PER_PAGE = 6;
+const INITIAL_BATCH_SIZE = 8;
+const BATCH_LOAD_SIZE = 6;
 
 export default function HistoryPageClient({
-  initialInterviews,
+  initialInterviews: interviews,
 }: HistoryPageClientProps) {
-  const [interviews, setInterviews] =
-    useState<SerializedInterviewHistory[]>(initialInterviews);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<StatusFilterType>("ALL");
   const [trackFilter, setTrackFilter] = useState<TrackFilterType>("ALL");
@@ -48,12 +43,12 @@ export default function HistoryPageClient({
     useState<DifficultyFilterType>("ALL");
   const [sortOption, setSortOption] = useState<SortOptionType>("NEWEST");
   const [viewMode, setViewMode] = useState<ViewModeType>("grid");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_BATCH_SIZE);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const observerTargetRef = useRef<HTMLDivElement | null>(null);
 
   // Modals state
   const [selectedInterviewForDetails, setSelectedInterviewForDetails] =
-    useState<SerializedInterviewHistory | null>(null);
-  const [interviewToDelete, setInterviewToDelete] =
     useState<SerializedInterviewHistory | null>(null);
 
   // Dynamic Telemetry Statistics based on all interviews
@@ -148,44 +143,41 @@ export default function HistoryPageClient({
     sortOption,
   ]);
 
-  // Pagination calculations
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredAndSortedInterviews.length / ITEMS_PER_PAGE)
-  );
-  const paginatedInterviews = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredAndSortedInterviews.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredAndSortedInterviews, currentPage]);
+  // Sliced interviews for infinite scrolling
+  const visibleInterviews = useMemo(() => {
+    return filteredAndSortedInterviews.slice(0, visibleCount);
+  }, [filteredAndSortedInterviews, visibleCount]);
 
-  // Reset page when filters change
-  const handleFilterChange = () => {
-    setCurrentPage(1);
+  const hasMore = visibleCount < filteredAndSortedInterviews.length;
+
+  // Reset visibleCount when filters change
+  const handleFilterReset = () => {
+    setVisibleCount(INITIAL_BATCH_SIZE);
   };
 
   const handleSearchChange = (q: string) => {
     setSearchQuery(q);
-    handleFilterChange();
+    handleFilterReset();
   };
 
   const handleStatusChange = (st: StatusFilterType) => {
     setStatusFilter(st);
-    handleFilterChange();
+    handleFilterReset();
   };
 
   const handleTrackChange = (tr: TrackFilterType) => {
     setTrackFilter(tr);
-    handleFilterChange();
+    handleFilterReset();
   };
 
   const handleDifficultyChange = (diff: DifficultyFilterType) => {
     setDifficultyFilter(diff);
-    handleFilterChange();
+    handleFilterReset();
   };
 
   const handleSortChange = (so: SortOptionType) => {
     setSortOption(so);
-    handleFilterChange();
+    handleFilterReset();
   };
 
   const handleClearAllFilters = () => {
@@ -194,29 +186,36 @@ export default function HistoryPageClient({
     setTrackFilter("ALL");
     setDifficultyFilter("ALL");
     setSortOption("NEWEST");
-    setCurrentPage(1);
+    setVisibleCount(INITIAL_BATCH_SIZE);
   };
 
-  // Delete Action
-  const handleConfirmDelete = async (interviewId: string) => {
-    try {
-      const res = await deleteInterviewSession(interviewId);
-      if (!res.success) {
-        toast.error(res.error || "Failed to delete interview session");
-        return;
-      }
+  // IntersectionObserver for infinite scrolling
+  useEffect(() => {
+    const observerTarget = observerTargetRef.current;
+    if (!observerTarget || !hasMore || isLoadingMore) return;
 
-      setInterviews((prev) => prev.filter((item) => item.id !== interviewId));
-      if (selectedInterviewForDetails?.id === interviewId) {
-        setSelectedInterviewForDetails(null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+          setIsLoadingMore(true);
+          setTimeout(() => {
+            setVisibleCount((prev) => prev + BATCH_LOAD_SIZE);
+            setIsLoadingMore(false);
+          }, 250);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "150px",
       }
-      setInterviewToDelete(null);
-      toast.success("Interview session deleted successfully");
-    } catch (err) {
-      toast.error("Failed to delete interview session");
-      console.error("Delete session error:", err);
-    }
-  };
+    );
+
+    observer.observe(observerTarget);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasMore, isLoadingMore]);
 
   return (
     <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto space-y-8 relative pb-24">
@@ -235,7 +234,7 @@ export default function HistoryPageClient({
             Interview History
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 mt-1 leading-relaxed max-w-2xl">
-            Review your past AI interview sessions, analyze audio transcripts, resume ongoing evaluations, and track your practice progress over time.
+            Review your past AI interview sessions, analyze audio transcripts, resume ongoing evaluations, and click on any card to explore comprehensive analytics.
           </p>
         </div>
 
@@ -281,67 +280,40 @@ export default function HistoryPageClient({
         <div className="space-y-6">
           {viewMode === "grid" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {paginatedInterviews.map((interview) => (
+              {visibleInterviews.map((interview) => (
                 <HistoryCard
                   key={interview.id}
                   interview={interview}
                   onViewDetails={setSelectedInterviewForDetails}
-                  onDeleteRequest={setInterviewToDelete}
                 />
               ))}
             </div>
           ) : (
             <HistoryTable
-              interviews={paginatedInterviews}
+              interviews={visibleInterviews}
               onViewDetails={setSelectedInterviewForDetails}
-              onDeleteRequest={setInterviewToDelete}
             />
           )}
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
-              <span className="text-xs text-slate-400 font-medium">
-                Page <strong className="text-slate-200">{currentPage}</strong> of{" "}
-                <strong className="text-slate-200">{totalPages}</strong> (
-                {filteredAndSortedInterviews.length} total sessions)
-              </span>
-
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-slate-100 hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span>Previous</span>
-                </button>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      currentPage === pageNum
-                        ? "bg-teal-500/20 text-teal-300 border border-teal-500/40 shadow-sm"
-                        : "bg-slate-900 border border-slate-800/80 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
-
-                <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-slate-100 hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
-                >
-                  <span>Next</span>
-                  <ChevronRight className="h-4 w-4" />
-                </button>
+          {/* Infinite Scroll Sentinel & Status Indicators */}
+          <div
+            ref={observerTargetRef}
+            className="flex flex-col items-center justify-center pt-6 pb-2 text-center"
+          >
+            {hasMore ? (
+              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-800/80 text-xs font-semibold text-slate-400">
+                <Loader2 className="h-4 w-4 animate-spin text-teal-400" />
+                <span>Loading more sessions...</span>
               </div>
-            </div>
-          )}
+            ) : filteredAndSortedInterviews.length > 0 ? (
+              <div className="flex items-center gap-2 text-xs text-slate-500 py-3">
+                <CheckCircle2 className="h-3.5 w-3.5 text-teal-500/80" />
+                <span>
+                  All <strong className="text-slate-400">{filteredAndSortedInterviews.length}</strong> sessions loaded • Tap any session to explore deep analysis
+                </span>
+              </div>
+            ) : null}
+          </div>
         </div>
       )}
 
@@ -350,15 +322,6 @@ export default function HistoryPageClient({
         <InterviewDetailsModal
           interview={selectedInterviewForDetails}
           onClose={() => setSelectedInterviewForDetails(null)}
-        />
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {interviewToDelete && (
-        <DeleteConfirmModal
-          interview={interviewToDelete}
-          onClose={() => setInterviewToDelete(null)}
-          onConfirmDelete={handleConfirmDelete}
         />
       )}
     </main>

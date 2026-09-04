@@ -66,8 +66,7 @@ export default function HistoryCard({
   const extraSkillsCount = (interview.skills?.length || 0) - displayedSkills.length;
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // Navigate to analytics page when clicking the card body
-    router.push(`/analytics/${interview.id}`);
+    if(interview.status !== "RUNNING") router.push(`/analytics/${interview.id}`);
   };
 
   return (
@@ -127,16 +126,7 @@ export default function HistoryCard({
                 sideOffset={5}
                 align="end"
               >
-                <DropdownMenu.Item asChild>
-                  <Link
-                    href={`/analytics/${interview.id}`}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-teal-400 rounded-lg hover:bg-teal-950/40 cursor-pointer outline-none transition-colors"
-                  >
-                    <BarChart3 className="h-3.5 w-3.5" />
-                    <span>View Full Analytics</span>
-                  </Link>
-                </DropdownMenu.Item>
-
+              
                 <DropdownMenu.Item
                   onClick={(e) => {
                     e.stopPropagation();
@@ -148,16 +138,27 @@ export default function HistoryCard({
                   <span>Transcript Preview</span>
                 </DropdownMenu.Item>
 
-                {interview.status === "RUNNING" && (
+                {interview.status === "RUNNING" ? (
                   <DropdownMenu.Item asChild>
                     <Link
-                      href={`/interview-room/${interview.id}`}
+                      href={interview.type === "CODING_INTERVIEW" ? `/coding-interview/${interview.id}` : `/interview-room/${interview.id}` }
                       className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-emerald-300 rounded-lg hover:bg-emerald-950/40 cursor-pointer outline-none transition-colors"
                     >
                       <Play className="h-3.5 w-3.5 text-emerald-400" />
                       <span>Resume Session</span>
                     </Link>
                   </DropdownMenu.Item>
+                ) : 
+                (
+                  <DropdownMenu.Item asChild>
+                  <Link
+                    href={`/analytics/${interview.id}`}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-teal-400 rounded-lg hover:bg-teal-950/40 cursor-pointer outline-none transition-colors"
+                  >
+                    <BarChart3 className="h-3.5 w-3.5" />
+                    <span>View Full Analytics</span>
+                  </Link>
+                </DropdownMenu.Item> 
                 )}
 
               </DropdownMenu.Content>
@@ -260,7 +261,7 @@ export default function HistoryCard({
         <div className="flex items-center gap-2 self-stretch sm:self-auto">
           {interview.status === "RUNNING" ? (
             <Link
-              href={`/interview-room/${interview.id}`}
+              href={interview.type === "CODING_INTERVIEW" ? `/coding-interview/${interview.id}` : `/interview-room/${interview.id}` }
               className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl text-slate-950 bg-teal-400 hover:bg-teal-300 transition-all duration-200 shadow-md shadow-teal-500/10 cursor-pointer group/btn"
             >
               <Play className="h-3.5 w-3.5 fill-current" />

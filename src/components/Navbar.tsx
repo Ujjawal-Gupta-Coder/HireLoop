@@ -22,8 +22,8 @@ const Navbar = ({ session, credits = 0, isLandingPage = false }: { session: Sess
             link: "tracks"
         },
         {
-            lable: "Methodology",
-            link: "methodology"
+            lable: "How it Works",
+            link: "how-it-works"
         },
         {
             lable: "Success Stories",

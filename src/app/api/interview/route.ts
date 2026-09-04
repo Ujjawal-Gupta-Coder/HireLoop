@@ -101,7 +101,10 @@ export const POST = async (req: Request) => {
             return Response.json({
                 success: true,
                 message: "Interview session created successfully",
-                data: {interviewId: interviewSession.id}
+                data: {
+                    interviewId: interviewSession.id,
+                    interviewType: interviewSession.type
+                }
             }, {status: 200});
 
         } catch(error) {

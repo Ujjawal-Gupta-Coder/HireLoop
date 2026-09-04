@@ -1,5 +1,4 @@
 import BottomLineFooter from "@/src/components/BottomLineFooter"
-import InterviewRoomClient from "./InterviewRoomClient"
 import { auth } from "@/src/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/src/lib/prisma";
@@ -38,7 +37,7 @@ const page = async ({params}:{params: Promise<{id: string}>}) => {
       }
     }
   })
-  if(!interviewDetails || interviewDetails.type === "CODING_INTERVIEW") return <InvalidIdClient />
+  if(!interviewDetails || interviewDetails.type !== "CODING_INTERVIEW") return <InvalidIdClient />
 
   if(interviewDetails.status !== "RUNNING") {
     redirect(`/analytics/${interviewDetails.id}`)
@@ -61,7 +60,9 @@ const page = async ({params}:{params: Promise<{id: string}>}) => {
 
   return (
     <>
-      <InterviewRoomClient interviewDetails={serializedDetails} />
+      <div className="flex flex-col gap-4 font-bold text-4xl w-full text-center mt-16">
+        Coding Interview Room
+      </div>
       <BottomLineFooter />
     </>
   )

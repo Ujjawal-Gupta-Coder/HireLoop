@@ -181,6 +181,7 @@ export default function BillingPageClient({payments, currentCredits, totalCredit
                           {/* Date */}
                           <td className="py-4 px-6 font-medium text-slate-300">
                             {payment.createdAt.toLocaleString("en-In", {
+                              timeZone: "Asia/Kolkata",
                               day: "numeric",
                               month: "long",
                               year: "numeric",

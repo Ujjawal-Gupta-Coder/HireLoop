@@ -208,11 +208,13 @@ const generatePaymentReceiptPDF = async (data: {
     const paymentDate = new Date(data.date);
 
     const formattedDate = paymentDate.toLocaleDateString("en-IN", {
+        timeZone: "Asia/Kolkata",
         day: "2-digit",
         month: "short",
         year: "numeric",
     });
     const formattedTime = paymentDate.toLocaleTimeString("en-IN", {
+        timeZone: "Asia/Kolkata",
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,

@@ -76,6 +76,14 @@ enum Speaker {
   CANDIDATE
 }
 
+enum Performance {
+  POOR 
+  WEAK 
+  AVERAGE 
+  GOOD 
+  EXCELLENT 
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -144,6 +152,45 @@ model InterviewHistory {
   status InterviewStatus
   timeElapsed Int @default(0)
   notes String?
+  report InterviewReport?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InterviewReport {
+  id String @id @default(cuid())
+  interviewId String @unique
+  interview InterviewHistory @relation(fields: [interviewId], references: [id])
+
+  overallScore Int
+  performance Performance
+
+  confidenceScore Int
+  clarityScore Int
+  relevancyScore Int
+  depthScore Int
+  problemSolvingScore Int
+
+  strengths String[]
+  weaknesses String[]
+  recommendations String[]
+
+  communicationScore Int
+  communicationPerformance Performance
+
+  commClarityScore Int
+  commGrammarScore Int
+  commVocabularyScore Int
+  commToneScore Int
+  commProfessionalismScore Int
+
+  communicationFeedback String
+
+  // Array of: { questionNumber: number, question: string, answer: string, feedback: string, score: number }
+  questionAnalyses Json
+
+  summary String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

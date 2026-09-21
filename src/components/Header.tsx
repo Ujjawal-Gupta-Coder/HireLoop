@@ -34,10 +34,6 @@ const Header = ({session, credits, setIsSidebarOpen}:hearderProps) => {
         label: "Payment",
         link: "/billing"
     },
-    {
-        label: "Settings",
-        link: "/settings"
-    },
    ]
 
    const handleSignOutClick = () => {

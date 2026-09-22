@@ -215,40 +215,77 @@ Strictly output valid JSON matching this schema:
   "summary": string
 }`;
 
-    const geminiResponse = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [
+    // Prioritized list of Gemini models for resilience against rate limits and demand spikes
+    const FALLBACK_MODELS = [
+      "gemini-3.5-flash-lite",
+      "gemini-flash-latest",
+      "gemini-3.5-flash",
+      "gemini-flash-lite-latest",
+      "gemini-3.7-flash",
+      "gemini-3.6-flash",
+    ];
+
+    let parsed: GeminiRawReport | null = null;
+    let lastError: unknown = null;
+    let successfulModel = "";
+
+    for (const modelName of FALLBACK_MODELS) {
+      try {
+        console.log(`[Analytics] Attempting report generation using model: ${modelName}`);
+        const geminiResponse = await ai.models.generateContent({
+          model: modelName,
+          contents: [
             {
-              text: `${systemPrompt}\n\n==================== INTERVIEW TRANSCRIPT ====================\n${transcriptFormatted}\n==================== END TRANSCRIPT ====================`,
+              role: "user",
+              parts: [
+                {
+                  text: `${systemPrompt}\n\n==================== INTERVIEW TRANSCRIPT ====================\n${transcriptFormatted}\n==================== END TRANSCRIPT ====================`,
+                },
+              ],
             },
           ],
-        },
-      ],
-      config: {
-        responseMimeType: "application/json",
-        temperature: 0.3,
-      },
-    });
+          config: {
+            responseMimeType: "application/json",
+            temperature: 0.3,
+          },
+        });
 
-    const responseText = geminiResponse.text;
-    if (!responseText) {
-      throw new Error("Empty response received from Gemini API");
-    }
+        const responseText = geminiResponse.text;
+        if (!responseText) {
+          throw new Error(`Empty response received from ${modelName}`);
+        }
 
-    let parsed: GeminiRawReport;
-    try {
-      parsed = JSON.parse(responseText);
-    } catch {
-      // If there are markdown backticks or wrappers, extract JSON substring
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error("Failed to parse JSON response from Gemini");
+        let candidate: GeminiRawReport;
+        try {
+          candidate = JSON.parse(responseText);
+        } catch {
+          // If there are markdown backticks or wrappers, extract JSON substring
+          const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+          if (!jsonMatch) {
+            throw new Error(`Failed to parse JSON response from ${modelName}`);
+          }
+          candidate = JSON.parse(jsonMatch[0]);
+        }
+
+        if (candidate && typeof candidate === "object") {
+          parsed = candidate;
+          successfulModel = modelName;
+          console.log(`[Analytics] Successfully generated report using model: ${modelName}`);
+          break;
+        }
+      } catch (err: unknown) {
+        lastError = err;
+        const errMessage = err instanceof Error ? err.message : String(err);
+        console.warn(`[Analytics] Model ${modelName} failed, falling back to next model. Error: ${errMessage}`);
       }
-      parsed = JSON.parse(jsonMatch[0]);
     }
+
+    if (!parsed) {
+      const detail = lastError instanceof Error ? lastError.message : "Unknown error";
+      throw new Error(`All AI fallback models failed to generate report. Last error: ${detail}`);
+    }
+
+    console.log(`[Analytics] Report finalized successfully via model: ${successfulModel}`);
 
     // Enforce 0-100 bounding on all parameter scores
     const boundScore = (num: number | undefined, defaultVal = 65) => {
@@ -270,7 +307,7 @@ Strictly output valid JSON matching this schema:
       depth: depthScore,
       problemSolving: problemSolvingScore,
     });
-    const performance: Performance = getPerformanceLevel(overallScore).toUpperCase();
+    const performance = getPerformanceLevel(overallScore).toUpperCase() as Performance;
 
     // Ensure exactly 3 bullets for strengths, weaknesses, recommendations
     const sanitizeBullets = (list: string[], defaultFallback: string[]): string[] => {
@@ -315,7 +352,7 @@ Strictly output valid JSON matching this schema:
       tone: commToneScore,
       professionalism: commProfessionalismScore,
     });
-    const communicationPerformance: Performance = getPerformanceLevel(communicationScore).toUpperCase();
+    const communicationPerformance = getPerformanceLevel(communicationScore).toUpperCase() as Performance;
 
     const communicationFeedback =
       typeof parsed.communicationFeedback === "string" && parsed.communicationFeedback.trim()

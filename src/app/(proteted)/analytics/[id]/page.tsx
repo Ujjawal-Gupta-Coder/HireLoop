@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   AlertCircle,
   HelpCircle,
+  RefreshCw,
 } from "lucide-react";
 import { formatIdIntoLabel } from "@/src/helper/helper.common";
 import { getOrGenerateInterviewReport } from "@/src/actions/analytics";
@@ -126,13 +127,19 @@ export default async function AnalyticsPage({params}: AnalyticsPageParams) {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            
             <Link
               href="/history"
-              className="px-4 py-2.5 text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1"
+              className="px-4 py-2.5 text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <ArrowLeft className="text-sm" /> 
+              <ArrowLeft className="h-3.5 w-3.5" /> 
               Return to History
+            </Link>
+            <Link
+              href={`/analytics/${interviewId}`}
+              className="px-4 py-2.5 text-xs font-bold text-slate-950 bg-teal-400 hover:bg-teal-300 rounded-xl transition-all shadow-lg shadow-teal-500/20 cursor-pointer flex items-center gap-1.5"
+            >
+              <RefreshCw className="h-3.5 w-3.5" /> 
+              Retry Evaluation
             </Link>
           </div>
         </div>

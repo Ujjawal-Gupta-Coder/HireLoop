@@ -105,9 +105,9 @@ AI-generated interview summaries and detailed performance analysis based on the 
 
 A personalized dashboard providing an overview of interview performance, credits, activity, and progress.
 
-### 👤 Profile & Settings
+### 👤 Profile 
 
-Dedicated profile and settings pages for managing user information and application preferences.
+Dedicated profile page for managing user information and application preferences.
 
 ---
 

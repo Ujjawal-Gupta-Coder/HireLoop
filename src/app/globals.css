@@ -50,6 +50,16 @@
   --animate-radar-spin: radar-spin 6s linear infinite;
   --animate-float: float 4s ease-in-out infinite;
   --animate-float-delayed: float-delayed 5s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes wave-bounce {

@@ -9,7 +9,6 @@ import {
   GalleryHorizontalEnd,
   User,
   CreditCard,
-  Settings,
   ShoppingCart,
   ArrowRight,
   LogOut,
@@ -31,7 +30,6 @@ export default function Sidebar({ className = "", onCloseMobile }: SidebarProps)
     { name: "Profile", href: "/profile", icon: User },
     { name: "Interview History", href: "/history", icon: GalleryHorizontalEnd },
     { name: "Billing", href: "/billing", icon: CreditCard },
-    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   const isActive = (href: string) => {

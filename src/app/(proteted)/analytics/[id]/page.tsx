@@ -3,19 +3,21 @@ import { auth } from "@/src/auth";
 import { prisma } from "@/src/lib/prisma";
 import { redirect } from "next/navigation";
 import {
-  BarChart3,
   ArrowLeft,
-  Sparkles,
-  FileText,
+  AlertCircle,
+  HelpCircle,
+  RefreshCw,
 } from "lucide-react";
 import { formatIdIntoLabel } from "@/src/helper/helper.common";
-import { formatDuration, formatInterviewDate } from "@/src/components/history/historyHelpers";
+import { getOrGenerateInterviewReport } from "@/src/actions/analytics";
+import AnalyticsClientView from "@/src/components/analytics/AnalyticsClientView";
+import { InterviewSessionInfo } from "@/src/components/analytics/analyticsTypes";
 
-type AnalyticsPageProps = {
-  params: Promise<{ id: string }>;
-};
+type AnalyticsPageParams = {
+  params: Promise<{id : string}>
+}
 
-export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
+export default async function AnalyticsPage({params}: AnalyticsPageParams) {
   const session = await auth();
   if (!session?.user?.email) {
     redirect("/auth");
@@ -44,19 +46,21 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
       conversations: {
         orderBy: { createdAt: "asc" },
       },
+      report: true,
     },
   });
 
-  const roleLabel = interview ? formatIdIntoLabel(interview.role) : "Interview";
-  const expLabel = interview ? formatIdIntoLabel(interview.experience) : "";
+  if (!interview) {
+    redirect("/history");
+  }
 
-  return (
-    <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-5xl w-full mx-auto space-y-8 relative pb-20">
-      {/* Background glow graphics */}
-      <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+  const roleLabel = formatIdIntoLabel(interview.role);
+  const expLabel = formatIdIntoLabel(interview.experience);
 
-      {/* Back button & Title */}
-      <div className="space-y-4">
+  // Case 1: No conversations recorded at all (abandoned session before starting)
+  if (!interview.conversations || interview.conversations.length === 0) {
+    return (
+      <main className="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-4xl w-full mx-auto space-y-8 relative">
         <Link
           href="/history"
           className="inline-flex items-center gap-2 text-xs font-semibold text-teal-400 hover:text-teal-300 transition-colors"
@@ -65,88 +69,107 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
           <span>Back to Interview History</span>
         </Link>
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-6">
-          <div>
-            <div className="flex items-center gap-2 text-teal-400 font-semibold text-xs tracking-wider uppercase mb-1">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>AI Performance Analytics</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-100 font-display">
-              {roleLabel} Analysis
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Session ID: <code className="text-teal-300 font-mono">{interviewId}</code>
+        <div className="p-8 sm:p-12 rounded-3xl bg-[#090e1c]/90 border border-slate-800/90 text-center space-y-6 shadow-2xl">
+          <div className="mx-auto w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <HelpCircle className="h-8 w-8" />
+          </div>
+
+          <div className="space-y-2 max-w-md mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-100 font-display">
+              No Transcript Recorded
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              This session was started for <strong className="text-slate-200">{roleLabel} ({expLabel})</strong>, but ended before any questions or candidate answers were recorded.
             </p>
           </div>
 
-          <Link
-            href="/history"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 hover:text-slate-100 transition-all cursor-pointer self-start sm:self-auto"
-          >
-            <FileText className="h-3.5 w-3.5 text-teal-400" />
-            <span>View All Sessions</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* Quick Summary Card if interview found */}
-      {interview && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl bg-[#090e1c]/80 border border-slate-800/80 shadow-xl">
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 uppercase block">Status</span>
-            <span className="text-sm font-bold text-teal-400 mt-0.5 block">{interview.status}</span>
-          </div>
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 uppercase block">Experience</span>
-            <span className="text-sm font-bold text-slate-200 mt-0.5 block">{expLabel}</span>
-          </div>
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 uppercase block">Questions Answered</span>
-            <span className="text-sm font-bold text-slate-200 mt-0.5 block">
-              {interview.answered} / {interview.totalQuestions}
-            </span>
-          </div>
-          <div>
-            <span className="text-[11px] font-semibold text-slate-500 uppercase block">Time Invested</span>
-            <span className="text-sm font-bold text-slate-200 mt-0.5 block">
-              {formatDuration(interview.timeElapsed)}
-            </span>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              href="/history"
+              className="px-4 py-2.5 text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition-all cursor-pointer"
+            >
+              ← Return to History
+            </Link>
+            <Link
+              href="/interview"
+              className="px-5 py-2.5 text-xs font-bold text-slate-950 bg-teal-400 hover:bg-teal-300 rounded-xl transition-all shadow-lg shadow-teal-500/20 cursor-pointer"
+            >
+              Start New Mock Interview
+            </Link>
           </div>
         </div>
-      )}
+      </main>
+    );
+  }
 
-      {/* Modern Analytics Placeholder Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#0c1324] via-[#090e1c] to-[#060a14] border border-teal-500/30 p-8 sm:p-14 text-center shadow-2xl space-y-6">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
+  // Case 2: Fetch or Generate Report via Gemini
+  const reportResult = await getOrGenerateInterviewReport(interviewId);
 
-        <div className="relative mx-auto flex items-center justify-center w-16 h-16 rounded-2xl bg-teal-950/60 border border-teal-500/40 text-teal-400 shadow-inner shadow-teal-500/20">
-          <BarChart3 className="h-8 w-8 animate-pulse" />
+  if (!reportResult.success) {
+    return (
+      <main className="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-4xl w-full mx-auto space-y-8 relative">
+
+        <div className="p-8 sm:p-12 rounded-3xl bg-[#090e1c]/90 border border-rose-500/30 text-center space-y-6 shadow-2xl">
+          <div className="mx-auto w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
+            <AlertCircle className="h-8 w-8" />
+          </div>
+
+          <div className="space-y-2 max-w-md mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-100 font-display">
+              Report Generation Notice
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              An unexpected issue occurred while evaluating this interview session.
+            </p>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Please try again after some time.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              href="/history"
+              className="px-4 py-2.5 text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> 
+              Return to History
+            </Link>
+            <Link
+              href={`/analytics/${interviewId}`}
+              className="px-4 py-2.5 text-xs font-bold text-slate-950 bg-teal-400 hover:bg-teal-300 rounded-xl transition-all shadow-lg shadow-teal-500/20 cursor-pointer flex items-center gap-1.5"
+            >
+              <RefreshCw className="h-3.5 w-3.5" /> 
+              Retry Evaluation
+            </Link>
+          </div>
         </div>
+      </main>
+    );
+  }
 
-        <div className="relative space-y-2 max-w-lg mx-auto">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-100 font-display">
-            Detailed Analytics & AI Scoring Engine
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-            The dedicated performance breakdown, grammar & communication scoring, technical accuracy graphs, and AI improvement recommendations for this session are coming here next!
-          </p>
-        </div>
+  const interviewDetails: InterviewSessionInfo = {
+    id: interview.id,
+    role: interview.role,
+    experience: interview.experience,
+    difficulty: interview.difficulty,
+    type: interview.type,
+    skills: interview.skills,
+    context: interview.context,
+    status: interview.status,
+    totalQuestions: interview.totalQuestions,
+    answered: interview.answered,
+    timeElapsed: interview.timeElapsed,
+    createdAt: interview.createdAt.toISOString(),
+  };
 
-        <div className="relative flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Link
-            href="/history"
-            className="px-5 py-2.5 text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 hover:text-slate-100 transition-all cursor-pointer"
-          >
-            ← Return to History
-          </Link>
-          <Link
-            href="/interview"
-            className="px-5 py-2.5 text-xs font-bold text-slate-950 bg-teal-400 hover:bg-teal-300 rounded-xl transition-all shadow-lg shadow-teal-500/15 cursor-pointer"
-          >
-            Practice New Interview
-          </Link>
-        </div>
-      </div>
+ 
+  return (
+    <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-6xl w-full mx-auto space-y-8 relative pb-20">
+      {/* Background glow graphics */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/3 left-10 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[160px] pointer-events-none -z-10" />
+
+      <AnalyticsClientView interviewDetails={interviewDetails} interviewReport={reportResult.data} />
     </main>
   );
 }

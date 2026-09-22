@@ -1,38 +1,26 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import {
   X,
   Clock,
-  Coins,
   Bot,
   User,
-  Copy,
-  Check,
   Play,
   RotateCcw,
-  Sparkles,
-  Calendar,
   FileText,
-  HelpCircle,
   StickyNote,
   Target,
-  Layers,
-  ArrowRight,
   MessageSquare,
   BarChart3,
   ArrowUpRight,
 } from "lucide-react";
-import toast from "react-hot-toast";
 import { SerializedInterviewHistory } from "./types";
 import {
   getTrackInfo,
   DIFFICULTY_MAP,
   STATUS_MAP,
-  formatDuration,
-  formatInterviewDate,
-  formatDetailedDuration,
 } from "./historyHelpers";
 import { formatIdIntoLabel } from "@/src/helper/helper.common";
 
@@ -45,10 +33,7 @@ export default function InterviewDetailsModal({
   interview,
   onClose,
 }: InterviewDetailsModalProps) {
-  const [speakerFilter, setSpeakerFilter] = useState<"ALL" | "INTERVIEWER" | "CANDIDATE">("ALL");
-  const [copied, setCopied] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<"transcript" | "notes">("transcript");
-
+ 
   const track = getTrackInfo(interview.type);
   const difficulty = DIFFICULTY_MAP[interview.difficulty] || {
     label: interview.difficulty,
@@ -67,25 +52,10 @@ export default function InterviewDetailsModal({
   const TrackIcon = track.icon;
   const roleLabel = formatIdIntoLabel(interview.role);
   const experienceLabel = formatIdIntoLabel(interview.experience);
-  const sessionTypeLabel = formatIdIntoLabel(interview.sessionType);
 
   const conversations = useMemo(() => {
     return interview.conversations || [];
   }, [interview.conversations]);
-
-  const filteredConversations = useMemo(() => {
-    if (speakerFilter === "ALL") return conversations;
-    return conversations.filter((c) => c.speaker === speakerFilter);
-  }, [conversations, speakerFilter]);
-
-  const interviewerCount = useMemo(
-    () => conversations.filter((c) => c.speaker === "INTERVIEWER").length,
-    [conversations]
-  );
-  const candidateCount = useMemo(
-    () => conversations.filter((c) => c.speaker === "CANDIDATE").length,
-    [conversations]
-  );
 
   // Format message time
   const formatMsgTime = (isoString: string) => {
@@ -95,37 +65,6 @@ export default function InterviewDetailsModal({
       minute: "2-digit",
       hour12: true,
     });
-  };
-
-  // Copy transcript to clipboard
-  const handleCopyTranscript = async () => {
-    try {
-      if (!conversations || conversations.length === 0) {
-        toast.error("No transcript available to copy");
-        return;
-      }
-
-      const text = conversations
-        .map((c) => {
-          const speaker = c.speaker === "INTERVIEWER" ? "AI Interviewer" : "Candidate";
-          const qNum = c.questionNumber ? ` [Question ${c.questionNumber}]` : "";
-          const time = formatMsgTime(c.createdAt);
-          return `[${time}] ${speaker}${qNum}:\n${c.message}\n`;
-        })
-        .join("\n---\n\n");
-
-      const header = `HireLoop AI Interview Session\nRole: ${roleLabel}\nTrack: ${track.label}\nExperience: ${experienceLabel}\nDifficulty: ${difficulty.label}\nDate: ${formatInterviewDate(
-        interview.createdAt
-      )}\nDuration: ${formatDuration(interview.timeElapsed)}\nStatus: ${status.label}\n\n==================== TRANSCRIPT ====================\n\n`;
-
-      await navigator.clipboard.writeText(header + text);
-      setCopied(true);
-      toast.success("Transcript copied to clipboard!");
-      setTimeout(() => setCopied(false), 2500);
-    } catch (err) {
-      toast.error("Failed to copy transcript");
-      console.error("Copy error:", err);
-    }
   };
 
   return (
@@ -189,47 +128,7 @@ export default function InterviewDetailsModal({
 
         {/* Modal Body - Scrollable */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 no-scrollbar">
-          {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">
-                Date Recorded
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-slate-200 block">
-                {formatInterviewDate(interview.createdAt)}
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">
-                Duration Elapsed
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-teal-400 flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5" />
-                {formatDetailedDuration(interview.timeElapsed)} ({formatDuration(interview.timeElapsed)})
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">
-                Questions Answered
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-slate-200 block">
-                {interview.answered} of {interview.totalQuestions} ({sessionTypeLabel})
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">
-                Credits Used
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-amber-400 flex items-center gap-1.5">
-                <Coins className="h-3.5 w-3.5" />
-                {interview.creditsUsed} Credits
-              </span>
-            </div>
-          </div>
-
+        
           {/* Assessed Skills Cloud */}
           {interview.skills && interview.skills.length > 0 && (
             <div className="space-y-2">
@@ -257,23 +156,40 @@ export default function InterviewDetailsModal({
                 <span>Custom Target Focus</span>
               </div>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed italic">
-                "{interview.context}"
+                {interview.context}
               </p>
             </div>
           )}
 
-          {/* Candidate Notes (If any) */}
-          {interview.notes && interview.notes.trim() && (
-            <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-1.5">
+          {/* Candidate Notes */}
+          { 
+            <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-2">
               <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase tracking-wider">
                 <StickyNote className="h-3.5 w-3.5" />
                 <span>Candidate Session Notes</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">
-                {interview.notes}
-              </p>
+
+              {interview.notes?.trim() ? (
+                <p className="text-xs sm:text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">
+                  {interview.notes}
+                </p>
+              ) : (
+                <div className="flex items-start gap-2.5 pt-1">
+                  <div className="mt-0.5 p-1.5 rounded-lg bg-slate-800/60">
+                    <StickyNote className="h-3.5 w-3.5 text-slate-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm text-slate-300">
+                      No notes added for this interview yet.
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      Your interview notes will appear here when available.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          }
 
           {/* Transcript Section */}
           <div className="space-y-4 pt-2">
@@ -285,63 +201,10 @@ export default function InterviewDetailsModal({
                 </h3>
               </div>
 
-              {/* Speaker Filters & Copy Button */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-800">
-                  <button
-                    onClick={() => setSpeakerFilter("ALL")}
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
-                      speakerFilter === "ALL"
-                        ? "bg-teal-500/20 text-teal-300"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
-                  >
-                    All ({conversations.length})
-                  </button>
-                  <button
-                    onClick={() => setSpeakerFilter("INTERVIEWER")}
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
-                      speakerFilter === "INTERVIEWER"
-                        ? "bg-teal-500/20 text-teal-300"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
-                  >
-                    Interviewer ({interviewerCount})
-                  </button>
-                  <button
-                    onClick={() => setSpeakerFilter("CANDIDATE")}
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
-                      speakerFilter === "CANDIDATE"
-                        ? "bg-teal-500/20 text-teal-300"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
-                  >
-                    Candidate ({candidateCount})
-                  </button>
-                </div>
-
-                <button
-                  onClick={handleCopyTranscript}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-teal-300 transition-all cursor-pointer"
-                  title="Copy full transcript to clipboard"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5" />
-                      <span>Copy Transcript</span>
-                    </>
-                  )}
-                </button>
-              </div>
             </div>
 
             {/* Conversation Feed */}
-            {filteredConversations.length === 0 ? (
+            {conversations.length === 0 ? (
               <div className="py-12 px-4 text-center rounded-xl bg-slate-900/30 border border-slate-800/60">
                 <FileText className="h-8 w-8 text-slate-600 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-slate-400">
@@ -357,7 +220,7 @@ export default function InterviewDetailsModal({
               </div>
             ) : (
               <div className="space-y-4">
-                {filteredConversations.map((msg, idx) => {
+                {conversations.map((msg, idx) => {
                   const isInterviewer = msg.speaker === "INTERVIEWER";
                   return (
                     <div
@@ -421,14 +284,8 @@ export default function InterviewDetailsModal({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 sm:p-5 border-t border-slate-800/80 bg-slate-950/60 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <button
-            onClick={onClose}
-            className="w-full sm:w-auto px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 bg-slate-900 border border-slate-800 rounded-xl transition-all cursor-pointer"
-          >
-            Close Window
-          </button>
-
+        <div className="p-4 sm:p-5 border-t border-slate-800/80 bg-slate-950/60 flex flex-col sm:flex-row items-center justify-end gap-3">
+          
           <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap sm:flex-nowrap">
             {interview.status === "RUNNING" ? (
               <Link

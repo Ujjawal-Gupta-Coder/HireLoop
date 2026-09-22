@@ -45,9 +45,3 @@ export type TrackFilterType =
   | "BEHAVIORAL_INTERVIEW"
   | "MIXED_INTERVIEW";
 export type DifficultyFilterType = "ALL" | "EASY" | "MEDIUM" | "HARD";
-export type SortOptionType =
-  | "NEWEST"
-  | "OLDEST"
-  | "LONGEST_DURATION"
-  | "MOST_QUESTIONS";
-export type ViewModeType = "grid" | "table";

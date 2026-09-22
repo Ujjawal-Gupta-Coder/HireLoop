@@ -13,14 +13,11 @@ import {
   StatusFilterType,
   TrackFilterType,
   DifficultyFilterType,
-  SortOptionType,
-  ViewModeType,
   HistoryStats,
 } from "./types";
 import HistoryStatsCards from "./HistoryStatsCards";
 import HistoryFilterBar from "./HistoryFilterBar";
 import HistoryCard from "./HistoryCard";
-import HistoryTable from "./HistoryTable";
 import InterviewDetailsModal from "./InterviewDetailsModal";
 import NoHistoryFound from "./NoHistoryFound";
 import { getTrackInfo } from "./historyHelpers";
@@ -41,8 +38,6 @@ export default function HistoryPageClient({
   const [trackFilter, setTrackFilter] = useState<TrackFilterType>("ALL");
   const [difficultyFilter, setDifficultyFilter] =
     useState<DifficultyFilterType>("ALL");
-  const [sortOption, setSortOption] = useState<SortOptionType>("NEWEST");
-  const [viewMode, setViewMode] = useState<ViewModeType>("grid");
   const [visibleCount, setVisibleCount] = useState<number>(INITIAL_BATCH_SIZE);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const observerTargetRef = useRef<HTMLDivElement | null>(null);
@@ -120,27 +115,12 @@ export default function HistoryPageClient({
 
         return true;
       })
-      .sort((a, b) => {
-        switch (sortOption) {
-          case "NEWEST":
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-          case "OLDEST":
-            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-          case "LONGEST_DURATION":
-            return (b.timeElapsed || 0) - (a.timeElapsed || 0);
-          case "MOST_QUESTIONS":
-            return (b.answered || 0) - (a.answered || 0);
-          default:
-            return 0;
-        }
-      });
   }, [
     interviews,
     statusFilter,
     trackFilter,
     difficultyFilter,
     searchQuery,
-    sortOption,
   ]);
 
   // Sliced interviews for infinite scrolling
@@ -175,17 +155,11 @@ export default function HistoryPageClient({
     handleFilterReset();
   };
 
-  const handleSortChange = (so: SortOptionType) => {
-    setSortOption(so);
-    handleFilterReset();
-  };
-
   const handleClearAllFilters = () => {
     setSearchQuery("");
     setStatusFilter("ALL");
     setTrackFilter("ALL");
     setDifficultyFilter("ALL");
-    setSortOption("NEWEST");
     setVisibleCount(INITIAL_BATCH_SIZE);
   };
 
@@ -261,12 +235,7 @@ export default function HistoryPageClient({
           setTrackFilter={handleTrackChange}
           difficultyFilter={difficultyFilter}
           setDifficultyFilter={handleDifficultyChange}
-          sortOption={sortOption}
-          setSortOption={handleSortChange}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
           statusCounts={statusCounts}
-          totalFilteredCount={filteredAndSortedInterviews.length}
         />
       </div>
 
@@ -278,8 +247,7 @@ export default function HistoryPageClient({
         />
       ) : (
         <div className="space-y-6">
-          {viewMode === "grid" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {visibleInterviews.map((interview) => (
                 <HistoryCard
                   key={interview.id}
@@ -288,12 +256,6 @@ export default function HistoryPageClient({
                 />
               ))}
             </div>
-          ) : (
-            <HistoryTable
-              interviews={visibleInterviews}
-              onViewDetails={setSelectedInterviewForDetails}
-            />
-          )}
 
           {/* Infinite Scroll Sentinel & Status Indicators */}
           <div

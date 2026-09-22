@@ -3,23 +3,11 @@
 import {
   Search,
   X,
-  LayoutGrid,
-  List,
-  Filter,
-  ArrowUpDown,
-  Laptop,
-  Code2,
-  Users,
-  Layers,
-  Cpu,
-  Sparkles,
 } from "lucide-react";
 import {
   StatusFilterType,
   TrackFilterType,
   DifficultyFilterType,
-  SortOptionType,
-  ViewModeType,
 } from "./types";
 
 type HistoryFilterBarProps = {
@@ -31,17 +19,12 @@ type HistoryFilterBarProps = {
   setTrackFilter: (track: TrackFilterType) => void;
   difficultyFilter: DifficultyFilterType;
   setDifficultyFilter: (diff: DifficultyFilterType) => void;
-  sortOption: SortOptionType;
-  setSortOption: (sort: SortOptionType) => void;
-  viewMode: ViewModeType;
-  setViewMode: (mode: ViewModeType) => void;
   statusCounts: {
     ALL: number;
     COMPLETED: number;
     RUNNING: number;
     ABANDONED: number;
   };
-  totalFilteredCount: number;
 };
 
 export default function HistoryFilterBar({
@@ -53,12 +36,7 @@ export default function HistoryFilterBar({
   setTrackFilter,
   difficultyFilter,
   setDifficultyFilter,
-  sortOption,
-  setSortOption,
-  viewMode,
-  setViewMode,
   statusCounts,
-  totalFilteredCount,
 }: HistoryFilterBarProps) {
   const statusOptions: { id: StatusFilterType; label: string; count: number }[] = [
     { id: "ALL", label: "All Sessions", count: statusCounts.ALL },
@@ -81,13 +59,6 @@ export default function HistoryFilterBar({
     { id: "EASY", label: "Easy" },
     { id: "MEDIUM", label: "Medium" },
     { id: "HARD", label: "Hard" },
-  ];
-
-  const sortOptions: { id: SortOptionType; label: string }[] = [
-    { id: "NEWEST", label: "Newest First" },
-    { id: "OLDEST", label: "Oldest First" },
-    { id: "LONGEST_DURATION", label: "Longest Duration" },
-    { id: "MOST_QUESTIONS", label: "Most Questions" },
   ];
 
   const isAnyFilterActive =
@@ -161,47 +132,6 @@ export default function HistoryFilterBar({
               ))}
             </select>
           </div>
-
-          {/* Sort Selector */}
-          <div className="relative flex-1 sm:flex-initial">
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value as SortOptionType)}
-              className="w-full sm:w-auto px-3.5 py-2.5 bg-[#0b101e]/80 border border-slate-800/90 rounded-xl text-xs font-semibold text-slate-300 hover:border-slate-700 focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/30 transition-all cursor-pointer shadow-inner pr-8 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:9px_9px] bg-[right_12px_center] bg-no-repeat"
-            >
-              {sortOptions.map((opt) => (
-                <option key={opt.id} value={opt.id} className="bg-[#0b101e] text-slate-200">
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* View Switcher (Grid / Table) */}
-          <div className="flex items-center bg-[#0b101e]/80 border border-slate-800/90 rounded-xl p-1 shadow-inner shrink-0">
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewMode === "grid"
-                  ? "bg-teal-500/20 text-teal-400 border border-teal-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
-              }`}
-              title="Grid View"
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setViewMode("table")}
-              className={`p-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                viewMode === "table"
-                  ? "bg-teal-500/20 text-teal-400 border border-teal-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
-              }`}
-              title="Table View"
-            >
-              <List className="h-4 w-4" />
-            </button>
-          </div>
         </div>
       </div>
 
@@ -236,12 +166,8 @@ export default function HistoryFilterBar({
           })}
         </div>
 
-        {/* Results Counter & Clear filter action */}
-        <div className="flex items-center gap-3 text-xs text-slate-400 shrink-0">
-          <span>
-            Showing <strong className="text-slate-200">{totalFilteredCount}</strong> session
-            {totalFilteredCount === 1 ? "" : "s"}
-          </span>
+        {/* Clear filter action */}
+        <div className="text-xs text-slate-400 shrink-0">
           {isAnyFilterActive && (
             <button
               onClick={clearAllFilters}

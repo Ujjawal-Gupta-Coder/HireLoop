@@ -192,6 +192,8 @@ model InterviewReport {
 
   summary String
 
+  reportPath String?
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

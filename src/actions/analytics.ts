@@ -10,9 +10,12 @@ import {
 } from "@/src/components/analytics/performanceMeter";
 import {
   InterviewReportData,
+  InterviewSessionInfo,
   QuestionAnalysis,
 } from "@/src/components/analytics/analyticsTypes";
 import { Performance } from "@prisma/client";
+import { generateAnalyticsPDF } from "@/src/helper/generateAnalyticsPDF";
+import { supabase } from "../lib/supabase";
 
 type GeminiRawReport = {
   confidenceScore: number;
@@ -71,6 +74,7 @@ export async function getOrGenerateInterviewReport(
           orderBy: { createdAt: "asc" },
         },
         report: true,
+        user: true
       },
     });
 
@@ -144,7 +148,7 @@ export async function getOrGenerateInterviewReport(
     const ai = new GoogleGenAI({ apiKey });
 
     const systemPrompt = `You are a Principal Technical Hiring Manager and Senior Executive Communications Coach.
-Your task is to thoroughly analyze an interview transcript and produce a high-precision, objective evaluation report.
+Your task is to thoroughly analyze an interview transcript and produce a evaluation with balanced scores that reflect the candidate’s actual performance without being overly harsh.
 
 Context of the Interview:
 - Role: ${interview.role}
@@ -403,35 +407,86 @@ Strictly output valid JSON matching this schema:
         summary,
       },
     });
+   
+    let reportPath:string = "";
+    const InterviewSession: InterviewSessionInfo = {
+      id: interview.id,
+      role: interview.role,
+      experience: interview.experience,
+      difficulty: interview.difficulty,
+      type: interview.type,
+      skills: interview.skills,
+      context: interview.context,
+      status: interview.status,
+      totalQuestions: interview.totalQuestions,
+      answered: interview.answered,
+      userName: interview.user.name,
+      userEmail: interview.user.email,
+      timeElapsed: interview.timeElapsed,
+      createdAt: interview.createdAt.toISOString(),
+    };
+
+    const savedReportData: InterviewReportData = {
+      id: savedReport.id,
+      interviewId: savedReport.interviewId,
+      overallScore: savedReport.overallScore,
+      performance: getPerformanceLevel(savedReport.overallScore),
+      confidenceScore: savedReport.confidenceScore,
+      clarityScore: savedReport.clarityScore,
+      relevancyScore: savedReport.relevancyScore,
+      depthScore: savedReport.depthScore,
+      problemSolvingScore: savedReport.problemSolvingScore,
+      strengths: savedReport.strengths,
+      weaknesses: savedReport.weaknesses,
+      recommendations: savedReport.recommendations,
+      communicationScore: savedReport.communicationScore,
+      communicationPerformance: getPerformanceLevel(savedReport.communicationScore),
+      commClarityScore: savedReport.commClarityScore,
+      commGrammarScore: savedReport.commGrammarScore,
+      commVocabularyScore: savedReport.commVocabularyScore,
+      commToneScore: savedReport.commToneScore,
+      commProfessionalismScore: savedReport.commProfessionalismScore,
+      communicationFeedback: savedReport.communicationFeedback,
+      questionAnalyses,
+      summary: savedReport.summary,
+      createdAt: savedReport.createdAt.toISOString(),
+      updatedAt: savedReport.updatedAt.toISOString(),
+    }
+    try {
+        const reportPDFBytes = await generateAnalyticsPDF(InterviewSession, savedReportData);
+
+        const filePath = `${interview.userId}/${interview.id}.pdf`;
+    
+        const {data, error} = await supabase.storage.from("Reports")
+            .upload(filePath, reportPDFBytes, {
+                contentType: "application/pdf",
+                upsert: true                                   // override file : Yes, same name file override
+            })
+        if(error) throw new Error(`Interview report upload failed: ${error.message}`)
+        
+        reportPath = data.path;
+
+    } catch (error) {
+      console.error("Report generation/upload failed: ", error);
+    }
+
+    try {
+        await prisma.interviewReport.update({
+            where: {
+                id: savedReport.id
+            },
+            data: {
+              reportPath,
+            }
+        })
+    } catch(error) {
+        console.error("error in updating interview report path: ", error);
+        await supabase.storage.from("Reports").remove([reportPath]);
+    }
 
     return {
       success: true,
-      data: {
-        id: savedReport.id,
-        interviewId: savedReport.interviewId,
-        overallScore: savedReport.overallScore,
-        performance: getPerformanceLevel(savedReport.overallScore),
-        confidenceScore: savedReport.confidenceScore,
-        clarityScore: savedReport.clarityScore,
-        relevancyScore: savedReport.relevancyScore,
-        depthScore: savedReport.depthScore,
-        problemSolvingScore: savedReport.problemSolvingScore,
-        strengths: savedReport.strengths,
-        weaknesses: savedReport.weaknesses,
-        recommendations: savedReport.recommendations,
-        communicationScore: savedReport.communicationScore,
-        communicationPerformance: getPerformanceLevel(savedReport.communicationScore),
-        commClarityScore: savedReport.commClarityScore,
-        commGrammarScore: savedReport.commGrammarScore,
-        commVocabularyScore: savedReport.commVocabularyScore,
-        commToneScore: savedReport.commToneScore,
-        commProfessionalismScore: savedReport.commProfessionalismScore,
-        communicationFeedback: savedReport.communicationFeedback,
-        questionAnalyses,
-        summary: savedReport.summary,
-        createdAt: savedReport.createdAt.toISOString(),
-        updatedAt: savedReport.updatedAt.toISOString(),
-      },
+      data: savedReportData
     };
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : "Failed to generate interview report";

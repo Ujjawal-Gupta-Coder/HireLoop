@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -16,7 +16,9 @@ import {
   Target,
   Smile,
   Briefcase,
+  Loader2,
 } from "lucide-react";
+import toast from "react-hot-toast";
 import { InterviewReportData, InterviewSessionInfo } from "./analyticsTypes";
 import PerformanceGauge from "./PerformanceGauge";
 import ScoreParameterCard from "./ScoreParameterCard";
@@ -41,7 +43,49 @@ export default function AnalyticsClientView({
   const roleLabel = formatIdIntoLabel(interviewDetails.role);
   const experienceLabel = formatIdIntoLabel(interviewDetails.experience);
 
-  const handleDownloadAnalytics = () => {
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  // Prevent auto-scrolling down when opening analytics page
+  useEffect(() => {
+    if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    const resetScrollToTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      const scrollContainers = document.querySelectorAll(
+        ".overflow-y-auto, [data-scroll-container]"
+      );
+      scrollContainers.forEach((container) => {
+        container.scrollTop = 0;
+      });
+    };
+
+    resetScrollToTop();
+    const rAF = requestAnimationFrame(resetScrollToTop);
+    const timer = setTimeout(resetScrollToTop, 50);
+
+    return () => {
+      cancelAnimationFrame(rAF);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const handleDownloadAnalytics = async () => {
+    try {
+      setIsGeneratingPDF(true);
+      const raw = await fetch(`/api/interview-report/${interviewDetails.id}`);
+      const res = await raw.json();
+      if(!res.success) throw new Error(res.message)
+    
+      window.open(res.data.url, "_blank");
+
+    } catch(error) {
+      toast.error("Download interview report action failed");
+      console.error("Error in download interview report: ", error);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
     
   };
 
@@ -59,12 +103,22 @@ export default function AnalyticsClientView({
           </p>
         </div>
 
+        {/* Download PDF Report  */}
         <button
           onClick={handleDownloadAnalytics}
-          className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-xl text-slate-950 bg-teal-400 hover:bg-teal-300 hover:scale-[1.02] shadow-lg shadow-teal-500/15 transition-all duration-200 cursor-pointer self-start sm:self-auto group shrink-0"
+          disabled={isGeneratingPDF}
+          className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-xl text-slate-950 transition-all duration-200 cursor-pointer self-start sm:self-auto group shrink-0 ${
+            isGeneratingPDF
+              ? "bg-teal-500/70 opacity-80 cursor-not-allowed"
+              : "bg-teal-400 hover:bg-teal-300 hover:scale-[1.02] shadow-lg shadow-teal-500/15"
+          }`}
         >
-          <FileText className="h-4 w-4 transition-transform group-hover:scale-110" />
-          <span>Download PDF</span>     
+          {isGeneratingPDF ? (
+            <Loader2 className="h-4 w-4 animate-spin text-slate-950" />
+          ) : (
+            <FileText className="h-4 w-4 transition-transform group-hover:scale-110" />
+          )}
+          <span>{isGeneratingPDF ? "Generating PDF..." : "Download PDF"}</span>     
         </button>
       </div>
       

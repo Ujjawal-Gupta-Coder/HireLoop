@@ -47,6 +47,7 @@ export default async function AnalyticsPage({params}: AnalyticsPageParams) {
         orderBy: { createdAt: "asc" },
       },
       report: true,
+      user: true
     },
   });
 
@@ -160,6 +161,8 @@ export default async function AnalyticsPage({params}: AnalyticsPageParams) {
     answered: interview.answered,
     timeElapsed: interview.timeElapsed,
     createdAt: interview.createdAt.toISOString(),
+    userName: interview.user.name,
+    userEmail: interview.user.email
   };
 
  

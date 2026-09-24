@@ -63,6 +63,8 @@ export type InterviewSessionInfo = {
   status: string;
   totalQuestions: number;
   answered: number;
+  userName: string,
+  userEmail: string
   timeElapsed: number;
   createdAt: string;
 };

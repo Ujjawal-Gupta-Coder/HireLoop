@@ -3,7 +3,7 @@ import { generateSignedURL } from "@/src/helper/helper.server";
 import { prisma } from "@/src/lib/prisma";
 
 type context = {
-    params: Promise<{ paymentId: string }>
+    params: Promise<{ interviewid: string }>
 }
 
 export const GET = async (_:Request, context: context) => {
@@ -15,44 +15,39 @@ export const GET = async (_:Request, context: context) => {
             data: null
         }, {status: 401})
 
-        const {paymentId: rawId} = await context.params;
-        const receiptId = rawId.trim() 
-
-        if(!receiptId) return Response.json({
+        const {interviewid: rawId} = await context.params;
+        const trimmedInterviewId = rawId.trim();
+        if(!trimmedInterviewId) return Response.json({
             success: false,
-            message: "Missing Receipt ID",
+            message: "Missing Interview ID",
             data: null
         }, {status: 400})
 
-        const payment = await prisma.payment.findUnique({
+        const interviewReport = await prisma.interviewReport.findUnique({
             where: {
-                receiptId,
-                user: {
-                    email: session.user.email
-                }
+                interviewId: trimmedInterviewId,
             },
             select: {
-                receiptId: true,
-                receiptPath: true
+                reportPath: true
             }
         })
-        if(!payment) return Response.json({
+        if(!interviewReport) return Response.json({
             success: false,
-            message: "Payment details not found",
+            message: "Interview Report not found",
             data: null
         }, {status: 404})
 
-        if(!payment.receiptPath) return Response.json({
+        if(!interviewReport.reportPath) return Response.json({
             success: true,
-            message: "Receipt not Available",
+            message: "Interview report PDF not Available",
             data: null
         }, {status: 200}) 
 
         try {
-            const url = await generateSignedURL("Receipts", payment.receiptPath);
+            const url = await generateSignedURL("Reports", interviewReport.reportPath);
             return Response.json({
                 success: true,
-                message: "Receipt URL generated successfully",
+                message: "Interview Report URL generated successfully",
                 data: { url }
             }, {status: 200})
                 
@@ -61,7 +56,7 @@ export const GET = async (_:Request, context: context) => {
             
             return Response.json({
                 success: false,
-                message: "Failed to generate receipt URL",
+                message: "Failed to generate interview report URL",
                 data: null
             }, {status: 500})
         }

@@ -148,7 +148,7 @@ export async function getOrGenerateInterviewReport(
     const ai = new GoogleGenAI({ apiKey });
 
     const systemPrompt = `You are a Principal Technical Hiring Manager and Senior Executive Communications Coach.
-Your task is to thoroughly analyze an interview transcript and produce a high-precision, objective evaluation report.
+Your task is to thoroughly analyze an interview transcript and produce a evaluation with balanced scores that reflect the candidate’s actual performance without being overly harsh.
 
 Context of the Interview:
 - Role: ${interview.role}

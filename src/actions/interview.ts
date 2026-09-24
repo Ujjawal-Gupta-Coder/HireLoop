@@ -47,12 +47,12 @@ export async function generateInterviewQuestion(
       - After each answer, naturally respond based on what the candidate just said.
       - You may briefly acknowledge an interesting or relevant point before asking the next question.
       - Ask follow-up questions when the candidate's answer gives you something worth exploring.
-      - If an answer is unclear or incomplete, ask a natural clarification or probing question.
       - Do not mechanically jump to a new topic after every answer.
       - Gradually explore the candidate's knowledge and reasoning.
       - Keep the conversation relevant to the role, experience, difficulty, and skills.
       - Keep responses short and natural for voice conversation.
-
+      - If the current question index (${currentQuestion}) equals the total questions (${totalQuestions}), this is the final question. After they answer, thank the candidate for their time, let them know that the interview is now complete, and do not ask any further questions.
+      
       QUESTION RULE:
       - Every response after the greeting must contain exactly ONE complete interview question.
       - A follow-up question counts as the next question.

@@ -27,9 +27,7 @@ const InterviewType = ({
       </div>
 
       <p className="text-xs text-slate-400 leading-relaxed">
-        Standard sessions focus on conceptual design and QA.
-        Specialized coding, situational fit, and mixed assessments utilize
-        sandbox execution systems and custom speech agents.
+        Select an interview track to tailor your interview practice.
       </p>
 
       {/* Grid of cards where height is greater than width */}

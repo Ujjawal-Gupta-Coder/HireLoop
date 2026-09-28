@@ -13,15 +13,18 @@ import {
   ArrowRight,
   LogOut,
 } from "lucide-react";
-import Logo from "../../public/logo.svg";
-import signOutWithGoogle from "../actions/signOut";
+import Logo from "@/public/logo.svg";
+import signOutWithGoogle from "../../actions/signOut";
 
 interface SidebarProps {
   className?: string;
   onCloseMobile?: () => void;
 }
 
-export default function Sidebar({ className = "", onCloseMobile }: SidebarProps) {
+export default function Sidebar({
+  className = "",
+  onCloseMobile,
+}: SidebarProps) {
   const pathname = usePathname();
 
   const navigationTabs = [
@@ -48,8 +51,14 @@ export default function Sidebar({ className = "", onCloseMobile }: SidebarProps)
         <div className="relative w-9 h-9 flex items-center justify-center bg-primary-dark rounded-xl shadow-lg shadow-primary-shadow/30 border border-teal-500/10">
           <Image src={Logo} alt="Logo" fill className="p-0.5" />
         </div>
-        <Link href="/" className="text-xl font-bold tracking-tight text-text cursor-pointer group">
-          Hire<span className="text-teal-400 group-hover:text-primary-light">Loop</span>
+        <Link
+          href="/"
+          className="text-xl font-bold tracking-tight text-text cursor-pointer group"
+        >
+          Hire
+          <span className="text-teal-400 group-hover:text-primary-light">
+            Loop
+          </span>
         </Link>
       </div>
 
@@ -72,7 +81,9 @@ export default function Sidebar({ className = "", onCloseMobile }: SidebarProps)
               >
                 <item.icon
                   className={`h-4.5 w-4.5 transition-colors ${
-                    active ? "text-teal-400" : "text-slate-400 group-hover:text-slate-300"
+                    active
+                      ? "text-teal-400"
+                      : "text-slate-400 group-hover:text-slate-300"
                   }`}
                 />
                 <span>{item.name}</span>
@@ -84,12 +95,11 @@ export default function Sidebar({ className = "", onCloseMobile }: SidebarProps)
 
       {/* Bottom Content  */}
       <div className="mt-auto pt-6 border-t border-slate-900/80">
-      
-      {/* Buy More Credits Promo Card */}
+        {/* Buy More Credits Promo Card */}
         <div className="relative overflow-hidden rounded-2xl bg-linear-to-b from-teal-950/40 to-slate-950/80 border border-teal-500/10 p-4 shadow-xl">
           {/* Subtle Glow Graphics */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-teal-500/5 rounded-full blur-xl pointer-events-none" />
-          
+
           <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-teal-950/60 border border-teal-500/20 mb-3 shadow-inner">
             <ShoppingCart className="h-5 w-5 text-teal-400 animate-pulse" />
           </div>
@@ -110,12 +120,12 @@ export default function Sidebar({ className = "", onCloseMobile }: SidebarProps)
           </Link>
         </div>
 
-      {/* Logout button  */}
+        {/* Logout button  */}
         <button
           onClick={signOutWithGoogle}
           className="flex items-center w-full mt-2 gap-3 px-3.5 py-2.5 rounded-xl text-sm cursor-pointer transition-color bg-linear-to-tr from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600  border border-red-600/30 text-text font-bold shadow-inner"
         >
-          <LogOut className="h-4.5 w-4.5"/>
+          <LogOut className="h-4.5 w-4.5" />
           <span>Sign Out</span>
         </button>
       </div>

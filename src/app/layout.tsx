@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "HireLoop | Practice Real AI Interviews | Get Hired Faster",
-  description: "Master coding, behavioral, and technical interviews with AI. Practice in a real-time code editor, receive instant feedback, downloadable PDF reports, personalized interview tracks, and land your dream job with HireLoop.",
+  description: "Master technical, behavioral, and system design interviews with AI. Practice in a real-time voice interview, get interview analytics, downloadable PDF reports, personalized interview tracks, and land your dream job with HireLoop.",
 };
 
 export default function RootLayout({

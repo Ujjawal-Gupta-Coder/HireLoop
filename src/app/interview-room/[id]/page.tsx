@@ -1,47 +1,46 @@
-import BottomLineFooter from "@/src/components/BottomLineFooter"
-import InterviewRoomClient from "./InterviewRoomClient"
+import BottomLineFooter from "@/src/components/ui/BottomLineFooter";
+import InterviewRoomClient from "../../../components/interview-room/InterviewRoomClient";
 import { auth } from "@/src/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/src/lib/prisma";
-import InvalidIdClient from "@/src/components/InvalidIdClient";
+import InvalidIdClient from "@/src/components/interview-room/InvalidIdClient";
 
-const page = async ({params}:{params: Promise<{id: string}>}) => {
-  
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const session = await auth();
-  if(!session?.user?.email) {
+  if (!session?.user?.email) {
     redirect("/auth");
   }
   const user = await prisma.user.findUnique({
     where: {
-      email: session.user.email
-    }
-  })
-  if(!user?.id) {
+      email: session.user.email,
+    },
+  });
+  if (!user?.id) {
     redirect("/auth");
   }
 
-  const {id: interviewId} = await params;
-  if(!interviewId.trim()) {
+  const { id: interviewId } = await params;
+  if (!interviewId.trim()) {
     redirect("/interview");
   }
 
   const interviewDetails = await prisma.interviewHistory.findUnique({
     where: {
       id: interviewId,
-      userId: user.id
+      userId: user.id,
     },
     include: {
       conversations: {
         orderBy: {
-          createdAt: "asc"
-        }
-      }
-    }
-  })
-  if(!interviewDetails || interviewDetails.type === "CODING_INTERVIEW") return <InvalidIdClient />
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+  if (!interviewDetails) return <InvalidIdClient />;
 
-  if(interviewDetails.status !== "RUNNING") {
-    redirect(`/analytics/${interviewDetails.id}`)
+  if (interviewDetails.status !== "RUNNING") {
+    redirect(`/analytics/${interviewDetails.id}`);
   }
 
   const serializedDetails = {
@@ -64,7 +63,7 @@ const page = async ({params}:{params: Promise<{id: string}>}) => {
       <InterviewRoomClient interviewDetails={serializedDetails} />
       <BottomLineFooter />
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;

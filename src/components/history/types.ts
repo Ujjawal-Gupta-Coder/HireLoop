@@ -40,7 +40,7 @@ export type StatusFilterType = "ALL" | "COMPLETED" | "RUNNING" | "ABANDONED";
 export type TrackFilterType =
   | "ALL"
   | "TECHNICAL_INTERVIEW"
-  | "CODING_INTERVIEW"
+  | "HR_INTERVIEW"
   | "SYSTEM_DESIGN_INTERVIEW"
   | "BEHAVIORAL_INTERVIEW"
   | "MIXED_INTERVIEW";

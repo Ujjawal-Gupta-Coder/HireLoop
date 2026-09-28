@@ -11,6 +11,7 @@ export const generateSignedURL = async (bucket:string, path: string) => {
 const typeCreditsMapping: Record<string,number> = {
     TECHNICAL_INTERVIEW: 10,
     CODING_INTERVIEW: 15,
+    HR_INTERVIEW: 10,
     BEHAVIORAL_INTERVIEW: 10,
     SYSTEM_DESIGN_INTERVIEW: 15,
     MIXED_INTERVIEW: 15

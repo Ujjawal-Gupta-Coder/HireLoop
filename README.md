@@ -93,10 +93,6 @@ View and manage previously conducted interviews from a centralized interview his
 
 HireLoop is continuously evolving, with several major features currently planned:
 
-### 💻 Coding Interview Room
-
-A dedicated coding interview environment with an integrated code editor for solving programming problems during AI-powered interviews.
-
 ### 🤖 AI-Generated Summary & Analysis
 
 AI-generated interview summaries and detailed performance analysis based on the candidate's interview responses.

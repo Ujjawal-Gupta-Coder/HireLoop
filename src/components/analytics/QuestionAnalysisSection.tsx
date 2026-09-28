@@ -134,7 +134,7 @@ export default function QuestionAnalysisSection({
                       Q{q.questionNumber}
                     </span>
 
-                    <h4 className="text-sm font-bold text-slate-100 line-clamp-1 sm:line-clamp-2">
+                    <h4 className="text-sm font-bold text-slate-100 line-clamp-1">
                       {q.question}
                     </h4>
                   </div>

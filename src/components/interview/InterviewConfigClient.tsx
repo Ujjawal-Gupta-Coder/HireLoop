@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { 
-  Code2, 
   Users, 
   Laptop, 
   Layers, 
@@ -11,6 +10,7 @@ import {
   Zap,
   Clock,
   Timer,
+  BriefcaseBusiness,
 } from "lucide-react";
 import InterviewType from "./InterviewType";
 import RoleAndExperience from "./RoleAndExperience";
@@ -41,12 +41,12 @@ export default function InterviewConfigClient({ credits }: InterviewConfigClient
       glowColor: "group-hover:shadow-blue-500/10",
     },
     {
-      id: "CODING_INTERVIEW",
-      title: "Coding Practice",
-      description: "Live interactive coding & algorithm execution sandboxes.",
-      icon: Code2,
-      cost: 15,
-      badge: "Premium",
+      id: "HR_INTERVIEW",
+      title: "HR Interview",
+      description: "Introduction, career goals, motivation, strengths, and workplace scenarios.",
+      icon: BriefcaseBusiness,
+      cost: 10,
+      badge: "Standard",
       iconColor: "text-teal-400",
       borderColor: "border-teal-500/20",
       glowColor: "group-hover:shadow-teal-500/10",

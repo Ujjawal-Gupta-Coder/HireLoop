@@ -4,12 +4,6 @@ import { redirect } from "next/navigation";
 import HistoryPageClient from "@/src/components/history/HistoryPageClient";
 import { SerializedInterviewHistory } from "@/src/components/history/types";
 
-export const metadata = {
-  title: "Interview History | HireLoop",
-  description:
-    "Review your AI interview history, practice telemetry, conversation transcripts, and performance progress.",
-};
-
 export default async function HistoryPage() {
   const session = await auth();
 

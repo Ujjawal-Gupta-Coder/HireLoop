@@ -25,9 +25,7 @@ const InterviewLength = ({
       </div>
 
       <p className="text-xs text-slate-400 leading-relaxed">
-        Choose the depth of your practice session. Shorter sessions are great
-        for quick reviews, while extended sessions provide a comprehensive
-        evaluation of code and systems.
+        Choose your session length based on how much time and depth you want for your practice.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">

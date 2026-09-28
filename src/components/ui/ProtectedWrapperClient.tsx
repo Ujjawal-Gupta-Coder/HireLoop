@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import SidebarContainer from "./SidebarContainer";
-import { Session } from "../types";
+import { Session } from "../../types";
 
 type ProtectedWrapperClientProps = {
   children: React.ReactNode;
@@ -23,7 +23,10 @@ const ProtectedWrapperClient = ({
 
   // Disable browser automatic scroll restoration to avoid unexpected scroll jumps
   useEffect(() => {
-    if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+    if (
+      typeof window !== "undefined" &&
+      "scrollRestoration" in window.history
+    ) {
       window.history.scrollRestoration = "manual";
     }
   }, []);
@@ -31,7 +34,11 @@ const ProtectedWrapperClient = ({
   // Reset scroll position to top whenever navigating between pages (e.g. /history to /analytics/[id])
   useEffect(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
       scrollContainerRef.current.scrollTop = 0;
     }
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });

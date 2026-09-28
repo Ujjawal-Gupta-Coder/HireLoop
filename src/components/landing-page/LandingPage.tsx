@@ -21,15 +21,15 @@ import {
   Brain,
   Sliders,
   BarChart3,
-  CheckCircle2,
+  BriefcaseBusiness,
+  MessageCircleQuestion,
 } from "lucide-react";
 import {
   IconRoute,
   IconTimeline,
   IconBrain,
 } from "@tabler/icons-react";
-import CodeEditorMockup from "./CodeEditorMockup";
-
+import InterviewRoomMockup from "./InterviewRoomMockup";
 
 // Interview Tracks
 const INTERVIEW_TRACKS = [
@@ -51,20 +51,20 @@ const INTERVIEW_TRACKS = [
     ],
   },
   {
-    id: "coding",
-    title: "Coding Round",
-    shortTitle: "Coding",
-    desc: "Algorithmic thinking, complexity tradeoffs, data structures, and edge-case evaluations via interactive problem walkthroughs.",
-    icon: Code2,
-    badge: "Algorithms & Logic",
-    iconColor: "text-cyan-400",
-    bgColor: "bg-cyan-500/10",
-    borderColor: "border-cyan-500/20",
+    id: "hr",
+    title: "HR Round",
+    shortTitle: "HR",
+    desc: "Professional conversations covering motivation, career goals, workplace situations, and role fit.",
+    icon: BriefcaseBusiness,
+    badge: "Career & Fit",
+    iconColor: "text-green-400",
+    bgColor: "bg-green-500/10",
+    borderColor: "border-green-500/20",
     focus: [
-      "Time & Space Complexity (Big-O)",
-      "Arrays, Trees, Graphs & Dynamic Programming",
-      "Boundary Conditions & Edge-Case Defense",
-      "Logical Decomposition & Code Clarity",
+      "Introduction, Motivation & Career Goals",
+      "Strengths, Weaknesses & Self-Awareness",
+      "Workplace Situations & Decision-Making",
+      "Role Fit & Professional Communication",
     ],
   },
   {
@@ -147,7 +147,7 @@ const HOW_IT_WORKS_STEPS = [
   {
     step: "01",
     title: "Configure Interview",
-    desc: "Choose your interview track (Technical, Coding, System Design, Behavioral, or Mix), target role, and seniority level to tailor the interviewer.",
+    desc: "Choose your interview track (Technical, System Design, HR, Behavioral, or Mix), target role, and seniority level to tailor the interviewer.",
     icon: Sliders,
     badge: "Step 1",
   },
@@ -262,8 +262,8 @@ const LandingPage = () => {
           </a>
         </div>
 
-        {/* Code Editor Mockup  */}
-        <CodeEditorMockup />
+        {/* AI Interview Room Mockup  */}
+        <InterviewRoomMockup />
         
         {/* Key Points Banner */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-slate-900/90">
@@ -416,7 +416,7 @@ const LandingPage = () => {
 
                 <div>
                   <div className="flex justify-between text-xs font-semibold mb-1.5">
-                    <span className="text-slate-300">Answer Relevance</span>
+                    <span className="text-slate-300">Problem Solving</span>
                     <span className="text-teal-400 font-mono font-bold">95% (Excellent)</span>
                   </div>
 
@@ -428,46 +428,70 @@ const LandingPage = () => {
             </div>
 
             <div className="mt-6 pt-3.5 border-t border-white/5 flex items-center justify-between text-xs text-slate-500">
-              <span>Automatic Analysis</span>
-              <span className="text-cyan-400 font-semibold">Ready for Review</span>
+              <span>AI Evaluation</span>
+              <span className="text-cyan-400 font-semibold">91% Overall Score</span>
             </div>
           </div>
 
-          {/* CARD 3: STAR Method Validation (4 cols - Floating Delayed) */}
-          <div className="lg:col-span-4 glass-panel rounded-3xl p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 flex flex-col justify-between shadow-2xl animate-float-delayed">
+          {/* CARD 3: Dynamicas follow ups (4 cols - Floating Delayed) */}
+          <div className="lg:col-span-4 glass-panel rounded-3xl p-6 border border-white/10 hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between shadow-2xl animate-float-delayed">
             <div>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                  <CheckCircle2 className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                  <MessageCircleQuestion className="w-5 h-5" />
                 </div>
+
                 <div>
-                  <h3 className="text-sm font-bold text-white">STAR Framework Audit</h3>
-                  <p className="text-[11px] text-slate-400">Structured behavioral alignment</p>
+                  <h3 className="text-sm font-bold text-white">
+                    Dynamic Follow-Ups
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Questions that adapt to your answers
+                  </p>
                 </div>
               </div>
 
-              {/* STAR Checklist */}
               <div className="space-y-2 mt-4">
                 {[
-                  { label: "Situation", status: "Clear context defined", score: "96%" },
-                  { label: "Task", status: "Core challenge framed", score: "92%" },
-                  { label: "Action", status: "Key technical steps", score: "95%" },
-                  { label: "Result", status: "Measurable metrics stated", score: "94%" },
+                  {
+                    label: "Your Answer",
+                    status: "Response analyzed",
+                  },
+                  {
+                    label: "AI Follow-Up",
+                    status: "Relevant question generated",
+                  },
+                  {
+                    label: "Interview Flow",
+                    status: "Conversation continues",
+                  },
+                  {
+                    label: "Next Question",
+                    status: "Context-aware",
+                  },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-white/5 text-xs">
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-white/5 text-xs"
+                  >
                     <div className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      <span className="font-semibold text-slate-200">{item.label}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                      <span className="font-semibold text-slate-200">
+                        {item.label}
+                      </span>
                     </div>
-                    <span className="text-emerald-400 font-mono font-bold text-[11px]">{item.score}</span>
+
+                    <span className="text-slate-400 text-[10px]">
+                      {item.status}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Overall STAR Match</span>
-              <span className="text-emerald-400 font-bold">94% Alignment</span>
+              <span className="text-slate-400">Interview Flow</span>
+              <span className="text-cyan-400 font-bold">Context-Aware</span>
             </div>
           </div>
 
@@ -537,7 +561,7 @@ const LandingPage = () => {
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-400">Actionable Tips</span>
-                  <span className="text-purple-400 font-bold font-mono">4 Areas</span>
+                  <span className="text-purple-400 font-bold font-mono">3 Areas</span>
                 </div>
               </div>
             </div>
@@ -546,7 +570,7 @@ const LandingPage = () => {
               <span className="text-slate-400">Export Format</span>
               <span className="text-purple-400 font-bold flex items-center gap-1">
                 <FileText className="w-3.5 h-3.5" />
-                <span>PDF Audit Ready</span>
+                <span>PDF Report</span>
               </span>
             </div>
           </div>

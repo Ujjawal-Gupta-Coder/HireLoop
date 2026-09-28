@@ -1,6 +1,5 @@
 import {
   Laptop,
-  Code2,
   Users,
   Layers,
   Cpu,
@@ -9,6 +8,7 @@ import {
   Clock,
   Sparkles,
   LucideIcon,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 export type TrackInfo = {
@@ -33,15 +33,15 @@ export const TRACK_MAP: Record<string, TrackInfo> = {
     glowColor: "shadow-blue-500/10",
     bgGradient: "from-blue-950/30 via-slate-900/40 to-slate-950/80",
   },
-  CODING_INTERVIEW: {
-    label: "Coding Practice",
-    shortLabel: "Coding",
-    icon: Code2,
-    badgeColor: "bg-teal-950/40 text-teal-400 border-teal-500/20",
-    textColor: "text-teal-400",
-    borderColor: "border-teal-500/20",
-    glowColor: "shadow-teal-500/10",
-    bgGradient: "from-teal-950/30 via-slate-900/40 to-slate-950/80",
+  HR_INTERVIEW: {
+    label: "HR Interview",
+    shortLabel: "HR",
+    icon: BriefcaseBusiness,
+    badgeColor: "bg-green-950/40 text-green-400 border-green-500/20",
+    textColor: "text-green-400",
+    borderColor: "border-green-500/20",
+    glowColor: "shadow-green-500/10",
+    bgGradient: "from-green-950/30 via-slate-900/40 to-slate-950/80",
   },
   BEHAVIORAL_INTERVIEW: {
     label: "Behavioral",

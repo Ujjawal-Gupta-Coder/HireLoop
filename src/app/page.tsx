@@ -1,10 +1,10 @@
-import Navbar from "../components/Navbar";
-import Pricing from "../components/Pricing";
-import Footer from "../components/Footer";
-import FAQ from "../components/FAQ";
-import Testimonials from "../components/Testimonials";
-import CTA from "../components/CTA";
-import LandingPage from "../components/LandingPage";
+import Navbar from "../components/ui/Navbar";
+import Pricing from "../components/landing-page/Pricing";
+import Footer from "../components/ui/Footer";
+import FAQ from "../components/landing-page/FAQ";
+import Testimonials from "../components/landing-page/Testimonials";
+import CTA from "../components/landing-page/CTA";
+import LandingPage from "../components/landing-page/LandingPage";
 import { auth } from "../auth";
 import { prisma } from "../lib/prisma";
 
@@ -20,62 +20,61 @@ export default async function Page() {
       auth(),
       prisma.testimonial.findMany({
         select: {
-          quote : true,
-          name : true,
-          role : true,
-          avatar : true,
-          color : true, 
+          quote: true,
+          name: true,
+          role: true,
+          avatar: true,
+          color: true,
         },
         orderBy: {
-          order: "asc"
-        }
-      }), 
+          order: "asc",
+        },
+      }),
       prisma.fAQ.findMany({
         select: {
-          question : true,
-          answer : true,
+          question: true,
+          answer: true,
         },
         orderBy: {
-          order: "asc"
-        }
+          order: "asc",
+        },
       }),
       prisma.plan.findMany({
         select: {
-            id:true,
-            name:true,
-            credits:true,
-            amount:true,
-            currencySymbol:true,
-            description:true, 
-            features:true, 
-            isMostPopular:true, 
-            buttonText:true, 
+          id: true,
+          name: true,
+          credits: true,
+          amount: true,
+          currencySymbol: true,
+          description: true,
+          features: true,
+          isMostPopular: true,
+          buttonText: true,
         },
         orderBy: {
-            amount: "asc"
-        }
-      })
-    ])
-  } catch(error) {
-      console.error("Database crashed: ", error);
+          amount: "asc",
+        },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database crashed: ", error);
   }
-  
-  let credits:number = 0;
-  if(session?.user?.email) {
+
+  let credits: number = 0;
+  if (session?.user?.email) {
     try {
       const userData = await prisma.user.findUnique({
         where: {
-          email: session.user.email
+          email: session.user.email,
         },
         select: {
-          credits: true
-        }
-      })
+          credits: true,
+        },
+      });
       credits = userData?.credits || 0;
-    } catch(error) {
+    } catch (error) {
       console.error("Error in getting user credits: ", error);
     }
-      
   }
 
   return (
@@ -89,19 +88,19 @@ export default async function Page() {
       <div className="absolute inset-0 grid-bg-overlay pointer-events-none -z-20 opacity-60" />
 
       {/* NAVBAR */}
-      <Navbar session={session} credits={credits} isLandingPage={true}/>  
+      <Navbar session={session} credits={credits} isLandingPage={true} />
 
       {/* Landing page component group  */}
       <LandingPage />
 
       {/* TESTIMONIALS SECTION */}
-      <Testimonials testimonialData={testimonial}/>
+      <Testimonials testimonialData={testimonial} />
 
       {/* PRICING PLANS SECTION */}
-      <Pricing session={session} plans={plans}/>
+      <Pricing session={session} plans={plans} />
 
       {/* FAQ SECTION */}
-      <FAQ faqData={faq}/>
+      <FAQ faqData={faq} />
 
       {/* FOOTER CALL TO ACTION */}
       <CTA />

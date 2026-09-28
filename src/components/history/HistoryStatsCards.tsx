@@ -5,8 +5,6 @@ import {
   CheckCircle2,
   Clock,
   MessageSquareQuote,
-  TrendingUp,
-  Award,
 } from "lucide-react";
 import { HistoryStats } from "./types";
 import { formatDuration } from "./historyHelpers";

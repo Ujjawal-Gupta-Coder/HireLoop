@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Mic, Video, Volume2, PhoneOff, Sparkles } from "lucide-react";
+import { Mic, Volume2, PhoneOff, Sparkles } from "lucide-react";
 
 const InterviewRoomMockup = () => {
   return (

@@ -1,7 +1,7 @@
 import { auth } from "@/src/auth";
 import { prisma } from "@/src/lib/prisma";
 import { redirect } from "next/navigation";
-import InterviewConfigClient from "./InterviewConfigClient";
+import InterviewConfigClient from "../../../components/interview/InterviewConfigClient";
 
 const Page = async () => {
   const session = await auth();

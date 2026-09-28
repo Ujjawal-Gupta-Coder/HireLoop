@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import Poster from "../../public/hireloop_poster.png"
+import Poster from "@/public/hireloop_poster.png"
 import BottomLineFooter from "./BottomLineFooter"
 
 const Footer = () => {

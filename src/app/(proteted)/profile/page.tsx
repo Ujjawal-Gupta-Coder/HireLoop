@@ -19,7 +19,6 @@ import signOutWithGoogle from "@/src/actions/signOut";
 type ProfileData = {
   name: string;
   email: string;
-  image?: string | null;
   createdAt: string;
   currentCredits: number;
   totalPurchasedCredits: number;
@@ -70,7 +69,6 @@ export default async function ProfilePage() {
   const profile: ProfileData = {
     name: user.name,
     email: user.email,
-    image: session.user.image ?? null,
     createdAt: user.createdAt.toISOString(),
     currentCredits: user.credits,
     totalPurchasedCredits,
@@ -96,20 +94,12 @@ export default async function ProfilePage() {
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Profile Picture */}
           <div className="relative mb-4">
-            {profile.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={profile.image}
-                alt={profile.name}
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-500/40 shadow-xl shadow-teal-500/10"
-              />
-            ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-linear-to-br from-teal-950 to-slate-950 border-2 border-teal-500/40 flex items-center justify-center shadow-xl shadow-teal-500/10">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-linear-to-br from-teal-950 to-slate-950 border-2 border-teal-500/40 flex items-center justify-center shadow-xl shadow-teal-500/10">
                 <span className="text-3xl font-extrabold text-teal-300 font-display">
                   {initials}
                 </span>
               </div>
-            )}
+
             <span className="absolute bottom-1 right-1 flex h-4 w-4">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#0b0f19]" />

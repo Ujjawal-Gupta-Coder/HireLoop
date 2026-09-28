@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Video,
   Sparkles,
-  Loader2,
   CheckCircle2,
 } from "lucide-react";
 import {
@@ -27,24 +26,16 @@ type HistoryPageClientProps = {
   initialInterviews: SerializedInterviewHistory[];
 };
 
-const INITIAL_BATCH_SIZE = 8;
-const BATCH_LOAD_SIZE = 6;
-
 export default function HistoryPageClient({
   initialInterviews: interviews,
 }: HistoryPageClientProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<StatusFilterType>("ALL");
   const [trackFilter, setTrackFilter] = useState<TrackFilterType>("ALL");
-  const [difficultyFilter, setDifficultyFilter] =
-    useState<DifficultyFilterType>("ALL");
-  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_BATCH_SIZE);
-  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-  const observerTargetRef = useRef<HTMLDivElement | null>(null);
+  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilterType>("ALL");
 
   // Modals state
-  const [selectedInterviewForDetails, setSelectedInterviewForDetails] =
-    useState<SerializedInterviewHistory | null>(null);
+  const [selectedInterviewForDetails, setSelectedInterviewForDetails] = useState<SerializedInterviewHistory | null>(null);
 
   // Dynamic Telemetry Statistics based on all interviews
   const stats: HistoryStats = useMemo(() => {
@@ -123,36 +114,20 @@ export default function HistoryPageClient({
     searchQuery,
   ]);
 
-  // Sliced interviews for infinite scrolling
-  const visibleInterviews = useMemo(() => {
-    return filteredAndSortedInterviews.slice(0, visibleCount);
-  }, [filteredAndSortedInterviews, visibleCount]);
-
-  const hasMore = visibleCount < filteredAndSortedInterviews.length;
-
-  // Reset visibleCount when filters change
-  const handleFilterReset = () => {
-    setVisibleCount(INITIAL_BATCH_SIZE);
-  };
-
   const handleSearchChange = (q: string) => {
     setSearchQuery(q);
-    handleFilterReset();
   };
 
   const handleStatusChange = (st: StatusFilterType) => {
     setStatusFilter(st);
-    handleFilterReset();
   };
 
   const handleTrackChange = (tr: TrackFilterType) => {
     setTrackFilter(tr);
-    handleFilterReset();
   };
 
   const handleDifficultyChange = (diff: DifficultyFilterType) => {
     setDifficultyFilter(diff);
-    handleFilterReset();
   };
 
   const handleClearAllFilters = () => {
@@ -160,36 +135,7 @@ export default function HistoryPageClient({
     setStatusFilter("ALL");
     setTrackFilter("ALL");
     setDifficultyFilter("ALL");
-    setVisibleCount(INITIAL_BATCH_SIZE);
   };
-
-  // IntersectionObserver for infinite scrolling
-  useEffect(() => {
-    const observerTarget = observerTargetRef.current;
-    if (!observerTarget || !hasMore || isLoadingMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
-          setIsLoadingMore(true);
-          setTimeout(() => {
-            setVisibleCount((prev) => prev + BATCH_LOAD_SIZE);
-            setIsLoadingMore(false);
-          }, 250);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "150px",
-      }
-    );
-
-    observer.observe(observerTarget);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasMore, isLoadingMore]);
 
   return (
     <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto space-y-8 relative pb-24">
@@ -248,7 +194,7 @@ export default function HistoryPageClient({
       ) : (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {visibleInterviews.map((interview) => (
+              {filteredAndSortedInterviews.map((interview) => (
                 <HistoryCard
                   key={interview.id}
                   interview={interview}
@@ -257,17 +203,11 @@ export default function HistoryPageClient({
               ))}
             </div>
 
-          {/* Infinite Scroll Sentinel & Status Indicators */}
           <div
-            ref={observerTargetRef}
             className="flex flex-col items-center justify-center pt-6 pb-2 text-center"
           >
-            {hasMore ? (
-              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-800/80 text-xs font-semibold text-slate-400">
-                <Loader2 className="h-4 w-4 animate-spin text-teal-400" />
-                <span>Loading more sessions...</span>
-              </div>
-            ) : filteredAndSortedInterviews.length > 0 ? (
+            { 
+             filteredAndSortedInterviews.length > 0 ? (
               <div className="flex items-center gap-2 text-xs text-slate-500 py-3">
                 <CheckCircle2 className="h-3.5 w-3.5 text-teal-500/80" />
                 <span>

@@ -17,10 +17,6 @@ const Footer = () => {
           link: "/#tracks"
         },
         {
-          label: "Methodology",
-          link: "/#methodology"
-        },
-        {
           label: "Pricing",
           link: "/#pricing"
         },

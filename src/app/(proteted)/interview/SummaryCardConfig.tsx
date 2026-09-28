@@ -94,13 +94,8 @@ const SummaryCardConfig = ({ credits, interviewTypes, interViewLengthOptions, se
           setLaunchStep(i);
         }
         
-        if(res.data.interviewType === "CODING_INTERVIEW") {
-          router.push(`/coding-interview/${res.data.interviewId}`);
-        }
-        else {
-          router.push(`/interview-room/${res.data.interviewId}`);
-        }
-
+        router.push(`/interview-room/${res.data.interviewId}`);
+        
       } catch(error) {
         console.error("Error in creating interview session:", error);
         toast.error("Failed to create interview session")

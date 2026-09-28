@@ -48,7 +48,7 @@ export default function HistoryFilterBar({
   const trackOptions: { id: TrackFilterType; label: string }[] = [
     { id: "ALL", label: "All Tracks" },
     { id: "TECHNICAL_INTERVIEW", label: "Technical Q&A" },
-    { id: "CODING_INTERVIEW", label: "Coding Practice" },
+    { id: "HR_INTERVIEW", label: "HR Round" },
     { id: "BEHAVIORAL_INTERVIEW", label: "Behavioral" },
     { id: "SYSTEM_DESIGN_INTERVIEW", label: "System Design" },
     { id: "MIXED_INTERVIEW", label: "Mixed Trial" },

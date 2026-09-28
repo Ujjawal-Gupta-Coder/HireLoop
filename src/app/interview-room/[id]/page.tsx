@@ -38,7 +38,7 @@ const page = async ({params}:{params: Promise<{id: string}>}) => {
       }
     }
   })
-  if(!interviewDetails || interviewDetails.type === "CODING_INTERVIEW") return <InvalidIdClient />
+  if(!interviewDetails) return <InvalidIdClient />
 
   if(interviewDetails.status !== "RUNNING") {
     redirect(`/analytics/${interviewDetails.id}`)

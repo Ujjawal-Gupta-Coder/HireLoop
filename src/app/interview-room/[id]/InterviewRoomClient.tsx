@@ -758,7 +758,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
                 </p>
                 <button
                   onClick={startInterviewFlow}
-                  className="w-full py-3.5 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 font-bold tracking-wide transition shadow-lg shadow-teal-500/25 active:scale-95"
+                  className="w-full py-3.5 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-green-500 hover:from-teal-400 hover:to-green-400 text-slate-950 font-bold tracking-wide transition shadow-lg shadow-teal-500/25 active:scale-95"
                 >
                   Resume Interview
                 </button>
@@ -772,7 +772,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
                 </p>
                 <button
                   onClick={startInterviewFlow}
-                  className="w-full py-3.5 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 font-bold tracking-wide transition shadow-lg shadow-teal-500/25 active:scale-95"
+                  className="w-full py-3.5 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-green-500 hover:from-teal-400 hover:to-green-400 text-slate-950 font-bold tracking-wide transition shadow-lg shadow-teal-500/25 active:scale-95"
                 >
                   Start Interview
                 </button>

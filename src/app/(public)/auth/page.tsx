@@ -16,17 +16,17 @@ const session = await auth();
       desc: "Tailored to your target role, seniority level, and company standards."
     },
     {
-      title: "Real-time AI feedback",
-      desc: "Instant evaluation of your coding speed, communication structure, and body language."
-    },
-    {
       title: "Detailed performance analytics",
-      desc: "Benchmark your score improvements over time and identify critical weaknesses."
+      desc: "Benchmark your scores over time and identify critical weaknesses."
     },
     {
-      title: "Industry-specific interview simulations",
-      desc: "Replicate actual top-tier technical loops under realistic, timed conditions."
-    }
+      title: "Secure & Flexible Credits",
+      desc: "Purchase credits securely with Stripe and use them for interview practice."
+    },
+    {
+      title: "Downloadable Interview Reports",
+      desc: "Save your interview performance reports as professional PDF documents."
+    },
   ];
 
   if(session) {

@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { InterviewStatus, Speaker } from "@prisma/client";
 import InterviewConfirmModal from "./InterviewConfirmModal";
+import AiModelFailed from "./AiModelFailed";
 
 export type SerializedConversation = {
   id: string;
@@ -54,6 +55,9 @@ type InterviewRoomClientProps = {
 export default function InterviewRoomClient({ interviewDetails }: InterviewRoomClientProps) {
   const initialConvs = interviewDetails.conversations || [];
   const hasPreviousSession = initialConvs.length > 0;
+
+  // AI model failed notify state
+  const [aiModelFailed, setAiModelFailed] = useState<boolean>(false);
 
   // Format helper for timestamps
   const formatTimestamp = (dateStr?: string) => {
@@ -292,6 +296,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
     const result = await generateInterviewQuestion(
       geminiHistory,
       interviewDetails.role,
+      interviewDetails.type,
       interviewDetails.experience,
       interviewDetails.difficulty,
       interviewDetails.skills,
@@ -305,6 +310,9 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
       questionText = result.text;
     } else {
       console.error("Gemini failed to get question:", result.error);
+      toast.error("Our AI interviewer is currently experiencing high demand. Please resume interview after a while.")
+      setAiModelFailed(true);
+      return;
     }
 
     setCurrentQuestion(nextQuestionIndex);
@@ -353,6 +361,7 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
     const result = await generateInterviewQuestion(
       geminiHistory,
       interviewDetails.role,
+      interviewDetails.type,
       interviewDetails.experience,
       interviewDetails.difficulty,
       interviewDetails.skills,
@@ -735,7 +744,8 @@ export default function InterviewRoomClient({ interviewDetails }: InterviewRoomC
 
   return (
     <div className="lg:h-screen lg:overflow-hidden min-h-screen bg-[#020408] text-slate-100 flex flex-col font-sans antialiased selection:bg-teal-500/20 relative">
-      
+      { aiModelFailed && <AiModelFailed /> }
+
       {/* 0. Start or Resume Interview Overlay */}
       {!isInterviewStarted && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md">

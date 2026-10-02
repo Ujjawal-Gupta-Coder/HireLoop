@@ -1,138 +1,263 @@
-
 <div align="center">
-
-  # 🚀 HireLoop
-
+    <a href="https://hireloop-ai.vercel.app/" target="_blank">
+          <img src="./public/screenshots/Screenshot 1.png" width="1200" alt="Project Cover Image">
+    </a>
+    
+# [HireLoop](https://hireloop-ai.vercel.app/)
 </div>
 
-<div align="center">
+🌟 Experience the full functionality of this **HireLoop Project** by exploring the [Live Demo](https://hireloop-ai.vercel.app/). Click the link to see it in action and enjoy!
 
-## AI-Powered Interview Preparation Platform
+🎥 You can also watch the detailed Video Demo on [YouTube](https://youtu.be/OJcXNXraMgA) for a visual walkthrough.
 
-**Practice. Perform. Improve.**
-
-[![Live Demo](https://img.shields.io/badge/Live-Demo-0D9488?style=for-the-badge\&logo=vercel\&logoColor=white)](https://hireloop-ai.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge\&logo=github\&logoColor=white)](https://github.com/Ujjawal-Gupta-Coder/HireLoop)
-
-<br />
-
-<a href="https://hireloop-ai.vercel.app/">
-  <img src="./public/hireloop-project-landingpage.png" alt="HireLoop Preview" width="100%" />
-</a>
-
-</div>
+**HireLoop** is an AI-powered voice interview preparation platform designed to help candidates practice and prepare for different types of interviews in a realistic, interactive environment. With powerful voice interaction, AI-driven interview evaluation, resume functionality, detailed analytics, and a credit-based system, HireLoop provides a complete interview preparation experience in one modern platform.
 
 ---
 
-## 📌 About
+## 📋 <a name="table">Table of Contents</a>
 
-**HireLoop** is an AI-powered interview preparation platform designed to simulate real-world interview experiences.
-
-It allows candidates to configure and practice different types of interviews while tracking their interview history and progress through a modern, responsive interface.
-
-> 🚧 **HireLoop is an ongoing project and is actively being developed.**
-
----
-
-## ✨ Features Completed So Far
-
-### 🎨 Beautiful Landing Page
-
-A modern, polished landing page designed to introduce HireLoop and its core capabilities.
-
-### 📱 Mobile Responsive
-
-Fully responsive interface designed to provide a smooth experience across desktop, tablet, and mobile devices.
-
-### 🔐 Google OAuth Login
-
-Secure and convenient authentication using Google OAuth.
-
-### 💳 Stripe Payment Gateway
-
-Integrated Stripe Checkout for secure payment processing.
-
-### 🪙 Credit-Based System
-
-A credit-based system for managing interview usage and purchases.
-
-### 🧾 Downloadable Payment Receipt
-
-Users can download their payment receipts as PDF documents.
-
-### ⚙️ Interview Configuration
-
-Customize interviews based on the desired interview type and configuration before starting.
-
-### 🎙️ AI Interview
-
-Interactive AI-powered interview experience designed to simulate realistic interview sessions.
-
-### 📚 Interview History
-
-View and manage previously conducted interviews from a centralized interview history section.
+1. 🛠️ **[What Problem Does This Solve?](#ProblemSolved)**
+2. 🌈 **[How HireLoop Solves These Problems?](#HowProblemSolved)**
+3. 📚 **[About HireLoop](#AboutProject)**
+4. 💻 **[Tech Stack](#TechStack)**
+5. 🌟 **[Features](#Features)**
+6. 🖼️ **[Screenshots](#Screenshots)**
+7. 🤝 **[Contributing](#Contributing)**
+8. 📬 **[Contact](#Contact)**
 
 ---
 
-## 🛠️ Tech Stack
+## <a name="ProblemSolved">🛠️ What Problem Does This Solve?</a>
 
-| Category       | Technologies                     |
-| -------------- | -------------------------------- |
-| Frontend       | React.js, JavaScript, TypeScript |
-| Framework      | Next.js                          |
-| Styling        | Tailwind CSS                     |
-| Database       | PostgreSQL, Neon                 |
-| ORM            | Prisma                           |
-| Authentication | Google OAuth                     |
-| Payments       | Stripe                           |
-| Storage        | Supabase                         |
+HireLoop addresses the common challenges candidates face when preparing for interviews and evaluating their interview performance.
 
----
+Common problems include:
 
-## 🔮 Upcoming Features
+- ❌ Limited access to realistic interview practice
 
-HireLoop is continuously evolving, with several major features currently planned:
+- ❌ Difficulty practicing different types of interviews in one place
 
-### 🤖 AI-Generated Summary & Analysis
+- ❌ Lack of natural voice-based interview interaction
 
-AI-generated interview summaries and detailed performance analysis based on the candidate's interview responses.
+- ❌ No structured way to practice according to a specific role, experience level, and skill set
 
-### 📊 Dashboard
+- ❌ Difficulty identifying strengths and weaknesses after an interview
 
-A personalized dashboard providing an overview of interview performance, credits, activity, and progress.
+- ❌ No detailed analysis of individual answers and communication
 
-### 👤 Profile 
+- ❌ Losing interview progress when an interview is interrupted
 
-Dedicated profile page for managing user information and application preferences.
+- ❌ Scattered interview history and performance records
+
+- ❌ Complicated or subscription-heavy approaches to accessing repeated interview practice
+
+HireLoop brings interview configuration, realistic AI voice interaction, persistent interview sessions, analytics, and credit-based access together in a single platform.
 
 ---
 
-## 🎯 Vision
+## <a name="HowProblemSolved">🌈 How HireLoop Solves These Problems?</a>
 
-HireLoop aims to become a complete AI-powered interview preparation platform that helps candidates **practice realistically, understand their weaknesses, track their progress, and become more confident for real interviews.**
+HireLoop provides a structured and interactive workflow that allows candidates to configure, conduct, resume, and analyze AI-powered interviews.
 
-> **Prepare smarter. Practice realistically. Get hired. 🚀**
+- 🎯 **Custom Interview Configuration**  
+  Candidates can configure their interview according to their target role, experience level, difficulty, skills, interview track, length, and custom requirements.
+
+- 🎤 **AI-Powered Voice Interviews**  
+  Candidates interact with an AI interviewer using browser-based speech recognition and speech synthesis for a natural voice interview experience.
+
+- 🧠 **Multiple Interview Tracks**  
+  Practice Technical, HR, Behavioural, System Design, or Mixed Technical + Behavioural interviews.
+
+- 💾 **Resume Interview**  
+  Every user and AI response is securely stored, allowing candidates to resume an interrupted interview and continue from where they stopped.
+
+- 📊 **AI-Powered Interview Analytics**  
+  After an interview, HireLoop generates a detailed performance report containing an AI summary, strengths, weaknesses, recommendations, and question-by-question analysis.
+
+- 🗣️ **Communication Analysis**  
+  The report evaluates communication across clarity, grammar and language, vocabulary, tone, and professionalism.
+
+- 💳 **Credit-Based System**  
+  Users purchase credits through Stripe and can use their purchased credits for interviews without subscription-based expiration.
+
+- 🧾 **Secure Payment & Receipts**  
+  Stripe payments are securely processed using webhooks, idempotent transaction handling, and proper error handling. Receipts are generated and securely stored for later access.
+
+- 🔎 **Interview History & Filtering**  
+  Candidates can access their previous interviews and filter them by role, skills, interview track, difficulty, status, and keywords.
+
+HireLoop combines realistic interview interaction, persistent sessions, AI evaluation, and performance tracking to create a complete interview preparation workflow.
 
 ---
 
-## 👨‍💻 Developer
+## <a name="AboutProject">📚 About HireLoop</a>
 
-<div align="center">
+**HireLoop** is a modern AI-powered voice interview preparation platform built to help candidates practice different types of interviews in a realistic and structured environment.
 
-### Built with ❤️ by **Ujjawal Gupta**
+Candidates can configure an interview based on their target role and experience level, select an interview track, choose difficulty and skills, define interview length, and provide additional context before starting their session.
 
-**Full-Stack Developer & Creator of HireLoop**
+During the interview, HireLoop provides a voice-based AI interviewer that interacts with the candidate using browser-based speech recognition and speech synthesis. Interview conversations and user notes are securely persisted, allowing candidates to resume interrupted interviews and continue from where they left off.
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-0D9488?style=for-the-badge&logo=google-chrome&logoColor=white)](https://ujjawalgupta.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge\&logo=github\&logoColor=white)](https://github.com/Ujjawal-Gupta-Coder)
+After completing or ending an interview, HireLoop generates a detailed AI-powered analytics report covering overall performance, strengths, weaknesses, recommendations, question-by-question analysis, and communication skills. Reports can be viewed interactively and downloaded as PDF documents.
 
-</div>
+Built with **Next.js**, **React**, **TypeScript**, **Google Gemini**, **PostgreSQL**, **Prisma**, **Supabase**, and **Stripe**, HireLoop combines AI, voice interaction, secure authentication, persistent data, payments, and analytics into one complete interview preparation platform.
 
 ---
 
-<div align="center">
+## <a name="TechStack">💻 Tech Stack</a>
 
-### ⭐ If you find HireLoop interesting, consider giving the repository a star!
+### 🧱 Frontend
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+
+### 🎨 UI & Styling
+
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Lucide React](https://img.shields.io/badge/Lucide_React-F56565?style=for-the-badge&logo=lucide&logoColor=white)
+![React Hot Toast](https://img.shields.io/badge/React_Hot_Toast-FF6B6B?style=for-the-badge&logo=react&logoColor=white)
+
+### 🧠 AI / Voice / Authentication
+
+![Google Gemini](https://img.shields.io/badge/Google_Gemini_API-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![NextAuth](https://img.shields.io/badge/NextAuth.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![Google OAuth](https://img.shields.io/badge/Google_OAuth-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Web Speech API](https://img.shields.io/badge/Web_Speech_API-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
+
+### 🗄️ Backend / Database / Storage
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![Neon](https://img.shields.io/badge/Neon-00E699?style=for-the-badge&logo=neon&logoColor=black)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+
+### 💳 Payments & Documents
+
+![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)
+![Stripe Webhooks](https://img.shields.io/badge/Stripe_Webhooks-635BFF?style=for-the-badge&logo=stripe&logoColor=white)
+![PDF-Lib](https://img.shields.io/badge/PDF--Lib-EC1C24?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)
+
+---
+
+## <a name="Features">🌟 Features</a>
+
+- 🎤 **AI-Powered Voice Interviews** – Conduct interactive interviews with an AI interviewer using browser-based speech recognition and speech synthesis.
+
+- 🎯 **Multiple Interview Tracks** – Practice five interview formats: Technical, HR, Behavioural, System Design, and Mixed Technical + Behavioural.
+
+- 👨‍💻 **Target Role Selection** – Configure interviews for roles including Frontend Developer, Backend Developer, Full Stack Developer, Software Developer, React Developer, Mobile App Developer, DevOps Engineer, and AI/ML Engineer.
+
+- 📈 **Multiple Experience Levels** – Choose from Fresher, Junior, Mid-Level, Senior, Lead/Staff, and Manager levels.
+
+- ⚙️ **Difficulty & Skill Configuration** – Select Easy, Medium, or Hard difficulty and add up to five skills to focus the interview.
+
+- ⏱️ **Flexible Interview Length** – Choose between Quick, Standard, and Extended interview sessions.
+
+- 📝 **Custom Interview Context** – Add specific requirements, topics, or context that should be considered during the interview.
+
+- 💳 **Credit-Based Interview System** – Interviews consume credits based on the selected interview track and session length.
+
+- 💰 **Stripe Payment Integration** – Securely purchase credits through Stripe with webhook processing, idempotent transaction handling, and error handling.
+
+- ♾️ **Lifetime Credits** – Purchased credits remain available for future interview sessions without expiration.
+
+- 🔐 **Google OAuth Authentication** – Secure authentication using Google OAuth through NextAuth.
+
+- 📊 **Interactive Interview Analytics** – View detailed post-interview analytics including AI summary, key strengths, weaknesses, recommendations, and question-by-question analysis.
+
+- 📈 **Overall Performance Evaluation** – Analyze interview performance across Confidence, Clarity, Answer Relevancy, Depth of Knowledge, and Problem Solving.
+
+- 🗣️ **Communication Feedback** – Evaluate communication across Clarity, Grammar & Language, Vocabulary, Tone, and Professionalism.
+
+- 💬 **Complete Interview Transcription** – Review the complete conversation between the candidate and AI interviewer after the session.
+
+- 📝 **Interview Notes** – Take personal notes during an interview and access them later from interview history.
+
+- 💾 **Resume Interrupted Interviews** – Automatically persist AI and user responses so an interview can be resumed from the point where it was interrupted.
+
+- 🛑 **End Interview Anytime** – Candidates can end an ongoing interview at any point, with analytics generated from the conversation completed so far.
+
+- 🕒 **Interview History** – Access all previous interviews with their configuration, status, conversation, notes, and analytics.
+
+- 🔍 **Interview Search & Filters** – Search interviews by role, skill, and keyword, with filters for interview track, difficulty, and status.
+
+- 📋 **Interview Status Tracking** – Track interviews as Running, Abandoned, or Completed.
+
+- 🧾 **Downloadable Analytics Reports** – Download interview analytics as PDF documents, securely stored using Supabase.
+
+- 🧾 **Downloadable Payment Receipts** – Access and download receipts for previous Stripe transactions, securely stored using Supabase.
+
+- 💼 **Billing & Transaction History** – View previous credit purchases and billing transactions from the dedicated Billing page.
+
+- 👤 **User Profile** – View personal account information through a dedicated profile page.
+
+- 🏠 **Personalized Dashboard** – Access recent interview activity, recent transactions, and important platform navigation from the authenticated dashboard.
+
+- 📱 **Modern Responsive Interface** – Clean, modern, dark-themed interface designed for a smooth interview preparation experience.
+
+---
+
+## 📄 Reports & Payment Receipt
+
+HireLoop provides downloadable documents for both interview performance analysis and payment transactions, giving users a clear record of their activity on the platform.
+
+### 📊 Interview Analytics Report
+
+After completing an interview, HireLoop generates a detailed AI-powered analytics report containing the overall performance evaluation, AI summary, key strengths, weaknesses, recommendations, question-by-question analysis, and communication feedback.
+
+<img src="./public/screenshots/Screenshot Report.png" alt="Interview Analytics Report" width="500"/>
+
+### 🧾 Payment Receipt
+
+For every successful credit purchase, HireLoop generates a payment receipt that users can access and download from the Billing page. The receipt is securely stored using Supabase for later retrieval.
+
+<img src="./public/screenshots/Screenshot Receipt.png" alt="Payment Receipt" width="500"/>
+
+## <a name="Screenshots">🖼️ Screenshots</a>
+
+<img src="./public/screenshots/Screenshot 1.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 1"> 
+<img src="./public/screenshots/Screenshot 2.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 2"> 
+<img src="./public/screenshots/Screenshot 3.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 3"> 
+<img src="./public/screenshots/Screenshot 4.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 4"> 
+<img src="./public/screenshots/Screenshot 5.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 5"> 
+<img src="./public/screenshots/Screenshot 6.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 6"> 
+<img src="./public/screenshots/Screenshot 7.png" width="500" style="margin-bottom: 10px; margin-right: 10px; border-radius: 10px;" alt="Screenshot - 7"> 
 
 
-</div>
+## <a name="Contributing"> 🤝 Contributing</a>
+
+We welcome contributions! If you'd like to improve this project, please follow these steps:
+
+1. **Fork the repository**  
+   Click the "Fork" button at the top right of the repository to create your own copy of the project.
+
+2. **Clone your fork**  
+   Once you've forked the repository, clone it to your local machine so you can make changes.
+
+3. **Create a new branch**  
+   Create a new branch to work on your feature or bug fix. It's a good practice to use descriptive branch names.
+
+4. **Make changes**  
+   Work on your changes or additions. Ensure your code follows the project's style and conventions.
+
+5. **Commit your changes**  
+   Once your changes are complete, commit them with a concise message explaining what you've done.
+
+6. **Push to your branch**  
+   Push the changes to your forked repository on GitHub.
+
+7. **Create a Pull Request (PR)**  
+   Open a Pull Request from your forked repository to the original repository, detailing the changes you've made.
+
+## <a name="Contact"> 📬 Contact</a>
+
+- **🔗 LinkedIn :** [Ujjawal Gupta](https://www.linkedin.com/in/ujjawal-gupta-dev)
+
+- **😃 My Portfolio:** [Portfolio Link](https://ujjawalgupta.vercel.app/)
+
+- **🚀 Live Demo :** [Project Link](https://hireloop-ai.vercel.app/)
+
+- **🧑‍💻 GitHub Profile :** [https://github.com/Ujjawal-Gupta-Coder](https://github.com/Ujjawal-Gupta-Coder)
+
+- **📁 Project Repository :** [https://github.com/Ujjawal-Gupta-Coder/HireLoop](https://github.com/Ujjawal-Gupta-Coder/HireLoop)

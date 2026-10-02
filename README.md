@@ -8,7 +8,7 @@
 
 🌟 Experience the full functionality of this **HireLoop Project** by exploring the [Live Demo](https://hireloop-ai.vercel.app/). Click the link to see it in action and enjoy!
 
-🎥 You can also watch the detailed Video Demo on [YouTube](https://example.com/) for a visual walkthrough.
+🎥 You can also watch the detailed Video Demo on [YouTube](https://youtu.be/OJcXNXraMgA) for a visual walkthrough.
 
 **HireLoop** is an AI-powered voice interview preparation platform designed to help candidates practice and prepare for different types of interviews in a realistic, interactive environment. With powerful voice interaction, AI-driven interview evaluation, resume functionality, detailed analytics, and a credit-based system, HireLoop provides a complete interview preparation experience in one modern platform.
 

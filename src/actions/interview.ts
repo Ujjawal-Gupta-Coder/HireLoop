@@ -163,7 +163,7 @@ export async function generateInterviewQuestion(
           config: {
             systemInstruction,
             temperature: 0.6,
-            maxOutputTokens: 120,
+            maxOutputTokens: 500,
           }
         });
 

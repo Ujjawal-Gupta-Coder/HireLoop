@@ -163,6 +163,7 @@ export function formatInterviewDate(isoString: string): string {
   if (!isoString) return "N/A";
   const date = new Date(isoString);
   return date.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
     day: "numeric",
     month: "short",
     year: "numeric",

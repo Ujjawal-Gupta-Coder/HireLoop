@@ -27,6 +27,7 @@ const PaymentDetailsModal = ({ payment, onClose, onViewReceipt, openingReceipt }
   };
 
   const formattedDate = payment.createdAt.toLocaleString("en-In", {
+    timeZone: "Asia/Kolkata",
     day: "numeric",
     month: "long",
     year: "numeric",

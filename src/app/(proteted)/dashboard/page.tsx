@@ -345,6 +345,7 @@ export default async function DashboardPage() {
                   const isRunning = interview.status === "RUNNING";
 
                   const formattedDate = new Date(interview.createdAt).toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
                     month: "short",
                     day: "numeric",
                     year: "numeric",
